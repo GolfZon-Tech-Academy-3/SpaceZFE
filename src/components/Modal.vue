@@ -51,7 +51,9 @@ export default {
 }
 .modal-dialog {
   width: 25%;
+  min-width: 300px;
   height: 70%;
+  min-height: 500px;
   display: flex;
   position: absolute;
   top: 50%;

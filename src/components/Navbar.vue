@@ -9,7 +9,7 @@
         </div>
         <ul class="elements">
             <li>
-                <img src="../assets/searchIcon.png" style="width:1em; height:1em;" />
+                <img class="searchIcon" src="../assets/searchIcon.png" />
             </li>
             <li>
                 <router-link class="element" :to="{name: 'RegisterPlace'}">
@@ -26,7 +26,7 @@
                 <span class="element" @click="openLoginModal">로그인</span>
             </li>
             <li>
-                <span class="element">로그아웃</span>
+                <span class="element" @click="logout">로그아웃</span>
             </li>
             <li>
                 <router-link class="element" :to="{name: 'MyPage'}">마이페이지</router-link>
@@ -58,10 +58,19 @@ export default {
             showLoginModal.value = true;
         }
 
+        const logout = () => {
+            //구현 필요
+            localStorage.removeItem("memberId");
+            localStorage.removeItem("companyId");
+            localStorage.removeItem("authority");
+            window.location.reload(true);
+        }
+
         return {
             showLoginModal,
             openLoginModal,
             closeModal,
+            logout,
         }
     }
 }
@@ -74,18 +83,25 @@ export default {
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5rem 0.5rem;
-    border-bottom: 1px solid black;
+    padding: 0.5vh 0.5vw;
+    border-bottom: 1px solid grey;
 }
 .menu {
     height: 100%;
 }
 .logo{
-    font-size: 2em;
+    font-size: 5vh;
     float:left;
     cursor: pointer;
-    color: black;
+    color: #041461;
     margin-left: 1em;
+}
+.logo:hover {
+    color: rgb(63, 149, 184);
+}
+.searchIcon {
+    width:1em;
+    height:1em;
 }
 ul {
     list-style: none;
@@ -100,5 +116,11 @@ li {
 a {
     text-decoration: none;
     color: grey;
+}
+a:hover {
+    color: #041461;
+}
+.element:hover {
+    color: #041461;
 }
 </style>
