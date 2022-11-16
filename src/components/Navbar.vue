@@ -1,60 +1,80 @@
 <template>
     <nav class="nav">
         <div class="menu">
-            <router-link class="logo" :to="{name: 'Home'}">
+            <router-link class="logo" :to="{name: 'Home'} " @click="closeSearchModal">
                 SpaceZ
             </router-link>
 
             
         </div>
+        <input id="searchInput" @focus="openSearchModal" />
+        <button v-if="showClose" class="closeBtn" @click="closeSearchModal">X</button>
         <ul class="elements">
-            <li>
-                <img class="searchIcon" src="../assets/searchIcon.png" />
-            </li>
-            <li>
-                <router-link class="element" :to="{name: 'RegisterPlace'}">
+            <!-- <li>
+                <router-link class="element" :to="{name: 'RegisterPlace'}" @click="closeSearchModal">
                     장소 등록
                 </router-link>
             </li>
             <li>
-                <router-link class="element" :to="{name: 'ManagePlaceManager'}">장소 관리</router-link>
+                <router-link class="element" :to="{name: 'ManagePlaceManager'}" @click="closeSearchModal">장소 관리</router-link>
             </li>
             <li>
-                <router-link class="element" :to="{name: 'ManagePlaceMaster'}">장소 관리</router-link>
-            </li>
+                <router-link class="element" :to="{name: 'ManagePlaceMaster'}" @click="closeSearchModal">장소 관리</router-link>
+            </li> -->
             <li>
-                <span class="element" @click="openLoginModal">로그인</span>
+                <span class="element" @click= "openLoginModal" >로그인</span>
             </li>
             <li>
                 <span class="element" @click="logout">로그아웃</span>
             </li>
             <li>
-                <router-link class="element" :to="{name: 'MyPage'}">마이페이지</router-link>
+                <router-link class="element" :to="{name: 'MyPage'}" @click="closeSearchModal">마이페이지</router-link>
             </li>
             <li>
-                <img style="width:1em; height:1em;" src="../assets/logo.png"/>
+                <img style="width:1em; height:1em;" src="../assets/logo.png" @click="closeSearchModal"/>
             </li>
         </ul>
     </nav>
-    <LoginModal v-if="showLoginModal" @close="closeModal" />
+    <LoginModal v-if="showLoginModal" @close="closeLoginModal" />
+    <SearchModal v-if="showSearchModal" />
 </template>
 
 <script>
 import { ref, getCurrentInstance } from 'vue';
 import LoginModal from '@/components/LoginModal.vue';
+import SearchModal from '@/components/SearchModal.vue';
+
 export default {
     components: {
         LoginModal,
+        SearchModal,
     },
     setup() {
         const {emit} = getCurrentInstance();
-        const closeModal = () => {
+        const showSearchModal = ref(false);
+        const showClose = ref(false);
+
+        const openSearchModal = () => {
+            showSearchModal.value = true;
+            showClose.value = true;
+        }
+
+        const closeSearchModal = () => {
+            showSearchModal.value = false;
+            showClose.value = false;
+            let input = document.getElementById('searchInput');
+            input.value = '';
+        }
+
+        const closeLoginModal = () => {
             showLoginModal.value = false;
         }
 
         const showLoginModal = ref(false);
 
-        const openLoginModal = () => {
+        const openLoginModal = async () => {
+            showSearchModal.value = false;
+            showClose.value = false;
             showLoginModal.value = true;
         }
 
@@ -69,8 +89,12 @@ export default {
         return {
             showLoginModal,
             openLoginModal,
-            closeModal,
+            closeLoginModal,
             logout,
+            showSearchModal,
+            openSearchModal,
+            closeSearchModal,
+            showClose,
         }
     }
 }
@@ -94,14 +118,10 @@ export default {
     float:left;
     cursor: pointer;
     color: #041461;
-    margin-left: 1em;
+    margin-left: 3em;
 }
 .logo:hover {
     color: rgb(63, 149, 184);
-}
-.searchIcon {
-    width:1em;
-    height:1em;
 }
 ul {
     list-style: none;
@@ -120,7 +140,25 @@ a {
 a:hover {
     color: #041461;
 }
+#searchInput {
+    width: 10em;
+    font-size: 1.4em;
+    color: grey;
+    border: none;
+    background-color: #EDEDED;
+    border-radius: 5vw;
+    padding: 0.7% 2%;
+}
+#searchInput:focus {
+    outline: none;
+}
 .element:hover {
     color: #041461;
+}
+.closeBtn {
+    background-color: white;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
 }
 </style>

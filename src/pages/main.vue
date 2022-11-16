@@ -28,8 +28,7 @@
 
         <div class="guide">
             <div class="box40" >
-                <div class="hostingGuide" >
-                    <!-- 클릭 이벤트 -->
+                <router-link class="hostingGuide" :to="{name:'Guide'}">
                     <div style="color:white; font-size:3vh; font-weight:bold; padding-left: 3%;margin-top: 3.4%;">
                         장소 등록, 시작해볼까요?
                         <img style="float:right; width:7%;margin-right:3%;" src="../assets/reg.png" />
@@ -37,7 +36,7 @@
                     <div style="color:white; font-weight:bold; padding-left: 3%;">
                         호스팅 가이드 보기
                     </div>
-                </div>
+                </router-link>
             </div>
             <div class="box40">
                 <div class="views">
@@ -187,6 +186,7 @@ export default {
     height: 60%;
     background-color: #041461;
     border-radius: 1em;
+    cursor: pointer;
 }
 .views {
     width: 70%;
@@ -199,6 +199,7 @@ export default {
     margin: 0% 1.5%;
     background-color: grey;
     border-radius: 1vw;
+    cursor: pointer;
 }
 .viewAll {
     width: 30%;
@@ -211,6 +212,7 @@ export default {
     display : flex;
     justify-content: center;
     align-items : center;
+    cursor: pointer;
 }
 .viewAll:hover {
     background-color:black;
