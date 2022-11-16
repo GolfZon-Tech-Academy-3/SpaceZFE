@@ -1,12 +1,23 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
+  <div>
+    <Navbar />
+    <router-view />
+  </div>  
+  
 </template>
 
 <script>
+import Navbar from '@/components/Navbar.vue';
 
 export default {
+  components: {
+    Navbar,
+  }
 }
 </script>
 
 <style>
+body {
+  margin: 0px;
+}
 </style>
