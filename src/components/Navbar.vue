@@ -2,7 +2,7 @@
     <nav class="nav">
         <div class="menu">
             <router-link class="logo" :to="{name: 'Home'} " @click="closeSearchModal">
-                SpaceZ
+                SPACEZ
             </router-link>
 
             
@@ -115,10 +115,11 @@ export default {
 }
 .logo{
     font-size: 5vh;
+    font-family: Archivo;
     float:left;
     cursor: pointer;
     color: #041461;
-    margin-left: 3em;
+    margin-left: 2em;
 }
 .logo:hover {
     color: rgb(63, 149, 184);

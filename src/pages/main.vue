@@ -40,17 +40,17 @@
             </div>
             <div class="box40">
                 <div class="views">
-                    <div class="view">
+                    <div class="view1">
                         <div style="margin:5% 5%; font-size:2vw; font-weight: bold; color:#041461;">
                             OFFICE
                         </div>
                     </div>
-                    <div class="view">
+                    <div class="view2">
                         <div style="margin:5% 5%; font-size:2vw; font-weight: bold;">
                             MEETING ROOM
                         </div>
                     </div>
-                    <div class="view">
+                    <div class="view3">
                         <div style="margin:5% 5%; font-size:2vw; font-weight: bold; color:white;">
                             DESK
                         </div>
@@ -58,11 +58,9 @@
                 </div>
             </div>
             <div class="box20">
-                <div class="viewAll">
-                    <div>
-                        전체 보기 →
-                    </div>
-                </div>
+                <router-link class="findPlace" :to="{name:'FindPlace'}">
+                    전체 보기
+                </router-link>
             </div>
         </div>
 
@@ -88,9 +86,9 @@
                     </div>
                 </div>
                 <div class="box20">
-                    <div class="viewAll">
+                    <div class="findPlace">
                         <div>
-                            새로 등록된 장소 더보기 →
+                            새로 등록된 장소 더보기
                         </div>
                     </div>
                 </div>
@@ -187,21 +185,44 @@ export default {
     background-color: #041461;
     border-radius: 1em;
     cursor: pointer;
+    text-decoration: none;
 }
 .views {
     width: 70%;
     height: 50%;
     display: flex;
 }
-.view {
+.view1 {
     width: 30.3%;
     height: 100%;
     margin: 0% 1.5%;
     background-color: grey;
     border-radius: 1vw;
     cursor: pointer;
+    background-image: url("../assets/office.png");
+    background-size:contain;
 }
-.viewAll {
+.view2 {
+    width: 30.3%;
+    height: 100%;
+    margin: 0% 1.5%;
+    background-color: grey;
+    border-radius: 1vw;
+    cursor: pointer;
+    background-image: url("../assets/meeting.png");
+    background-size:contain;
+}
+.view3 {
+    width: 30.3%;
+    height: 100%;
+    margin: 0% 1.5%;
+    background-color: grey;
+    border-radius: 1vw;
+    cursor: pointer;
+    background-image: url("../assets/desk.png");
+    background-size:contain;
+}
+.findPlace {
     width: 30%;
     height: 60%;
     font-size: 2vw;
@@ -213,8 +234,9 @@ export default {
     justify-content: center;
     align-items : center;
     cursor: pointer;
+    text-decoration: none;
 }
-.viewAll:hover {
+.findPlace:hover {
     background-color:black;
 }
 .new {

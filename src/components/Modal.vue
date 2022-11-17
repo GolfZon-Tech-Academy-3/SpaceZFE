@@ -71,6 +71,8 @@ export default {
   border-radius: 2rem;
 }
 .modal-header {
+  font-family: Archivo;
+  color:#041461;
   width: 100%;
   height: 15%;
   font-size: 2em;

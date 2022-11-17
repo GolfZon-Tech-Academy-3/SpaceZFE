@@ -8,38 +8,47 @@
         <h2>회원가입</h2>
       </div>
       <div class="signUpForm">
-        <div class="content">
-          <div class="title">
-            이메일
+        <div>
+          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 1vh);">
+            <span>
+              이메일
+            </span>
           </div>
-          <div class="title">
+        
+          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 4vh);">
             <input class="input" type="text" placeholder="이메일">
             <button class="button">인증번호 보내기</button>
           </div>
-          <div class="title">
-            인증번호
+          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 12vh);">
+            <span>
+              인증번호
+            </span>
           </div>
-          <div class="title">
+          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 15vh);">
             <input class="input" type="text" placeholder="인증번호 입력">
             <button class="button">확인</button>
           </div>
-          <div class="title">
-            비밀번호
+          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 23vh);">
+            <span>
+              비밀번호
+            </span>
           </div>
-          <div class="title">
+          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 26vh);">
             <input class="input" type="password" placeholder="비밀번호 입력">
           </div>
-          <div class="title">
+          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 33vh);">
             <input class="input" type="password" placeholder="비밀번호 재입력">
           </div>
-          <div class="title">
-            닉네임
+          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 40vh);">
+            <span>
+              닉네임
+            </span>
           </div>
-          <div class="title">
+          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 43vh);">
             <input class="input" type="text" placeholder="닉네임 입력">
             <button class="button">중복확인</button>
           </div>
-          <div class="title">
+          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 50vh);">
             <button type="submit" class="submit">회원가입 하기</button>
           </div>
         </div>
@@ -70,6 +79,11 @@ export default {
   align-items : center;
   float: left;
 }
+@media (max-width: 1000px) {
+  .deco {
+    display: none;
+  }
+}
 .signUpLogo {
   width: 50vh;
 }
@@ -81,21 +95,11 @@ export default {
 }
 .signUpForm {
   height: 90%;
-  text-align: center;
-  display : flex;
-  justify-content: center;
 }
 h2 {
   color:#041461;
   float: left;
   padding-left: 5%;
-}
-.content {
-  width: 80%;
-  height: 83%;
-  padding: 5%;
-  border: 1px solid grey;
-  border-radius: 2%;
 }
 .title {
   height: 10%;
@@ -116,7 +120,7 @@ h2 {
   background-color: skyblue;
 }
 .input {
-  width: 40%;
+  width: 60%;
   border: 1px solid white;
   border-bottom: 1px solid gray;
   padding: 3%;

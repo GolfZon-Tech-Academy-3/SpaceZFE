@@ -20,6 +20,7 @@ export default {
 
 <style>
 #app {
+  font-family: Inter;
   min-width: 1000px;
   height: 100%;
   min-height: 600px;
