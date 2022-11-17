@@ -1,7 +1,7 @@
 <template>
   <Modal>
     <template v-slot:title>
-      SpaceZ
+      SPACEZ
     </template>
     <template v-slot:body>
       <div class="loginform">
@@ -24,7 +24,7 @@
     </template>
     <template v-slot:footer>
       <span>
-        <b><i>SpaceZ</i></b> 가 처음이신가요?
+        <span style="font-family: Archivo; color:#041461;">SPACEZ</span> 가 처음이신가요?
         </span>
         <br />
         <router-link class="submit" :to="{ name: 'SignUp' }" @click="onClose">
