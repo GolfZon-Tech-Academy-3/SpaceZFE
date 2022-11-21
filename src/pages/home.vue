@@ -23,7 +23,7 @@ export default {
         const start = () => {
             if (localStorage.getItem("memberId")) {
                 router.push({
-                name: "Main",
+                    name: "Main",
                 });
             } else {
                 showLoginModal.value = true;
@@ -47,7 +47,7 @@ export default {
 <style scoped>
 .wrapper {
     width: 100%;
-    height: 70vh;
+    height: 80vh;
     text-align:center;
 }
 .startLogo {

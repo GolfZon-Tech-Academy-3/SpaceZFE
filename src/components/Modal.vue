@@ -48,6 +48,7 @@ export default {
   left: 0;
   background-color: rgba(0, 0, 0, 0.5);
   text-align: center;
+  z-index: 100;
 }
 .modal-dialog {
   width: 25%;

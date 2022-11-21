@@ -125,6 +125,10 @@ h2 {
   border-bottom: 1px solid gray;
   padding: 3%;
 }
+.input:focus {
+  outline: none;
+  border-bottom: 1px solid black;
+}
 .submit {
   width: 70%;
   padding: 3%;

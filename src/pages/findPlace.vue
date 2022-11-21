@@ -10,16 +10,16 @@
         </div>
         
         <div class="typeSelection">
-            <div :class="[ isAll ? 'yes' : 'no']" style="margin-left: 1em;" @click="selectAll">
+            <div :class="[ searchType === 'all' ? 'yes' : 'no']" style="margin-left: 1em;" @click="selectAll(1)">
                 전체
             </div>
-            <div :class="[ isOffice ? 'yes' : 'no']" @click="selectOffice">
+            <div :class="[ searchType === 'office' ? 'yes' : 'no']" @click="selectOffice(1)">
                 오피스
             </div>
-            <div :class="[ isDesk ? 'yes' : 'no']" @click="selectDesk">
+            <div :class="[ searchType === 'desk' ? 'yes' : 'no']" @click="selectDesk(1)">
                 데스크
             </div>
-            <div :class="[ isMeeting ? 'yes' : 'no']" @click="selectMeeting">
+            <div :class="[ searchType === 'meeting' ? 'yes' : 'no']" @click="selectMeeting(1)">
                 회의실
             </div>
         </div>
@@ -27,19 +27,19 @@
         <div class="conditionSelection">
             <span style="display:inline-block;width: 15%; height: 100%;">
                 <div style="color: #9E9E9E; font-size: 1em;">날짜</div>
-                <input id="dateSelector" type="date" v-model="date" :min="today" />
+                <input id="dateSelector" type="date" @change="changeDate($event)" :value="searchDate" :min="today" />
             </span>
             <span style="display:inline-block;width: 13%; height: 100%;margin-left:1%;">
                 <div style="color: #9E9E9E; font-size: 1em;">시간</div>
-                <select :disabled="isDisabled" id="timeSelector" v-model="selectedTime">
-                    <option v-for="val in 23">{{val}} 시</option>
+                <select id="timeSelector" @change="changeTime($event)" :value="searchTime">
+                    <option v-for="val in 23" :key="val">{{val}} 시</option>
                 </select>
             </span>
             <span style="display:inline-block;width: 23%; height: 100%;margin-left:0%;">
-                <input class="search" type="text" placeholder="지역 검색">
+                <input class="search" type="text" placeholder="지역 검색" @change="changeWord($event)" @keyup.enter="searchWithCondition" :value="searchWord">
             </span>
             <span style="width: 30%; height: 100%;">
-                <button class="searchButton">적용</button>
+                <button class="searchButton" @click="searchWithCondition">적용</button>
             </span>
         </div>
 
@@ -47,59 +47,64 @@
             검색결과 없음
         </div>
         <div v-else :class="{'grid1': isOne, 'grid2':isTwo, 'grid3':isThree}">
-            <div v-for="num in resultNum" style="border:1px black solid">
+            <div v-for="num in resultCurrentNum" :key="num" style="border:1px black solid">
                 {{num}}
             </div>
+        </div>
+
+        <div class="pagination">
+            <div class="previous"></div>
+            <div v-for="page in pageNum" :key="page" :class="{'curPage' : (page === currentPage), 'notCurPage' : (page !== currentPage)}"
+                @click="search(page)">
+                {{page}}
+            </div>  
+            <div class="next"></div>
         </div>
     </div>
 </template>
 
 <script>
-import { ref, watch  } from 'vue';
+import { ref, computed  } from 'vue';
+import { useStore } from 'vuex';
 export default {
     setup() {
-        const isAll = ref(true);
-        const isOffice = ref(false);
-        const isDesk = ref(false);
-        const isMeeting = ref(false);
-        const date = ref(null);
-        const selectedTime = ref('');
-        const isDisabled = ref(true);
-        const resultNum = ref(8);
+        const store = useStore();
+        const searchType = computed(() => store.state.searchType);
+        const searchDate = computed(() => store.state.searchDate);
+        const searchTime = computed(() => store.state.searchTime);
+        const searchWord = computed(() => store.state.searchWord);
+        const resultCurrentNum = ref(5);
         const isOne = ref(false);
         const isTwo = ref(false);
         const isThree = ref(false);
         const noResult = ref(false);
+        const resultAllNum = ref(19);
+        const pageNum = Math.ceil((resultAllNum.value) / 9);
+        const currentPage = computed(() => store.state.currentPage);
 
-        if(resultNum.value === 0) {
+        if(resultCurrentNum.value === 0) {
             noResult.value = true;
         }
 
-        if((resultNum.value - 1) / 3 < 1) {
+        if((resultCurrentNum.value - 1) / 3 < 1) {
             isOne.value = true;
-        } else if((resultNum.value - 1) / 3 < 2) {
+        } else if((resultCurrentNum.value - 1) / 3 < 2) {
             isTwo.value = true;
         } else {
             isThree.value = true;
         }
 
-        if(date.value == null) {
-            isDisabled.value = true;
-        } else {
-            isDisabled.value = false;
+        const changeDate = (event) => {
+            store.dispatch('updateDate', event.target.value);
+        }
+        
+        const changeTime = (event) => {
+            store.dispatch('updateTime', event.target.value);
         }
 
-        watch(date, () => {
-            isDisabled.value = false;
-        })
-        
-        watch(selectedTime, () => {
-            if(selectedTime.value.length == 3) {
-                console.log(selectedTime.value[0]);
-            } else {
-                console.log(selectedTime.value[0] + selectedTime.value[1]);
-            }
-        })
+        const changeWord = (event) => {
+            store.dispatch('updateWord', event.target.value);
+        }
 
         let today = new Date();
         today = dateFormat(today);
@@ -117,51 +122,71 @@ export default {
         }
 
         const selectAll = () => {
-            isAll.value = true;
-            isOffice.value = false;
-            isDesk.value = false;
-            isMeeting.value = false;
+            store.dispatch('updateType', 'all');
+            search(1);
         }
 
         const selectOffice = () => {
-            isAll.value = false;
-            isOffice.value = true;
-            isDesk.value = false;
-            isMeeting.value = false;
+            store.dispatch('updateType', 'office');
+            search(1);
         }
 
         const selectDesk = () => {
-            isAll.value = false;
-            isOffice.value = false;
-            isDesk.value = true;
-            isMeeting.value = false;
+            store.dispatch('updateType', 'desk');
+            search(1);
         }
 
         const selectMeeting = () => {
-            isAll.value = false;
-            isOffice.value = false;
-            isDesk.value = false;
-            isMeeting.value = true;
+            store.dispatch('updateType', 'meeting');
+            search(1);
+        }
+
+        const searchWithCondition = () => {
+            if(searchDate.value === '' && searchTime.value === '') {
+                console.log('hello');
+            } else if(searchDate.value !== '' && searchTime.value !== '') {
+                console.log('hello');
+            } else {
+                alert('날짜와 시간을 모두 선택해주세요');
+            }
+            console.log(searchWord.value);
+            search(1);
+        }
+
+        const search = (page) => {
+            store.dispatch('updatePage', page);
+            if(searchTime.value !== '') {
+                if(searchTime.value.length == 3) {
+                    console.log(searchTime.value[0]);
+                } else {
+                    console.log(searchTime.value[0] + searchTime.value[1]);
+                }
+            }
         }
 
         return {
-            isAll,
-            isOffice,
-            isDesk,
-            isMeeting,
             selectAll,
             selectOffice,
             selectDesk,
             selectMeeting,
-            today,
-            selectedTime,
-            date,
-            isDisabled,
-            resultNum,
+            resultCurrentNum,
             noResult,
             isOne,
             isTwo,
             isThree,
+            searchWithCondition,
+            search,
+            resultAllNum,
+            pageNum,
+            currentPage,
+            searchType,
+            searchDate,
+            searchTime,
+            searchWord,
+            today,
+            changeDate,
+            changeTime,
+            changeWord,
         }
     }
 }
@@ -244,7 +269,6 @@ export default {
     display: grid;
     width: 80%;
     height: 50vh;
-    background-color: aqua;
     margin: 3% auto;
     grid-template-columns: 1fr 1fr 1fr;
 }
@@ -252,7 +276,6 @@ export default {
     display: grid;
     width: 80%;
     height: 100vh;
-    background-color: aqua;
     margin: 3% auto;
     grid-template-columns: 1fr 1fr 1fr;
 }
@@ -260,8 +283,47 @@ export default {
     display: grid;
     width: 80%;
     height: 150vh;
-    background-color: aqua;
     margin: 3% auto;
     grid-template-columns: 1fr 1fr 1fr;
+}
+.pagination {
+    width: 100%;
+    height: 3em;
+    display : flex;
+    justify-content: center;
+    align-items : center;
+    text-align: center;
+    margin: 5% 0;
+}
+.curPage {
+    width: 5vh;
+    height:5vh;
+    position: relative;
+    color: white;
+    font-weight:bolder;
+    background-color: #041461;
+    cursor: pointer;
+    display : flex;
+    justify-content: center;
+    align-items : center;
+    border-radius: 50%;
+    margin: 0 1%;
+}
+.notCurPage {
+    width: 5vh;
+    height:5vh;
+    position: relative;
+    color: white;
+    font-weight:bolder;
+    background-color: skyblue;
+    cursor: pointer;
+    display : flex;
+    justify-content: center;
+    align-items : center;
+    border-radius: 50%;
+    margin: 0 1%;
+}
+.notCurPage:hover {
+    background-color: blue;
 }
 </style>
