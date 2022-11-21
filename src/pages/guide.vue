@@ -38,7 +38,7 @@
             <hr style="height:0.5px; color:#EDEDED;margin-top: 1%;">
         </div>
 
-        <div style="min-width: 350px;width: 25%;height: 40%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, 155%);text-align: center;">
+        <div style="min-width: 350px;width: 25%;height: 15%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, 430%);text-align: center;">
             <router-link class="regPlace" :to="{name:'RegisterPlace'}">장소 등록하러 가기</router-link>
         </div>
     </div>

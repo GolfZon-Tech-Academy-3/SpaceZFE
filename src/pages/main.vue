@@ -57,7 +57,7 @@
                     </div>
                 </div>
             </div>
-            <div class="box20">
+            <div class="box20" @click="moveToAll">
                 <router-link class="findPlace" :to="{name:'FindPlace'}">
                     전체 보기
                 </router-link>
@@ -98,8 +98,26 @@
 </template>
 
 <script>
+import { useStore } from 'vuex';
 export default {
+    setup() {
+        const store = useStore();
+        const router = useRouter();
+        const moveToAll = () => {
+            store.dispatch('updatePage', 1);
+            store.dispatch('updateType', 'all');
+            store.dispatch('updateDate', '');
+            store.dispatch('updateTime', '');
+            store.dispatch('updateWord', '');
+            router.push({
+                name: 'FindPlace',
+            })
+        }
 
+        return {
+            moveToAll,
+        }
+    }
 }
 </script>
 

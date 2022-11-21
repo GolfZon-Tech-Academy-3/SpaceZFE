@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <div class="results">
-            <div class="result" @click="">
+            <div class="result">
                 용인
             </div>
             <div class="result">

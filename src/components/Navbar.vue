@@ -7,7 +7,7 @@
 
             
         </div>
-        <input id="searchInput" @focus="openSearchModal" />
+        <input id="searchInput" @focus="openSearchModal" @keyup.enter="moveToSearch" v-model="searchWord"/>
         <button v-if="showClose" class="closeBtn" @click="closeSearchModal">X</button>
         <ul class="elements">
             <!-- <li>
@@ -43,6 +43,8 @@
 import { ref, getCurrentInstance } from 'vue';
 import LoginModal from '@/components/LoginModal.vue';
 import SearchModal from '@/components/SearchModal.vue';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 export default {
     components: {
@@ -53,6 +55,9 @@ export default {
         const {emit} = getCurrentInstance();
         const showSearchModal = ref(false);
         const showClose = ref(false);
+        const searchWord = ref('');
+        const router = useRouter();
+        const store = useStore();
 
         const openSearchModal = () => {
             showSearchModal.value = true;
@@ -86,6 +91,19 @@ export default {
             window.location.reload(true);
         }
 
+        const moveToSearch = () => {
+            showSearchModal.value = false;
+            showClose.value = false;
+            store.dispatch('updatePage', 1);
+            store.dispatch('updateType', 'all');
+            store.dispatch('updateDate', '');
+            store.dispatch('updateTime', '');
+            store.dispatch('updateWord', searchWord.value);
+            router.push({
+                name: 'FindPlace',
+            });
+        }
+
         return {
             showLoginModal,
             openLoginModal,
@@ -95,6 +113,8 @@ export default {
             openSearchModal,
             closeSearchModal,
             showClose,
+            moveToSearch,
+            searchWord,
         }
     }
 }
