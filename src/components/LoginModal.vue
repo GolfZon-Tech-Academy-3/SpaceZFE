@@ -36,19 +36,66 @@
 
 <script>
 import Modal from '@/components/Modal.vue';
-import { getCurrentInstance } from 'vue';
+import { ref, getCurrentInstance } from 'vue';
+import axios from '@/axios';
 export default {
   components: {
     Modal,
   },
   setup() {
     const { emit } = getCurrentInstance();
+    const email = ref('');
+    const pw = ref('');
+    
     const onClose = () => {
       emit('close');
     }
 
+    const email_check = (email) => {
+      var regex=/([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+      return (email != '' && email != 'undefined' && regex.test(email));
+    }
+
+    const parseJwt = (token) => {
+      try {
+        return JSON.parse(decodeURIComponent(escape(atob(token.split('.')[1]))));
+      } catch (e) {
+        return null;
+      }
+    };
+
+    const login = async () => {
+      if(!email_check(email.value)) {
+        alert('올바른 이메일 형식이 아닙니다');
+      } else if(pw.value === '') {
+        alert('비밀번호를 입력해주세요');
+      } else {
+        try {
+          await axios.post('member/login', {email: email.value, password: pw.value})
+          .then(
+            (res) => {
+              if(res.data === '') {
+                localStorage.setItem("authority", parseJwt(res.headers.authorization).AUTHORITY);
+                console.log(parseJwt(res.headers.authorization));
+                localStorage.setItem("access_token", res.headers.authorization);
+                onClose();
+                window.location.reload(true);
+              }
+            }
+          )
+
+        } catch (error) {
+          console.log(error);
+          alert('로그인 정보가 알맞지 않습니다');
+        }
+      }
+    }
+
     return {
-      onClose
+      onClose,
+      email,
+      pw,
+      login,
     }
   }
 }

@@ -16,8 +16,8 @@
           </div>
         
           <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 4vh);">
-            <input class="input" type="text" placeholder="이메일">
-            <button class="button">인증번호 보내기</button>
+            <input :disabled="emailOK" class="input" type="text" placeholder="이메일" v-model="email">
+            <button :disabled="emailOK" class="button" @click="sendCertification">인증번호 보내기</button>
           </div>
           <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 12vh);">
             <span>
@@ -25,8 +25,8 @@
             </span>
           </div>
           <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 15vh);">
-            <input class="input" type="text" placeholder="인증번호 입력">
-            <button class="button">확인</button>
+            <input :disabled="certificationOK" class="input" type="text" placeholder="인증번호 입력" v-model="certificationNum">
+            <button :disabled="certificationOK" class="button" @click="checkCertificationNum">확인</button>
           </div>
           <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 23vh);">
             <span>
@@ -34,10 +34,10 @@
             </span>
           </div>
           <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 26vh);">
-            <input class="input" type="password" placeholder="비밀번호 입력">
+            <input class="input" type="password" placeholder="비밀번호 입력" v-model="pw">
           </div>
           <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 33vh);">
-            <input class="input" type="password" placeholder="비밀번호 재입력">
+            <input class="input" type="password" placeholder="비밀번호 재입력" v-model="pwCheck">
           </div>
           <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 40vh);">
             <span>
@@ -45,11 +45,11 @@
             </span>
           </div>
           <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 43vh);">
-            <input class="input" type="text" placeholder="닉네임 입력">
-            <button class="button">중복확인</button>
+            <input :disabled="nicknameOK" class="input" type="text" placeholder="닉네임 입력" v-model="nickname">
+            <button :disabled="nicknameOK" class="button" @click="checkNickName">중복확인</button>
           </div>
           <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 50vh);">
-            <button type="submit" class="submit">회원가입 하기</button>
+            <button type="submit" class="submit" @click="signUp">회원가입 하기</button>
           </div>
         </div>
       </div>
@@ -58,8 +58,118 @@
 </template>
 
 <script>
+import { ref } from 'vue';
+import axios from '@/axios';
+import { useRouter } from 'vue-router';
 export default {
+  setup() {
+    const router = useRouter();
+    const email = ref('');
+    const emailOK = ref(false);
+    const certificationNum = ref();
+    const certificationOK = ref(false);
+    const pw = ref('');
+    const pwCheck = ref('');
+    const nickname = ref('');
+    const nicknameOK = ref(false);
 
+    const email_check = (email) => {
+      var regex=/([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+      return (email != '' && email != 'undefined' && regex.test(email));
+    }
+
+    const sendCertification = async () => {
+      if(!email_check(email.value)) {
+        alert('올바른 이메일 형식이 아닙니다');
+      } else {
+        try {
+          await axios.post('member/mail', {email: email.value})
+          .then(
+            (res) => {
+              localStorage.setItem('certificationNum', res.data);
+              emailOK.value = true;
+            }
+          )
+        } catch (error) {
+          alert('사용 불가능한 아이디입니다');
+        }
+        
+      }
+    }
+
+    const checkCertificationNum = () => {
+      if(localStorage.getItem('certificationNum') === certificationNum.value) {
+        alert('인증되었습니다');
+        certificationOK.value = true;
+        localStorage.removeItem('certificationNum');
+      }
+    }
+    
+    const checkNickName = async () => {
+      if(nickname.value.length < 2) {
+        alert('닉네임은 두 글자 이상 입력해야합니다');
+      } else {
+        await axios.post('member/name-check', {memberName: nickname.value})
+          .then(
+            (res) => {
+              if(res.data === 1) {
+                alert('사용 가능한 닉네임입니다');
+                nicknameOK.value = true;
+              } else {
+                alert('사용 불가능한 닉네임입니다');
+              }
+            }
+          )
+      }
+    }
+
+    const pw_check = (pw) => {
+      var regex=/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+      return (pw != '' && pw != 'undefined' && regex.test(pw));
+    }
+
+    const signUp = async () => {
+      if(localStorage.getItem('authority') != null) {
+        alert('로그인 상태에서 회원가입할 수 없습니다');
+      } else if(!emailOK.value) {
+        alert('인증되지 않은 이메일입니다');
+      } else if(!certificationOK.value) {
+        alert('인증번호 인증을 해주세요');
+      } else if(!pw_check(pw.value)) {
+        alert('비밀번호는 최소 8자이며, 최소 하나의 문자와 하나의 숫자로 이루어져야합니다');
+      } else if(pw.value !== pwCheck.value) {
+        alert('비밀번호가 일치하지 않습니다');
+      } else if(!nicknameOK.value) {
+        alert('닉네임 중복확인을 해주세요');
+      } else {
+        await axios.post('member/signup', 
+          {authority: "member", email: email.value, memberName: nickname.value, password: pw.value})
+            .then(
+              (res) => {
+                alert(res.data);
+                router.push({
+                  name: 'Home'
+                })
+              }
+            )
+      }
+    }
+
+    return {
+      email,
+      emailOK,
+      sendCertification,
+      checkCertificationNum,
+      certificationNum,
+      certificationOK,
+      nickname,
+      checkNickName,
+      signUp,
+      nicknameOK,
+      pw,
+      pwCheck,
+    }
+  }
 }
 </script>
 

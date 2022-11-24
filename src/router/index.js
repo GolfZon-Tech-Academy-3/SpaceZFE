@@ -9,6 +9,9 @@ import ReservationStatus from '../pages/backOffice/reservationStatus.vue';
 import ManagePlace from '../pages/backOffice/managePlace.vue';
 import Payment from '../pages/backOffice/payment.vue';
 import Qna from '../pages/backOffice/qna.vue';
+import MasterCompany from '../pages/master/company.vue';
+import MasterAccount from '../pages/master/account.vue';
+import RegisterCompany from '../pages/registerCompany.vue';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -31,24 +34,9 @@ const router = createRouter({
             component: Main,
         },
         {
-            path: '/registerPlace',
-            name: 'RegisterPlace',
-            component: Home,
-        },
-        {
             path: '/findplace',
             name: 'FindPlace',
             component: FindPlace,
-        },
-        {
-            path: '/manage/manager',
-            name: 'ManagePlaceManager',
-            component: Home,
-        },
-        {
-            path: '/manage/master',
-            name: 'ManagePlaceMaster',
-            component: Home,
         },
         {
             path: '/mypage',
@@ -89,6 +77,21 @@ const router = createRouter({
             path: '/backoffice/qna',
             name: 'Qna',
             component: Qna,
+        },
+        {
+            path: '/master/company',
+            name: 'MasterCompany',
+            component: MasterCompany,
+        },
+        {
+            path: '/master/account',
+            name: 'MasterAccount',
+            component: MasterAccount,
+        },
+        {
+            path: '/registercompany',
+            name: 'RegisterCompany',
+            component: RegisterCompany,
         }
     ]
 });

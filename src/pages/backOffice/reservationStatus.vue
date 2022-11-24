@@ -3,7 +3,9 @@
         <MenuBar />
         <div class="content">
             <div class="condition">
+                날짜
                 <input class="date" type="date" />
+                ~
                 <input class="date" type="date" />
                 <button class="search">검색</button>
             </div>
@@ -63,6 +65,7 @@ export default {
     padding: 0.7% 0.7%;
     border-radius: 2em;
     font-family: Inter;
+    margin-left: 1em;
     margin-right: 1em;
 }
 .date:focus {
