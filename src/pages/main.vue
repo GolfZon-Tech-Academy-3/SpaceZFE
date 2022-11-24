@@ -5,22 +5,51 @@
                 <div class="title">
                     <span>인기장소</span>
                     <span class="hot">HOT</span>
-                    <button class="button">></button>
-                    <button class="button">&lt</button>
+                    <button :disabled="disabled" @click="changePage" class="button">></button>
+                    <button :disabled="disabled" @click="changePage" class="button">&lt</button>
                 </div>
-                <div class="places">
-                    <!-- v-for 로 짜야함 -->
-                    <div class="place">
-                        
+                <div v-if="page" class="places">
+                    <div v-for="place in hotPlaces1" :key="place.companyId" class="place">
+                        <div style="width:80%; height:70%; margin:0 auto; overflow:hidden; border-radius: 1em;">
+                            <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)" />
+                        </div>
+                        <div style="width:80%; height:7%; margin:0 auto;font-size:100%;color:#9E9E9E;">
+                            <span>{{place.location}}</span>
+                            <span v-for="type in place.types" :key=type>·{{type}}</span>
+                            <img class="favorite_red" @click="addFavorite(place.companyId)" v-if="place.companyLike" src="../assets/heart_red.png" />
+                            <img class="favorite" @click="addFavorite(place.companyId)" v-else src="../assets/heart.png" />
+                        </div>
+                        <div style="width:80%; height:16%; margin:0 auto;font-size:160%;">
+                            <span style="cursor:pointer;">{{place.companyName}}</span>
+                        </div>
+                        <div style="width:80%; height:7%; margin:0 auto;">
+                            <span>{{place.lowPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} 원 </span>
+                            <span style="color:#F6CA4E;">★</span>
+                            <span>{{place.avgReview}}</span>
+                            <span style="color: #9E9E9E;margin-left:1em;">리뷰 {{place.reviewSize}}</span>
+                        </div>
                     </div>
-                    <div class="place">
-                        
-                    </div>
-                    <div class="place">
-                        
-                    </div>
-                    <div class="place">
-                        
+                </div>
+                <div v-else class="places">
+                    <div v-for="place in hotPlaces2" :key="place.companyId" class="place">
+                        <div style="width:80%; height:70%; margin:0 auto; overflow:hidden; border-radius: 1em;">
+                            <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)" />
+                        </div>
+                        <div style="width:80%; height:7%; margin:0 auto;font-size:100%;color:#9E9E9E;">
+                            <span>{{place.location}}</span>
+                            <span v-for="type in place.types" :key=type>·{{type}}</span>
+                            <img class="favorite_red" @click="addFavorite(place.companyId)" v-if="place.companyLike" src="../assets/heart_red.png" />
+                            <img class="favorite" @click="addFavorite(place.companyId)" v-else src="../assets/heart.png" />
+                        </div>
+                        <div style="width:80%; height:16%; margin:0 auto;font-size:160%;">
+                            <span style="cursor:pointer;">{{place.companyName}}</span>
+                        </div>
+                        <div style="width:80%; height:7%; margin:0 auto;">
+                            <span>{{place.lowPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} 원 </span>
+                            <span style="color:#F6CA4E;">★</span>
+                            <span>{{place.avgReview}}</span>
+                            <span style="color: #9E9E9E;margin-left:1em;">리뷰 {{place.reviewSize}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -58,9 +87,9 @@
                 </div>
             </div>
             <div class="box20" @click="moveToAll">
-                <router-link class="findPlace" :to="{name:'FindPlace'}">
+                <div class="findPlace">
                     전체 보기
-                </router-link>
+                </div>
             </div>
         </div>
 
@@ -71,22 +100,29 @@
                     <span class="newP">NEW</span>
                 </div>
                 <div class="places2">
-                    <!-- v-for 로 짜야함 -->
-                    <div class="place">
-                        
-                    </div>
-                    <div class="place">
-                        
-                    </div>
-                    <div class="place">
-                        
-                    </div>
-                    <div class="place">
-                        
+                    <div v-for="place in newPlaces" :key="place.companyId" class="place">
+                        <div style="width:80%; height:70%; margin:0 auto; overflow:hidden; border-radius: 1em;">
+                            <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)" />
+                        </div>
+                        <div style="width:80%; height:7%; margin:0 auto;font-size:100%;color:#9E9E9E;">
+                            <span>{{place.location}}</span>
+                            <span v-for="type in place.types" :key=type>·{{type}}</span>
+                            <img class="favorite_red" @click="addFavorite(place.companyId)" v-if="place.companyLike" src="../assets/heart_red.png" />
+                            <img class="favorite" @click="addFavorite(place.companyId)" v-else src="../assets/heart.png" />
+                        </div>
+                        <div style="width:80%; height:16%; margin:0 auto;font-size:160%;">
+                            <span style="cursor:pointer;">{{place.companyName}}</span>
+                        </div>
+                        <div style="width:80%; height:7%; margin:0 auto;">
+                            <span>{{place.lowPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} 원 </span>
+                            <span style="color:#F6CA4E;">★</span>
+                            <span>{{place.avgReview}}</span>
+                            <span style="color: #9E9E9E;margin-left:1em;">리뷰 {{place.reviewSize}}</span>
+                        </div>
                     </div>
                 </div>
                 <div class="box20">
-                    <div class="findPlace">
+                    <div class="findPlace" @click="moveToAll">
                         <div>
                             새로 등록된 장소 더보기
                         </div>
@@ -98,12 +134,42 @@
 </template>
 
 <script>
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import axios from '@/axios';
 export default {
     setup() {
         const store = useStore();
         const router = useRouter();
+        const hotPlaces1 = ref([]);
+        const hotPlaces2 = ref([]);
+        const newPlaces = ref([]);
+        const page = ref(true);
+        const disabled = ref(false);
+
+        const main = async () => {
+            await axios.get('company/main', {
+                headers: {
+                    Authorization: localStorage.getItem('access_token')
+                }
+            })
+                .then((res) => {
+                    console.log(res.data);
+                    console.log(res.data.hotCompany.length);
+                    if(res.data.hotCompany.length > 4) {
+                        hotPlaces1.value = res.data.hotCompany.slice(0, 4);
+                        hotPlaces2.value = res.data.hotCompany.slice(4, res.data.hotCompany.length);
+                    } else {
+                        hotPlaces1.value = res.data.hotCompany.slice(4, res.data.hotCompany.length);
+                        disabled.value = true;
+                    }
+                    newPlaces.value = res.data.newCompany;
+                })
+        }
+
+        main();
+
         const moveToAll = () => {
             store.dispatch('updatePage', 1);
             store.dispatch('updateType', 'all');
@@ -115,8 +181,42 @@ export default {
             })
         }
 
+        const changePage = () => {
+            page.value = !page.value;
+        }
+
+        const addFavorite = async (companyId) => {
+            await axios.post(`company/like/${companyId}`, {
+                headers: {
+                    Authorization: localStorage.getItem('access_token')
+                }
+            })
+                .then(() => {
+                    window.location.reload();
+                })
+        }
+
+        const moveToPlaceDetail = async (companyId) => {
+            await axios.get(`company/details/${companyId}`, {
+                headers: {
+                    Authorization: localStorage.getItem('access_token')
+                }
+            })
+                .then((res) => {
+                    console.log(res.data);
+                })
+        }
+
         return {
             moveToAll,
+            hotPlaces1,
+            hotPlaces2,
+            newPlaces,
+            page,
+            changePage,
+            disabled,
+            addFavorite,
+            moveToPlaceDetail,
         }
     }
 }
@@ -258,6 +358,22 @@ export default {
 .findPlace:hover {
     background-color:black;
 }
+.favorite {
+    float:right;
+    cursor:pointer;
+    width: 12%;
+}
+.favorite_red {
+    float:right;
+    cursor:pointer;
+    width: 15%;
+}
+.img {
+    width: 100%;
+    margin: 0 auto;
+    cursor: pointer;
+    border-radius: 1em;
+}
 .new {
     width: 100%;
     min-width: 1000px;
@@ -282,4 +398,5 @@ export default {
     width: 100%;
     height : 70%;
 }
+
 </style>

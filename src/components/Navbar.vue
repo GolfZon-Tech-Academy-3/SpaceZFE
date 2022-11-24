@@ -26,7 +26,7 @@
                 <router-link class="element" :to="{name: 'MyPage'}" @click="closeSearchModal">마이페이지</router-link>
             </li>
             <li>
-                <img style="width:1em; height:1em;" src="../assets/logo.png" @click="closeSearchModal"/>
+                <img style="width:1.2em; height:1.2em;" v-if="isLogined" src="../assets/defaultProfile.png" @click="closeSearchModal"/>
             </li>
         </ul>
     </nav>

@@ -1,9 +1,11 @@
 <template>
-    <div style="width: 100%; height: 105vh;">
+    <div style="width: 100%; height: 115vh;">
         <div class="wrapper">
             <h2>업체 등록하기</h2>
             <div class="item">업체 이름</div>
             <input class="input" type="text" placeholder="업체 이름" v-model="placeName" />
+            <div class="item">업체 사진</div>
+            <input class="file" id="file" type="file" accept="image/*" />
             <div class="item">주소</div>
             <input disabled class="input" type="text" id="address" placeholder="주소" v-model="address">
             <input class="btn" type="button" @click="searchAddress()" value="주소 찾기">
@@ -59,6 +61,8 @@ export default {
             } else if(localStorage.getItem('authority') === 'member') {
                 if(placeName.value.length < 2) {
                     alert('업체 이름은 두 자리 이상이어야합니다');
+                } else if(document.getElementById('file').files.length === 0) {
+                    alert('장소 대표 이미지를 하나 선택해주세요');
                 } else if(address.value === '') {
                     alert('주소를 입력해주세요');
                 } else if(placeSummary.value.length < 10) {
@@ -98,6 +102,18 @@ export default {
 .item {
     font-size: 1.3em;
     margin: 0.5em 0;
+}
+.file::file-selector-button {
+    padding: 1em;
+    background-color: #041461;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 1em;
+    cursor: pointer;
+}
+.file::file-selector-button:hover {
+    background-color:skyblue;
 }
 .btn {
     padding: 1em;

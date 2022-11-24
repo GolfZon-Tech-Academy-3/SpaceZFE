@@ -92,7 +92,7 @@ const router = createRouter({
             path: '/registercompany',
             name: 'RegisterCompany',
             component: RegisterCompany,
-        }
+        },
     ]
 });
 
