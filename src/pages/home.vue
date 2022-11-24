@@ -13,6 +13,7 @@
 
 <script>
 import { getCurrentInstance, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import LoginModal from '@/components/LoginModal.vue';
 export default {
     components: {
@@ -20,8 +21,9 @@ export default {
     },
     setup() {
         const showLoginModal = ref(false);
+        const router = useRouter();
         const start = () => {
-            if (localStorage.getItem("memberId")) {
+            if (localStorage.getItem("authority") != null) {
                 router.push({
                     name: "Main",
                 });

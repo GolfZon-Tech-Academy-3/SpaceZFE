@@ -11,21 +11,16 @@
         <button v-if="showClose" class="closeBtn" @click="closeSearchModal">X</button>
         <ul class="elements">
             <!-- <li>
-                <router-link class="element" :to="{name: 'RegisterPlace'}" @click="closeSearchModal">
-                    장소 등록
-                </router-link>
-            </li>
-            <li>
-                <router-link class="element" :to="{name: 'ManagePlaceManager'}" @click="closeSearchModal">장소 관리</router-link>
-            </li>
-            <li>
-                <router-link class="element" :to="{name: 'ManagePlaceMaster'}" @click="closeSearchModal">장소 관리</router-link>
+                <router-link class="element" :to="{name: 'ManagePlaceManager'}" @click="closeSearchModal">마스터</router-link>
             </li> -->
             <li>
-                <span class="element" @click= "openLoginModal" >로그인</span>
+                <router-link class="element" v-if="isManager" :to="{name: 'Dashboard'}" @click="closeSearchModal">매니저</router-link>
             </li>
             <li>
-                <span class="element" @click="logout">로그아웃</span>
+                <span class="element" v-if="!isLogined" @click= "openLoginModal" >로그인</span>
+            </li>
+            <li>
+                <span class="element" v-if="isLogined" @click="logout">로그아웃</span>
             </li>
             <li>
                 <router-link class="element" :to="{name: 'MyPage'}" @click="closeSearchModal">마이페이지</router-link>
@@ -58,6 +53,17 @@ export default {
         const searchWord = ref('');
         const router = useRouter();
         const store = useStore();
+        const isLogined = ref(false);
+        const isManager = ref(false);
+
+        if(localStorage.getItem('authority') == null) {
+            isLogined.value = false;
+        } else if(localStorage.getItem('authority') === 'manager') {
+            isLogined.value = true;
+            isManager.value = true;
+        } else {
+            isLogined.value = true;
+        }
 
         const openSearchModal = () => {
             showSearchModal.value = true;
@@ -84,10 +90,11 @@ export default {
         }
 
         const logout = () => {
-            //구현 필요
-            localStorage.removeItem("memberId");
-            localStorage.removeItem("companyId");
-            localStorage.removeItem("authority");
+            localStorage.clear();
+            isLogined.value = false;
+            router.push({
+                name: 'Home'
+            });
             window.location.reload(true);
         }
 
@@ -115,6 +122,8 @@ export default {
             showClose,
             moveToSearch,
             searchWord,
+            isLogined,
+            isManager,
         }
     }
 }

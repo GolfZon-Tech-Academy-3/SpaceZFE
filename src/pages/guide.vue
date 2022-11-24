@@ -39,15 +39,35 @@
         </div>
 
         <div style="min-width: 350px;width: 25%;height: 15%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, 430%);text-align: center;">
-            <router-link class="regPlace" :to="{name:'RegisterPlace'}">장소 등록하러 가기</router-link>
+            <button class="regPlace" @click="MoveToRegisterPage">장소 등록하러 가기</button>
         </div>
     </div>
     </div>
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
 export default {
+    setup() {
+        const router = useRouter();
+        const MoveToRegisterPage = () => {
+            if(localStorage.getItem('authority') === 'member') {
+                router.push({
+                    name: 'RegisterCompany'
+                })
+            } else if(localStorage.getItem('authority') === 'manager') {
+                router.push({
+                    name: 'ManagePlace'
+                })
+            } else {
+                alert('잘못된 접근입니다');
+            }
+        }
 
+        return {
+            MoveToRegisterPage
+        }
+    }
 }
 </script>
 
@@ -70,7 +90,9 @@ export default {
     font-weight: bold;
     background-color: #041461;
     padding: 1vh 4vw;
+    border: none;
     border-radius: 1vw;
+    cursor: pointer;
 }
 .regPlace:hover {
     background-color: rgb(63, 149, 184);
