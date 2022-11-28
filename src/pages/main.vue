@@ -161,7 +161,7 @@ export default {
                         hotPlaces1.value = res.data.hotCompany.slice(0, 4);
                         hotPlaces2.value = res.data.hotCompany.slice(4, res.data.hotCompany.length);
                     } else {
-                        hotPlaces1.value = res.data.hotCompany.slice(4, res.data.hotCompany.length);
+                        hotPlaces1.value = res.data.hotCompany.slice(0, res.data.hotCompany.length);
                         disabled.value = true;
                     }
                     newPlaces.value = res.data.newCompany;
