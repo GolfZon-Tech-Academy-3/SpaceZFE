@@ -12,6 +12,7 @@ import Qna from '../pages/backOffice/qna.vue';
 import MasterCompany from '../pages/master/company.vue';
 import MasterAccount from '../pages/master/account.vue';
 import RegisterCompany from '../pages/registerCompany.vue';
+import PlaceDetail from '../pages/placeDetail/_id.vue';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -92,6 +93,11 @@ const router = createRouter({
             path: '/registercompany',
             name: 'RegisterCompany',
             component: RegisterCompany,
+        },
+        {
+            path: '/placedetail/:id',
+            name: 'PlaceDetail',
+            component: PlaceDetail,
         },
     ]
 });

@@ -197,14 +197,21 @@ export default {
         }
 
         const moveToPlaceDetail = async (companyId) => {
-            await axios.get(`company/details/${companyId}`, {
-                headers: {
-                    Authorization: localStorage.getItem('access_token')
+            // await axios.get(`company/details/${companyId}`, {
+            //     headers: {
+            //         Authorization: localStorage.getItem('access_token')
+            //     }
+            // })
+            //     .then((res) => {
+            //         console.log(res.data);
+            //     })
+
+            router.push({
+                name: 'PlaceDetail',
+                params:{
+                    id: companyId,
                 }
             })
-                .then((res) => {
-                    console.log(res.data);
-                })
         }
 
         return {
