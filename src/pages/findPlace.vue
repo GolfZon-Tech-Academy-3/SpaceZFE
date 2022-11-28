@@ -157,9 +157,9 @@ export default {
             store.dispatch('updatePage', page);
             if(searchTime.value !== '') {
                 if(searchTime.value.length == 3) {
-                    console.log(searchTime.value[0]);
+                    console.log(searchTime.value[0] + ':00');
                 } else {
-                    console.log(searchTime.value[0] + searchTime.value[1]);
+                    console.log(searchTime.value[0] + searchTime.value[1] + ':00');
                 }
             }
         }

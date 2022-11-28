@@ -76,6 +76,7 @@ export default {
             (res) => {
               if(res.data === '') {
                 localStorage.setItem("authority", parseJwt(res.headers.authorization).AUTHORITY);
+                localStorage.setItem("profile_image", parseJwt(res.headers.authorization).IMAGE_NAME);
                 console.log(parseJwt(res.headers.authorization));
                 localStorage.setItem("access_token", res.headers.authorization);
                 onClose();

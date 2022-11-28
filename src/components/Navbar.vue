@@ -26,7 +26,7 @@
                 <router-link class="element" :to="{name: 'MyPage'}" @click="closeSearchModal">마이페이지</router-link>
             </li>
             <li>
-                <img style="width:1.2em; height:1.2em;" v-if="isLogined" src="../assets/defaultProfile.png" @click="closeSearchModal"/>
+                <img style="width:1.2em; height:1.2em;" v-if="isLogined" :src="profile_image" @click="closeSearchModal"/>
             </li>
         </ul>
     </nav>
@@ -55,6 +55,7 @@ export default {
         const store = useStore();
         const isLogined = ref(false);
         const isManager = ref(false);
+        const profile_image = localStorage.getItem("profile_image");
 
         if(localStorage.getItem('authority') == null) {
             isLogined.value = false;
@@ -124,6 +125,7 @@ export default {
             searchWord,
             isLogined,
             isManager,
+            profile_image,
         }
     }
 }
