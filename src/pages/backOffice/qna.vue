@@ -13,29 +13,75 @@
                         <th></th>
                     </thead>
                     <tbody>
-                        <tr v-for="num in 15" :key="num">
-                            <td>112</td>
-                            <td>최슈</td>
-                            <td>오피스 moon 실</td>
-                            <td>2022-11-12 13:34</td>
-                            <td>완료</td>
-                            <td><button class="btn">내용 보기</button></td>
+                        <tr v-for="(qna, index) in qnas" :key="index">
+                            <td>{{qna.memberId}}</td>
+                            <td>{{qna.memberName}}</td>
+                            <td>{{qna.spaceName}}</td>
+                            <td>{{qna.inquiryTime}}</td>
+                            <td v-if="qna.isAnswer">답변완료</td>
+                            <td v-else>미 답변</td>
+                            <td><button class="btn" @click="openQnaModal(index)">내용 보기</button></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <QnaModal />
+        <QnaModal :qna="qna" v-if="showQnaModal" @close="closeQnaModal" />
     </div>
 </template>
 
 <script>
+import { ref } from 'vue';
+import axios from '@/axios';
 import MenuBar from './menuBar.vue';
 import QnaModal from '@/components/QnaModal.vue';
 export default {
     components: {
         MenuBar,
         QnaModal,
+    },
+    setup() {
+        const showQnaModal = ref(false);
+        const qnas = ref([]);
+        const qna = ref({});
+
+        const getQnas = async () => {
+            // console.log(localStorage.getItem('access_token'));
+            await axios.get(`../back-office/inquiry/total/1`, {
+                headers: {
+                    Authorization: localStorage.getItem('access_token')
+                }
+            })
+                .then(
+                    (res) => {
+                        console.log(res.data);
+                        qnas.value = res.data;
+                        qnas.value.forEach(function(qna) {
+                            qna.isAnswer = JSON.parse(qna.isAnswer);
+                        });
+                    })
+        }
+
+        getQnas();
+
+        const openQnaModal = (index) => {
+            showQnaModal.value = true;
+            qna.value = qnas.value[index];
+        }
+
+        const closeQnaModal = () => {
+            showQnaModal.value = false;
+        }
+
+
+        return {
+            showQnaModal,
+            qnas,
+            openQnaModal,
+            closeQnaModal,
+            getQnas,
+            qna,
+        }
     }
 }
 </script>
