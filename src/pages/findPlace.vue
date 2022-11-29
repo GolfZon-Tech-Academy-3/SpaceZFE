@@ -108,7 +108,6 @@ export default {
         const currentPage = computed(() => store.state.currentPage);
 
         const search = async () => {
-            console.log(searchWord.value);
             if(searchTime.value != null) { //검색 시간이 존재할때
                 if(searchTime.value.length === 3) {
                     await axios.post(`company/${searchType.value}?page=${currentPage.value}`,
@@ -123,7 +122,6 @@ export default {
                         }
                     })
                         .then((res) => {
-                            console.log(res.data);
                             resultAllNum.value = res.data.totalSize;
                             pageNum.value = res.data.totalPage;
                             resultCurrentNum.value = res.data.company.length;
@@ -151,7 +149,6 @@ export default {
                             }
                         })
                             .then((res) => {
-                                console.log(res.data);
                                 resultAllNum.value = res.data.totalSize;
                                 pageNum.value = res.data.totalPage;
                                 resultCurrentNum.value = res.data.company.length;
@@ -180,7 +177,6 @@ export default {
                         }
                     })
                         .then((res) => {
-                            console.log(res.data);
                             resultAllNum.value = res.data.totalSize;
                             pageNum.value = res.data.totalPage;
                             resultCurrentNum.value = res.data.company.length;
@@ -300,7 +296,7 @@ export default {
                 })
         }
 
-        const moveToPlaceDetail = async (companyId) => {
+        const moveToPlaceDetail = (companyId) => {
             router.push({
                 name: 'PlaceDetail',
                 params:{

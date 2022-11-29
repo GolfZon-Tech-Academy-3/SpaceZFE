@@ -1,28 +1,52 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper" @click="closeModal">
         <div class="results">
-            <div class="result">
-                용인
-            </div>
-            <div class="result">
-                용인
-            </div>
-            <div class="result">
-                용인
+            <div v-for="res in result" :key="res.companyId" class="result" @click="moveToPlaceDetail(res.companyId)">
+                <div style="float:left">{{res.companyName}}</div>
+                <div style="float:right">{{res.location}}</div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { getCurrentInstance } from 'vue';
+import { useRouter } from 'vue-router';
 export default {
+    props: {
+        result: {
+            type: Array,
+            required: true,
+        }
+    },
+    setup() {
+        const { emit } = getCurrentInstance();
+        const router = useRouter();
 
+        const closeModal = () => {
+            emit('close');
+        }
+
+        const moveToPlaceDetail = (companyId) => {
+            router.push({
+                name: 'PlaceDetail',
+                params:{
+                    id: companyId,
+                }
+            })
+        }
+
+        return {
+            closeModal,
+            moveToPlaceDetail,
+        }
+    }
 }
 </script>
 
 <style scoped>
 .wrapper {
-    position: fixed;
+    position: absolute;
     width: 100%;
     height: 100%;
     background-color:rgba(0, 0, 0, 0.5);
@@ -33,7 +57,7 @@ export default {
         position: relative;
         width: 40%;
         height: auto;
-        max-height: 40vh;
+        max-height: 90vh;
         background-color: white;
         z-index: 100;
         left: 28%;
@@ -48,7 +72,11 @@ export default {
   }
 }
 .result {
-    padding:2%;
+    height: 1em;
+    padding:1em;
     cursor:pointer;
+}
+.result:hover {
+    background-color: #EDEDED;
 }
 </style>
