@@ -10,7 +10,7 @@
                 </div>
                 <div v-if="page" class="places">
                     <div v-for="place in hotPlaces1" :key="place.companyId" class="place">
-                        <div style="width:80%; height:70%; margin:0 auto; overflow:hidden; border-radius: 1em;">
+                        <div style="width:80%; height:70%; margin:0 auto; ">
                             <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)" />
                         </div>
                         <div style="width:80%; height:7%; margin:0 auto;font-size:100%;color:#9E9E9E;">
@@ -32,7 +32,7 @@
                 </div>
                 <div v-else class="places">
                     <div v-for="place in hotPlaces2" :key="place.companyId" class="place">
-                        <div style="width:80%; height:70%; margin:0 auto; overflow:hidden; border-radius: 1em;">
+                        <div style="width:80%; height:70%; margin:0 auto; ">
                             <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)" />
                         </div>
                         <div style="width:80%; height:7%; margin:0 auto;font-size:100%;color:#9E9E9E;">
@@ -69,17 +69,17 @@
             </div>
             <div class="box40">
                 <div class="views">
-                    <div class="view1">
+                    <div class="view1" @click="moveToOffice">
                         <div style="margin:5% 5%; font-size:2vw; font-weight: bold; color:#041461;">
                             OFFICE
                         </div>
                     </div>
-                    <div class="view2">
+                    <div class="view2" @click="moveToMeeting">
                         <div style="margin:5% 5%; font-size:2vw; font-weight: bold;">
                             MEETING ROOM
                         </div>
                     </div>
-                    <div class="view3">
+                    <div class="view3" @click="moveToDesk">
                         <div style="margin:5% 5%; font-size:2vw; font-weight: bold; color:white;">
                             DESK
                         </div>
@@ -101,7 +101,7 @@
                 </div>
                 <div class="places2">
                     <div v-for="place in newPlaces" :key="place.companyId" class="place">
-                        <div style="width:80%; height:70%; margin:0 auto; overflow:hidden; border-radius: 1em;">
+                        <div style="width:80%; height:70%; margin:0 auto; ">
                             <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)" />
                         </div>
                         <div style="width:80%; height:7%; margin:0 auto;font-size:100%;color:#9E9E9E;">
@@ -170,11 +170,44 @@ export default {
 
         main();
 
+        const moveToOffice = () => {
+            store.dispatch('updatePage', 1);
+            store.dispatch('updateType', 'office');
+            store.dispatch('updateDate', null);
+            store.dispatch('updateTime', null);
+            store.dispatch('updateWord', '');
+            router.push({
+                name: 'FindPlace',
+            })
+        }
+
+        const moveToMeeting = () => {
+            store.dispatch('updatePage', 1);
+            store.dispatch('updateType', 'meeting-room');
+            store.dispatch('updateDate', null);
+            store.dispatch('updateTime', null);
+            store.dispatch('updateWord', '');
+            router.push({
+                name: 'FindPlace',
+            })
+        }
+
+        const moveToDesk = () => {
+            store.dispatch('updatePage', 1);
+            store.dispatch('updateType', 'desk');
+            store.dispatch('updateDate', null);
+            store.dispatch('updateTime', null);
+            store.dispatch('updateWord', '');
+            router.push({
+                name: 'FindPlace',
+            })
+        }
+
         const moveToAll = () => {
             store.dispatch('updatePage', 1);
-            store.dispatch('updateType', 'all');
-            store.dispatch('updateDate', '');
-            store.dispatch('updateTime', '');
+            store.dispatch('updateType', 'total');
+            store.dispatch('updateDate', null);
+            store.dispatch('updateTime', null);
             store.dispatch('updateWord', '');
             router.push({
                 name: 'FindPlace',
@@ -197,15 +230,6 @@ export default {
         }
 
         const moveToPlaceDetail = async (companyId) => {
-            // await axios.get(`company/details/${companyId}`, {
-            //     headers: {
-            //         Authorization: localStorage.getItem('access_token')
-            //     }
-            // })
-            //     .then((res) => {
-            //         console.log(res.data);
-            //     })
-
             router.push({
                 name: 'PlaceDetail',
                 params:{
@@ -224,6 +248,9 @@ export default {
             disabled,
             addFavorite,
             moveToPlaceDetail,
+            moveToOffice,
+            moveToMeeting,
+            moveToDesk
         }
     }
 }
@@ -377,6 +404,8 @@ export default {
 }
 .img {
     width: 100%;
+    height: 80%;
+    object-fit: fill;
     margin: 0 auto;
     cursor: pointer;
     border-radius: 1em;

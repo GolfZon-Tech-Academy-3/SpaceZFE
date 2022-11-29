@@ -46,8 +46,8 @@ export default {
         const qna = ref({});
 
         const getQnas = async () => {
-            // console.log(localStorage.getItem('access_token'));
-            await axios.get(`../back-office/inquiry/total/1`, {
+            const companyId = localStorage.getItem('company_id');
+            await axios.get(`../back-office/inquiry/total/${companyId}`, {
                 headers: {
                     Authorization: localStorage.getItem('access_token')
                 }
