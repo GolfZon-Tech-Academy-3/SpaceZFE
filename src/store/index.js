@@ -4,7 +4,7 @@ import createPersistedState from 'vuex-persistedstate';
 export default createStore({
     state: {
         currentPage: 1,
-        searchType: 'all',
+        searchType: 'total',
         searchDate: '',
         searchTime: '',
         searchWord: '',

@@ -10,12 +10,14 @@
           v-model="email"
           type="email"
           placeholder="이메일"
+          @keyup.enter="login" 
         />
         <input
           class="password"
           v-model="pw"
           type="password"
           placeholder="비밀번호"
+          @keyup.enter="login" 
         />
         <button type="button" class="login" @click="login">
           로그인
@@ -77,7 +79,7 @@ export default {
               if(res.data === '') {
                 localStorage.setItem("authority", parseJwt(res.headers.authorization).AUTHORITY);
                 localStorage.setItem("profile_image", parseJwt(res.headers.authorization).IMAGE_NAME);
-                console.log(parseJwt(res.headers.authorization));
+                localStorage.setItem("company_id", parseJwt(res.headers.authorization).COMPANY_ID);
                 localStorage.setItem("access_token", res.headers.authorization);
                 onClose();
                 window.location.reload(true);

@@ -90,10 +90,10 @@ export default {
             showLoginModal.value = true;
         }
 
-        const logout = () => {
+        const logout = async () => {
             localStorage.clear();
             isLogined.value = false;
-            router.push({
+            await router.push({
                 name: 'Home'
             });
             window.location.reload(true);
