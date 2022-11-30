@@ -14,6 +14,7 @@ import MasterAccount from "../pages/master/account.vue";
 import RegisterCompany from "../pages/registerCompany.vue";
 import PlaceDetail from "../pages/placeDetail/_id.vue";
 import Reservation from "../pages/Reservation/_id.vue";
+import MyPage from "../pages/myPage.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -43,7 +44,7 @@ const router = createRouter({
     {
       path: "/mypage",
       name: "MyPage",
-      component: Home,
+      component: MyPage,
     },
     {
       path: "/signup",

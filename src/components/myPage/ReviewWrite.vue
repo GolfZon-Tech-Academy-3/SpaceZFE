@@ -1,0 +1,155 @@
+// eslint-disable-next-line
+<template>
+  <div class="modal-wrapper">
+    <div class="modal-dialog">
+      <div
+        class="modal-content"
+        style="background-color: rgba(255, 255, 255, 0)"
+      >
+        <div
+          class="modal-body"
+          style="background-color: rgba(255, 255, 255, 0)"
+        >
+          <span style="color: white" @click="onClose">&times;</span>
+          <p
+            v-if="editOrDel !== 'edit'"
+            style="color: white; font-size: 1.5rem"
+          >
+            리뷰를 작성해주세요!
+          </p>
+          <p
+            v-if="editOrDel === 'edit'"
+            style="color: white; font-size: 1.5rem"
+          >
+            리뷰를 수정해주세요!
+          </p>
+          <p class="inner">
+            <span
+              class="star"
+              v-for="index in 5"
+              :key="index"
+              @click="check(index)"
+            >
+              <span
+                style="color: yellow; font-size: 2.5rem"
+                v-show="index < score"
+                >★</span
+              >
+              <span
+                style="color: white; font-size: 2.5rem"
+                v-show="index >= score"
+                >★</span
+              >
+            </span>
+          </p>
+        </div>
+      </div>
+      <div class="modal-content">
+        <textarea
+          v-model="revContent"
+          name="reviewContent"
+          id="text"
+          cols="10"
+          rows="10"
+        ></textarea>
+      </div>
+      <div class="modal-content">
+        <button v-if="editOrDel != 'edit'" class="btn" @click="submit">
+          제출
+        </button>
+        <button v-if="editOrDel == 'edit'" class="btn" @click="submit">
+          수정
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { ref } from "vue";
+export default {
+  props: {
+    editOrDel: {
+      type: String,
+      required: true,
+    },
+  },
+  setup(props, { emit }) {
+    const score = ref(0);
+    const revContent = ref("");
+
+    const onClose = () => {
+      emit("close");
+    };
+
+    const check = (index) => {
+      score.value = index + 1;
+      // console.log(index);
+      // console.log(score.value);
+      if (score.value == 2 && index == 1) {
+        // console.log(0);
+        index = !index;
+      }
+    };
+
+    const submit = () => {
+      // reviewed.value = true
+      onClose();
+      emit("reviewed", true);
+      // console.log(score.value - 1, revContent.value);
+    };
+
+    return {
+      onClose,
+      score,
+      check,
+      submit,
+      revContent,
+    };
+  },
+};
+</script>
+
+<style scoped>
+.modal-dialog {
+  margin-top: 10%;
+}
+.modal-wrapper {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  height: fit-content;
+  width: fit-content;
+  text-align: center;
+  border-radius: 15px;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  margin: 2% 10% 2% 10%;
+}
+.btn {
+  height: 10%;
+  width: 20vw;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+#text {
+  height: 30vh;
+  width: 20vw;
+  font-size: 1.5rem;
+  border-radius: 15px;
+}
+.modal-body {
+  width: 20vw;
+}
+.inner {
+  margin-bottom: 0;
+}
+</style>
