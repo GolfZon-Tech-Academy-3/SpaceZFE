@@ -21,7 +21,6 @@
                 </div>
                 <div class="memos">
                     <div v-for="num in 10" :key="num" class="one">
-                        {{num}}
                     </div>
                 </div>
             </div>
@@ -57,6 +56,8 @@ export default {
                 }
             })
                 .then((res) => {
+                    console.log(localStorage.getItem('company_id'));
+                    console.log(res.data);
                     todayCancel.value = res.data;
                 })
         }

@@ -299,7 +299,7 @@ export default {
         const moveToPlaceDetail = (companyId) => {
             router.push({
                 name: 'PlaceDetail',
-                params:{
+                query:{
                     id: companyId,
                 }
             })

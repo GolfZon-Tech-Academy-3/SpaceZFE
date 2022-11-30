@@ -9,9 +9,9 @@
             <input id="searchInput" autocomplete="off" @focus="openSearchModal" @keyup.enter="moveToSearch" :value="searchWord" @input="searchModal"/>
             <button v-if="showClose" class="closeBtn" @click="closeSearchModal">X</button>
             <ul class="elements">
-                <!-- <li>
-                    <router-link class="element" :to="{name: 'ManagePlaceManager'}" @click="closeSearchModal">마스터</router-link>
-                </li> -->
+                <li>
+                    <router-link class="element" v-if="isMaster" :to="{name: 'MasterCompany'}" @click="closeSearchModal">마스터</router-link>
+                </li>
                 <li>
                     <router-link class="element" v-if="isManager" :to="{name: 'Dashboard'}" @click="closeSearchModal">매니저</router-link>
                 </li>
@@ -55,6 +55,7 @@ export default {
         const store = useStore();
         const isLogined = ref(false);
         const isManager = ref(false);
+        const isMaster = ref(false);
         const profile_image = localStorage.getItem("profile_image");
         const result = ref([]);
 
@@ -63,6 +64,9 @@ export default {
         } else if(localStorage.getItem('authority') === 'manager') {
             isLogined.value = true;
             isManager.value = true;
+        } else if(localStorage.getItem('authority') === 'master') {
+            isLogined.value = true;
+            isMaster.value = true;
         } else {
             isLogined.value = true;
         }
@@ -146,6 +150,7 @@ export default {
             searchWord,
             isLogined,
             isManager,
+            isMaster,
             profile_image,
             searchModal,
             result,
