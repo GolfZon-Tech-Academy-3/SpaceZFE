@@ -2,19 +2,19 @@
     <div class="wrapper">
         <div class="modal-back">
             <div style="width: 100%; height: 1.7em;">
-                <button class="close">X</button>
+                <button class="close" @click="closeModal">X</button>
             </div>
             <div class="question">
-                현재 대학교에서 영상
+                {{qna.inquiries}}
             </div>
             <div style="width: 90%; height: 10%;margin: auto;">
-                <button class="btn">답변 달기</button>
-                <button class="btn">답변 수정</button>
+                <button v-if="qna.isAnswer" class="btn" @click="modifyAnswer(qna.inquiryId)">답변 수정</button>
+                <button v-if="qna.isAnswer" class="btn" @click="deleteAnswer(qna.inquiryId)">답변 삭제</button>
+                <button v-else class="btn" @click="registerAnswer(qna.inquiryId)">답변 등록</button>
             </div>
             <div class="answer">
-                <div style="width: 90%; height: 90%; padding: 1em;margin: auto">
-                    안됩니다
-                </div>
+                <textarea id="answer" v-model="qna.answers" maxlength="500" style="width: 96%; height: 88%;padding:2%;resize:none;outline:none;font-family: Inter;background-color:#F5F7F8;border:none;border-radius: 1em;">
+                </textarea>
             </div>
         </div>
     </div>
@@ -22,14 +22,90 @@
 
 <script>
 import { ref, watch, getCurrentInstance } from 'vue';
+import axios from '@/axios';
 export default {
     props: {
-        space: {
+        qna: {
             type: Object,
             required: true,
         }
     },
     setup() {
+        const { emit } = getCurrentInstance();
+
+        const closeModal = () => {
+            emit('close');
+        }
+        
+        const deleteAnswer = async (inquiryId) => {
+            if(confirm("답변을 삭제하시겠습니까?")) {
+                try {
+                    await axios.put(`/inquiry/answer/delete/${inquiryId}`,
+                        {
+                            headers: {
+                                Authorization: localStorage.getItem('access_token'),
+                            }
+                        }).then((res) => {console.log(res.data);})
+                    alert('답변이 삭제되었습니다');
+                } catch (error) {
+                    alert('error');
+                }
+            }
+        }
+
+        const modifyAnswer = async (inquiryId) => {
+            if(confirm("답변을 수정하시겠습니까?")) {
+                var answer = document.getElementById('answer');
+                if(answer.value.length < 3) {
+                    alert('답변은 세 글자 이상 입력되어야합니다');
+                    return
+                }
+                try {
+                    await axios.put(`/inquiry/answer/${inquiryId}`, {
+                        answers: answer.value,
+                    },
+                    {
+                        headers: {
+                            Authorization: localStorage.getItem('access_token'),
+                        }
+                    })
+                    alert('답변이 수정되었습니다');
+                } catch (error) {
+                    alert('error');
+                }
+            }
+        }
+
+        const registerAnswer = async (inquiryId) => {
+            if(confirm("답변을 등록하시겠습니까?")) {
+                var answer = document.getElementById('answer');
+                if(answer.value.length < 3) {
+                    alert('답변은 세 글자 이상 입력되어야합니다');
+                    return
+                }
+                try {
+                    await axios.put(`/inquiry/answer/${inquiryId}`, {
+                        answers: answer.value,
+                    },
+                    {
+                        headers: {
+                            Authorization: localStorage.getItem('access_token'),
+                        }
+                    })
+                    alert('답변이 등록되었습니다');
+                } catch (error) {
+                    alert('error');
+                }
+                
+            }
+        }
+
+        return {
+            closeModal,
+            modifyAnswer,
+            deleteAnswer,
+            registerAnswer,
+        }
     }
 }
 </script>
@@ -72,8 +148,6 @@ export default {
     width: 90%;
     height: 40%;
     margin: auto;
-    color: #858589;
-    background-color: #F1EEEE;
     border-radius: 1em;
 }
 .btn {
@@ -84,6 +158,7 @@ export default {
     border-radius: 2em;
     cursor: pointer;
     float: right;
+    margin-left: 1em;
 }
 .btn:hover {
     background-color: skyblue;
