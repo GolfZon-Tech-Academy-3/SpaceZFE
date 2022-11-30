@@ -5,7 +5,7 @@
             <div class="item">업체 이름</div>
             <input class="input" type="text" placeholder="업체 이름" v-model="placeName" />
             <div class="item">업체 사진</div>
-            <input class="file" id="file" type="file" accept="image/*" />
+            <input class="file" id="file" type="file" accept="image/*" @change="changeImage" />
             <div class="item">주소</div>
             <input disabled class="input" type="text" id="address" placeholder="주소" v-model="address">
             <input class="btn" type="button" @click="searchAddress()" value="주소 찾기">
@@ -22,15 +22,19 @@
 </template>
 
 <script>
+import axios from '@/axios';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 export default {
     setup() {
         const placeName = ref('');
+        var file = null;
         const address = ref('');
         const detailAddress = ref('');
         const placeSummary = ref('');
         const placeIntro = ref('');
         const rule = ref('');
+        const router = useRouter();
 
         const searchAddress = () => {
             new daum.Postcode({
@@ -55,7 +59,11 @@ export default {
             }).open();
         }
 
-        const submit = () => {
+        const changeImage = (event) => {
+            file = event.target.files[0];
+        }
+
+        const submit = async () => {
             if(localStorage.getItem('authority') == null) {
                 alert('로그인을 먼저 진행해주세요');
             } else if(localStorage.getItem('authority') === 'member') {
@@ -72,7 +80,35 @@ export default {
                 } else if(rule.value.length < 10) {
                     alert('이용 규칙은 열 자리 이상이어야합니다');
                 } else {
-                    //요청
+                    const form = new FormData()
+                    form.append('companyName', placeName.value);
+                    form.append('info', placeIntro.value);
+                    form.append('rules', rule.value);
+                    form.append('location', address.value);
+                    form.append('details', detailAddress.value);
+                    form.append('summary', placeSummary.value);
+                    form.append('companyName', placeName.value);
+                    form.append('multipartFile', file);
+                    try {
+                        await axios.post('company/post', form, {
+                            headers: {
+                                Authorization: localStorage.getItem('access_token'),
+                                'Content-Type': 'multipart/form-data',
+                            }
+                        })
+                            .then((res) => {
+                                alert('업체 신청되었습니다');
+                                router.push({
+                                    name: 'Home',
+                                })
+                            })
+                    } catch (error) {
+                        alert('이미 업체 신청된 계정입니다');
+                        router.push({
+                            name: 'Home',
+                        })
+                    }
+                    
                 }
             } else {
                 alert('잘못된 요청입니다');
@@ -88,6 +124,7 @@ export default {
             rule,
             searchAddress,
             submit,
+            changeImage,
         }
     }
 }
