@@ -2,7 +2,6 @@
     <div style="display:flex">
         <MenuBar />
         <div class="content">
-            계정 관리
         </div>
     </div>
 </template>

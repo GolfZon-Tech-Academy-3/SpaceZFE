@@ -162,6 +162,7 @@ table {
     margin: 0 auto 3em auto;
     overflow: auto;
     font-weight: bold;
+    border-collapse: collapse;
 }
 thead {
     height: 5%;
@@ -169,14 +170,15 @@ thead {
 }
 th {
     padding: 0.5em 0;
-    border-left: 2px #A69A9A solid;
     border-bottom: 2px #A69A9A solid;
+}
+tr {
+    height: 4em;
+    border-bottom: 1px #A69A9A solid;
 }
 td {
     text-align: center;
     padding: 0.5em 0;
-    border-left: 2px #A69A9A solid;
-    border-bottom: 2px #A69A9A solid;
 }
 tbody {
     height: 95%;

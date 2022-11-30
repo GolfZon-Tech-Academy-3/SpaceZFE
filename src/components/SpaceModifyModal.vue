@@ -117,7 +117,7 @@ export default {
         endTime.value = info.value.closeTime;
         startCleanTime.value = info.value.breakOpen;
         endCleanTime.value = info.value.breakClose;
-        facilities.value = info.value.facilities;
+        facilities.value = info.value.facilities.split(",");
 
         if(type.value === '데스크') {
             price.value = 10000;
