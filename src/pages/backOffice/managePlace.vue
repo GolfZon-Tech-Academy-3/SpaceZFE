@@ -122,16 +122,17 @@ table {
 thead {
     height: 5%;
     min-height: 20px;
-    background-color: #041461;
-    color:white;
 }
 th {
-    border-bottom: 1px solid #A69A9A;
     padding: 0.5em 0;
+    border-left: 2px #A69A9A solid;
+    border-bottom: 2px #A69A9A solid;
 }
 td {
     text-align: center;
     padding: 0.5em 0;
+    border-left: 2px #A69A9A solid;
+    border-bottom: 2px #A69A9A solid;
 }
 tbody {
     height: 95%;

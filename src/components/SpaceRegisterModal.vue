@@ -25,7 +25,7 @@
                         <option value="데스크">데스크</option>
                         <option value="회의실 4인">회의실 4 인</option>
                         <option value="회의실 6인">회의실 6 인</option>
-                        <option value="회의실 8인 ~ 10인">회의실 8 ~ 10 인</option>
+                        <option value="회의실 8인 ~ 10인">회의실 8 인 ~ 10 인</option>
                         <option value="회의실 20인">회의실 20 인</option>
                     </select>
                 </div>

@@ -18,16 +18,21 @@
                         <th>이름</th>
                         <th>예약 날짜</th>
                         <th>예약자 명</th>
-                        <th>예약 상태</th>
+                        <th>예약 상태 처리</th>
                     </thead>
                     <tbody>
-                        <tr v-for="num in 20" :key="num">
-                            <td>20221001</td>
-                            <td>오피스</td>
-                            <td>sun 실</td>
-                            <td>2022-11-12 17:00 / 2022-11-13 17:00</td>
-                            <td>손흥민</td>
-                            <td style="color: #383ED8;">예약완료<br/><button class="cancel">취소</button></td>
+                        <tr v-for="resv in reservations" :key="resv.reservationId">
+                            <td>{{resv.reservationId}}</td>
+                            <td>{{resv.type}}</td>
+                            <td>{{resv.spaceName}}</td>
+                            <td>{{resv.startDate}} ~ {{resv.endDate}}</td>
+                            <td>{{resv.reservationName}}</td>
+                            <td v-if="resv.status === '001'" style="color: #383ED8;">예약 중<br/>
+                                <button class="button" @click="cancelResv(resv.type, resv.reservationId)">취소</button>
+                                <button class="button">완료 처리</button>
+                            </td>
+                            <td v-if="resv.status === '002'" style="color: #383ED8;">예약 취소</td>
+                            <td v-if="resv.status === '004'" style="color: #383ED8;">이용 완료</td>
                         </tr>
                     </tbody>
                 </table>
@@ -37,6 +42,7 @@
 </template>
 
 <script>
+import { ref } from 'vue';
 import MenuBar from './menuBar.vue';
 import axios from '@/axios';
 export default {
@@ -44,6 +50,7 @@ export default {
         MenuBar,
     },
     setup() {
+        const reservations = ref([]);
 
         const getResvs = async () => {
             await axios.get(`../back-office/reservation/total/${localStorage.getItem('company_id')}`, {
@@ -53,10 +60,42 @@ export default {
             })
                 .then((res) => {
                     console.log(res.data);
+                    reservations.value = res.data;
                 })
         }
 
         getResvs();
+
+        const cancelResv = async (type, id) => {
+            if(type === '오피스') {
+                if(confirm("예약을 취소하시겠습니까?")) {
+                    await axios.put(`../reservation/office-cancel/${id}`, {
+                        headers: {
+                            Authorization: localStorage.getItem('access_token'),
+                        }
+                    })
+                        .then(() => {
+                            window.location.reload();
+                        })
+                }
+            } else {
+                if(confirm("예약을 취소하시겠습니까?")) {
+                    await axios.put(`../reservation/desk-cancel/${id}`, {
+                        headers: {
+                            Authorization: localStorage.getItem('access_token'),
+                        }
+                    })
+                        .then(() => {
+                            window.location.reload();
+                        })
+                }
+            }
+        }
+
+        return {
+            reservations,
+            cancelResv,
+        }
     }
 }
 </script>
@@ -98,7 +137,7 @@ export default {
 .search:hover {
     background-color: skyblue;
 }
-.cancel {
+.button {
     padding: 1% 3%;
     background-color: #041461;
     color: white;
@@ -106,7 +145,7 @@ export default {
     border-radius: 2em;
     cursor: pointer;
 }
-.cancel:hover {
+.button:hover {
     background-color: skyblue;
 }
 .result {
@@ -127,16 +166,17 @@ table {
 thead {
     height: 5%;
     min-height: 20px;
-    background-color: #041461;
-    color:white;
 }
 th {
-    border-bottom: 1px solid #A69A9A;
     padding: 0.5em 0;
+    border-left: 2px #A69A9A solid;
+    border-bottom: 2px #A69A9A solid;
 }
 td {
     text-align: center;
     padding: 0.5em 0;
+    border-left: 2px #A69A9A solid;
+    border-bottom: 2px #A69A9A solid;
 }
 tbody {
     height: 95%;
