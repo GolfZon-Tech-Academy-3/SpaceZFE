@@ -8,16 +8,16 @@
                         <th>타입</th>
                         <th>이름</th>
                         <th>오픈/마감시간</th>
-                        <th>금일 예약 수</th>
+                        <th>청소 시작/종료 시간</th>
                         <th>수정</th>
                     </thead>
                     <tbody>
-                        <tr v-for="num in 14" :key="num">
-                            <td>오피스</td>
-                            <td>정보</td>
-                            <td>10:00/22:00</td>
-                            <td>3</td>
-                            <td><button class="edit" @click="openModify">수정</button></td>
+                        <tr v-for="space in spaces" :key="space.spaceId">
+                            <td>{{space.type}}</td>
+                            <td>{{space.spaceName}}</td>
+                            <td>{{space.openTime}} / {{space.closeTime}}</td>
+                            <td>{{space.breakOpen}} / {{space.breakClose}}</td>
+                            <td><button class="edit" @click="openModify(space)">수정</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -36,6 +36,7 @@
 
 <script>
 import { ref } from 'vue';
+import axios from '@/axios';
 import MenuBar from './menuBar.vue';
 import SpaceRegisterModal from '@/components/SpaceRegisterModal.vue';
 import SpaceModifyModal from '@/components/SpaceModifyModal.vue';
@@ -48,7 +49,24 @@ export default {
     setup() {
         const showRegisterSpace = ref(false);
         const showModifySpace = ref(false);
+        const spaces = ref([]);
         var space = ref({});
+
+        const getSpaces = async () => {
+            const companyId = localStorage.getItem('company_id');
+            await axios.get(`../space/list/${companyId}`, {
+                headers: {
+                    Authorization: localStorage.getItem('access_token')
+                }
+            })
+                .then(
+                    (res) => {
+                        spaces.value = res.data;
+                        console.log(res.data);
+                    })
+        }
+
+        getSpaces();
 
         const openRegister = () => {
             showRegisterSpace.value = true;
@@ -62,19 +80,20 @@ export default {
             showModifySpace.value = false;
         }
 
-        const openModify = () => {
+        const openModify = (info) => {
             showModifySpace.value = true;
-            space.value.spaceName = 'test';
+            space.value = info;
         }
 
         return {
             showRegisterSpace,
             showModifySpace,
-            space,
             openRegister,
             openModify,
             closeRegister,
             closeModifier,
+            spaces,
+            space,
         }
     }
 }

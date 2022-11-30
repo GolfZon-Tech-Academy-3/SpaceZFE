@@ -38,9 +38,25 @@
 
 <script>
 import MenuBar from './menuBar.vue';
+import axios from '@/axios';
 export default {
     components: {
         MenuBar,
+    },
+    setup() {
+
+        const getResvs = async () => {
+            await axios.get(`../back-office/reservation/total/${localStorage.getItem('company_id')}`, {
+                headers: {
+                    Authorization: localStorage.getItem('access_token'),
+                }
+            })
+                .then((res) => {
+                    console.log(res.data);
+                })
+        }
+
+        getResvs();
     }
 }
 </script>

@@ -364,7 +364,7 @@ export default {
     const moveToPlaceDetail = async (companyId) => {
       router.push({
         name: "PlaceDetail",
-        params: {
+        query: {
           id: companyId,
         },
       });
