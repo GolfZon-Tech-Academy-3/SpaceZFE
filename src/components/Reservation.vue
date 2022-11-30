@@ -271,7 +271,7 @@ export default {
       console.log(resInfos.value);
       console.log(resInfos.value.breakOpen);
       console.log(resInfos.value.breakClose);
-      console.log(store.state.memberId);
+      // console.log(store.state.memberId);
 
       //운영시간 구하기
       let open = parseInt(resInfos.value.openTime);
