@@ -469,7 +469,7 @@ export default {
                       payStatus: "003",
                       prepay: "001",
                       startDate: now + " " + startSelected.value,
-                      // endDate: now + " " + endSelected.value,
+                      endDate: now + " " + endSelected.value,
                     },
                     {
                       headers: {
