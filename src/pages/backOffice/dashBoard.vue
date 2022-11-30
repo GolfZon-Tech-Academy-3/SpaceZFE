@@ -5,18 +5,14 @@
             <div class="status">
                 <div class="reserved">
                     <div style="font-weight: bold;">
-                        금일 예약 5 건
+                        금일 예약 {{todayResv}} 건
                     </div>
                 </div>
                 <div class="canceled">
                     <div style="font-weight: bold;">
-                        금일 취소 예약 2 건
+                        금일 취소 예약 {{todayCancel}} 건
                     </div>
                 </div>
-            </div>
-
-            <div class="calender">
-
             </div>
 
             <div class="memo">
@@ -34,10 +30,46 @@
 </template>
 
 <script>
+import { ref } from 'vue';
+import axios from '@/axios';
 import MenuBar from './menuBar.vue';
 export default {
     components: {
         MenuBar,
+    },
+    setup() {
+        const todayResv = ref(0);
+        const todayCancel = ref(0);
+        const getTodayResv = async () => {
+            await axios.get(`../back-office/reservation/count/${localStorage.getItem('company_id')}`, {
+                headers: {
+                    Authorization: localStorage.getItem('access_token'),
+                }
+            })
+                .then((res) => {
+                    todayResv.value = res.data;
+                })
+        }
+        const getTodayCancel = async () => {
+            await axios.get(`../back-office/cancel/count/${localStorage.getItem('company_id')}`, {
+                headers: {
+                    Authorization: localStorage.getItem('access_token'),
+                }
+            })
+                .then((res) => {
+                    todayCancel.value = res.data;
+                })
+        }
+
+        getTodayResv();
+        getTodayCancel();
+
+        return {
+            todayResv,
+            todayCancel,
+            getTodayResv,
+            getTodayCancel,
+        }
     }
 }
 </script>
@@ -77,12 +109,6 @@ export default {
     display : flex;
     justify-content: center;
     align-items : center;
-}
-.calender {
-    width: 80%;
-    height: 27em;
-    background-color:#EDF8E7;
-    margin: 2em auto;
 }
 .memo {
     width: 80%;

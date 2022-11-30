@@ -1,39 +1,52 @@
 <template>
     <div class="wrapper">
-        <div :class="[link === '/backoffice/dashboard' ? 'menuSelected' : 'menu']">
-            <router-link style="text-decoration:none; color:white" :to="{name: 'Dashboard'}">
+        <div :class="[link === '/backoffice/dashboard' ? 'menuSelected' : 'menu']" @click="moveToDashboard">
+            <div style="text-decoration:none; color:white">
                 대시보드
-            </router-link>
+            </div>
         </div>
-        <div :class="[link === '/backoffice/reservationstatus' ? 'menuSelected' : 'menu']">
-            <router-link style="text-decoration:none; color:white" :to="{name: 'ReservationStatus'}">
+        <div :class="[link === '/backoffice/reservationstatus' ? 'menuSelected' : 'menu']" @click="moveToReservationStatus">
+            <div style="text-decoration:none; color:white">
                 예약 현황
-            </router-link>
+            </div>
         </div>
-        <div :class="[link === '/backoffice/manageplace' ? 'menuSelected' : 'menu']">
-            <router-link style="text-decoration:none; color:white" :to="{name: 'ManagePlace'}">
+        <div :class="[link === '/backoffice/manageplace' ? 'menuSelected' : 'menu']" @click="moveToManagePlace">
+            <div style="text-decoration:none; color:white">
                 공간 정보/수정
-            </router-link>
+            </div>
         </div>
-        <div :class="[link === '/backoffice/payment' ? 'menuSelected' : 'menu']">
-            <router-link style="text-decoration:none; color:white" :to="{name: 'Payment'}">
+        <div :class="[link === '/backoffice/payment' ? 'menuSelected' : 'menu']" @click="moveToPayment">
+            <div style="text-decoration:none; color:white">
                 결제
-            </router-link>
+            </div>
         </div>
-        <div :class="[link === '/backoffice/qna' ? 'menuSelected' : 'menu']">
-            <router-link style="text-decoration:none; color:white" :to="{name: 'Qna'}">
+        <div :class="[link === '/backoffice/qna' ? 'menuSelected' : 'menu']" @click="moveToQna">
+            <div style="text-decoration:none; color:white">
                 문의
-            </router-link>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
 export default {
     setup() {
+        const router = useRouter();
         const link =  window.location.pathname;
 
+        const moveToDashboard = () => {router.push({name:'Dashboard'})}
+        const moveToReservationStatus = () => {router.push({name:'ReservationStatus'})}
+        const moveToManagePlace = () => {router.push({name: 'ManagePlace'})}
+        const moveToPayment = () => {router.push({name: 'Payment'})}
+        const moveToQna = () => {router.push({name: 'Qna'})}
+
         return {
+            moveToDashboard,
+            moveToReservationStatus,
+            moveToManagePlace,
+            moveToPayment,
+            moveToQna,
             link
         }
     }
@@ -55,6 +68,7 @@ export default {
     font-weight: bold;
     font-size: 1.3em;
     text-decoration: none;
+    cursor: pointer;
 }
 .menu:hover {
     background-color: #4B5170;
@@ -67,5 +81,6 @@ export default {
     padding: 7% 0;
     text-decoration: none;
     background-color: #4B5170;
+    cursor: pointer;
 }
 </style>
