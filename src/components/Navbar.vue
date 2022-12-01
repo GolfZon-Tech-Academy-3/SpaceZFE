@@ -2,13 +2,16 @@
     <div>
         <nav class="nav">
             <div class="menu">
-                <router-link class="logo" :to="{name: 'Home'} " @click="closeSearchModal">
+                <router-link class="logo" :to="{name: 'Home'} ">
                     SPACEZ
                 </router-link>
             </div>
             <input id="searchInput" autocomplete="off" @focus="openSearchModal" @keyup.enter="moveToSearch" :value="searchWord" @input="searchModal"/>
             <button v-if="showClose" class="closeBtn" @click="closeSearchModal">X</button>
             <ul class="elements">
+                <li v-if="!isManager && !isMaster && isLogined" @click="controlMapModal">
+                    지도
+                </li>
                 <li>
                     <router-link class="element" v-if="isMaster" :to="{name: 'MasterCompany'}" @click="closeSearchModal">마스터</router-link>
                 </li>
@@ -25,12 +28,13 @@
                     <router-link class="element" :to="{name: 'MyPage'}" @click="closeSearchModal">마이페이지</router-link>
                 </li>
                 <li>
-                    <img style="width:1.2em; height:1.2em;" v-if="isLogined" :src="profile_image" @click="closeSearchModal"/>
+                    <img style="width:1.2em; height:1.2em;border-radius: 50%;" v-if="isLogined" :src="profile_image" @click="closeSearchModal"/>
                 </li>
             </ul>
         </nav>
         <LoginModal v-if="showLoginModal" @close="closeLoginModal" />
         <SearchModal v-if="showSearchModal" @close="closeSearchModal" :result="result" />
+        <MapModal v-if="showMapModal" @close="controlMapModal" />
     </div>
     
 </template>
@@ -39,6 +43,7 @@
 import { ref } from 'vue';
 import LoginModal from '@/components/LoginModal.vue';
 import SearchModal from '@/components/SearchModal.vue';
+import MapModal from '@/components/MapModal.vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import axios from '@/axios';
@@ -46,9 +51,11 @@ export default {
     components: {
         LoginModal,
         SearchModal,
+        MapModal,
     },
     setup() {
         const showSearchModal = ref(false);
+        const showMapModal = ref(false);
         const showClose = ref(false);
         const searchWord = ref('');
         const router = useRouter();
@@ -137,6 +144,10 @@ export default {
             });
         }
 
+        const controlMapModal = () => {
+            showMapModal.value = !showMapModal.value;
+        }
+
         return {
             showLoginModal,
             openLoginModal,
@@ -154,6 +165,8 @@ export default {
             profile_image,
             searchModal,
             result,
+            controlMapModal,
+            showMapModal,
         }
     }
 }

@@ -22,6 +22,7 @@
             <div :class="[ searchType === 'meeting-room' ? 'yes' : 'no']" @click="selectMeeting(1)">
                 회의실
             </div>
+            <div class="mapBtn" @click="controlMapModal">지도</div>
         </div>
 
         <div class="conditionSelection">
@@ -37,7 +38,7 @@
                 </select>
             </span>
             <span style="display:inline-block;width: 20%; height: 100%;margin-left:0%;">
-                <input class="search" type="text" placeholder="지역 검색" @change="changeWord($event)" @keyup.enter="searchWithCondition" :value="searchWord">
+                <input class="search" type="text" placeholder="검색" @change="changeWord($event)" @keyup.enter="searchWithCondition" :value="searchWord">
             </span>
             <span style="width: 30%; height: 100%;">
                 <button class="searchButton" @click="resetCondition">초기화</button>
@@ -81,6 +82,7 @@
             </div>  
             <div v-if="currentPage != pageNum" class="nav-btn" @click="increasePage">다음</div>
         </div>
+        <SearchMapModal @close="controlMapModal" v-if="showMapModal" :placeInfo="resultPlace" />
     </div>
 </template>
 
@@ -89,7 +91,11 @@ import { ref, computed  } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import axios from '@/axios';
+import SearchMapModal from '@/components/SearchMapModal.vue';
 export default {
+    components: {
+        SearchMapModal,
+    },
     setup() {
         const router = useRouter();
         const store = useStore();
@@ -106,6 +112,7 @@ export default {
         const resultAllNum = ref(0);
         const pageNum = ref(0);
         const currentPage = computed(() => store.state.currentPage);
+        const showMapModal = ref(false);
 
         const search = async () => {
             if(searchTime.value != null) { //검색 시간이 존재할때
@@ -152,6 +159,7 @@ export default {
                                 resultAllNum.value = res.data.totalSize;
                                 pageNum.value = res.data.totalPage;
                                 resultCurrentNum.value = res.data.company.length;
+                                resultPlace.value = res.data.company;
                                 if(resultCurrentNum.value === 0) {
                                     noResult.value = true;
                                 }
@@ -305,6 +313,10 @@ export default {
             })
         }
 
+        const controlMapModal = () => {
+            showMapModal.value = !showMapModal.value;
+        }
+
         return {
             selectAll,
             selectOffice,
@@ -335,6 +347,8 @@ export default {
             resultPlace,
             addFavorite,
             moveToPlaceDetail,
+            controlMapModal,
+            showMapModal,
         }
     }
 }
@@ -498,5 +512,18 @@ export default {
     float:right;
     cursor:pointer;
     width: 12%;
+}
+.mapBtn {
+    display: inline;
+    border: 1px #041461 solid;
+    color: #041461;
+    padding: 0.5em 1em;
+    border-radius: 1em;
+    cursor: pointer;
+}
+.mapBtn:hover {
+    border: 1px #041461 solid;
+    color: white;
+    background-color: #041461;
 }
 </style>

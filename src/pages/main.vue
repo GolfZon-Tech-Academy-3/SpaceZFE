@@ -280,8 +280,6 @@ export default {
           },
         })
         .then((res) => {
-          console.log(res.data);
-          console.log(res.data.hotCompany.length);
           if (res.data.hotCompany.length > 4) {
             hotPlaces1.value = res.data.hotCompany.slice(0, 4);
             hotPlaces2.value = res.data.hotCompany.slice(
