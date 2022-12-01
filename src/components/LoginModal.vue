@@ -77,23 +77,9 @@ export default {
             .post("member/login", { email: email.value, password: pw.value })
             .then((res) => {
               if (res.data === "") {
-                // store.commit(
-                //   "GET_MEMBERID",
-                //   parseJwt(res.headers.authorization).MEMBER_ID
-                // );
-                // store.commit(
-                //   "GET_AUTHORITY",
-                //   parseJwt(res.headers.authorization).AUTHORITY
-                // );
-                // store.commit("GET_TOKEN", res.headers.authorization);
-                // console.log(store.state.token);
                 localStorage.setItem(
                   "authority",
                   parseJwt(res.headers.authorization).AUTHORITY
-                );
-                localStorage.setItem(
-                  "memberId",
-                  parseJwt(res.headers.authorization).MEMBER_ID
                 );
                 localStorage.setItem(
                   "profile_image",
@@ -102,6 +88,10 @@ export default {
                 localStorage.setItem(
                   "company_id",
                   parseJwt(res.headers.authorization).COMPANY_ID
+                );
+                localStorage.setItem(
+                  "memberId",
+                  parseJwt(res.headers.authorization).MEMBER_ID
                 );
                 localStorage.setItem("access_token", res.headers.authorization);
                 onClose();

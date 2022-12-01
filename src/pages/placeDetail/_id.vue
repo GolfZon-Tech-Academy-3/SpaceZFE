@@ -78,9 +78,9 @@
         <ul class="nav" @click="showReviews">
           <p class="hover" v-if="!reviewClicked">
             리뷰
-            <!-- <a style="opacity: 0.6; margin-left: 10px">{{
-              details.reviews.length
-            }}</a> -->
+            <a style="opacity: 0.6; margin-left: 10px">{{
+              reviews.totalCount
+            }}</a>
           </p>
 
           <p
@@ -89,9 +89,9 @@
             style="color: blue; border-bottom: 1px solid blue"
           >
             리뷰
-            <!-- <a style="opacity: 0.6; margin-left: 10px">{{
-              details.reviews.length
-            }}</a> -->
+            <a style="opacity: 0.6; margin-left: 10px">{{
+              reviews.totalCount
+            }}</a>
           </p>
         </ul>
         <ul class="nav" @click="showQna">
@@ -174,6 +174,30 @@
         <div class="rulesClicked" v-if="rulesClicked">
           {{ details.rules }}
         </div>
+        <div class="reviewClicked" v-show="reviewClicked">
+          <div class="reviews" v-for="num in reviews.reviews.length" :key="num">
+            <img
+              class="profilePic"
+              :src="reviews.reviews[num - 1].memberImage"
+            />
+            <div style="line-height: 1.6; margin-left: 3%; margin-bottom: 2%">
+              {{ reviews.reviews[num - 1].memberName }}
+              <a v-for="num in reviews.reviews[num - 1].rating" :key="num"
+                >⭐</a
+              >
+              {{ reviews.reviews[num - 1].rating }} <br />
+              [{{ reviews.reviews[num - 1].type }}] 사용 <br />
+              {{ reviews.reviews[num - 1].content }}
+            </div>
+          </div>
+          <!-- <pagination
+            v-if="reviews.length"
+            :numberOfPages="numberOfPages"
+            :currentPage="currentPage"
+            @click="getDetails"
+          >
+          </pagination> -->
+        </div>
       </div>
     </div>
     <UseInfo :details="useInfoString" v-if="useInfoModal" @close="closeModal" />
@@ -239,6 +263,8 @@ export default {
 
     const useInfoModal = ref(false);
     const useInfoString = ref({});
+    const companyId = ref();
+    const reviews = ref([]);
 
     const res = async () => {
       await axios
@@ -251,12 +277,25 @@ export default {
           details.value = { ...res.data };
           currentImg.value = details.value.spaceImages[currentImgNum.value];
           resDetails.value = details.value.spaces;
-
+          companyId.value = res.data.companyId;
           console.log(details.value);
+          axios
+            .get(`review/total/${companyId.value}?page=1`, {
+              headers: {
+                Authorization: localStorage.getItem("access_token"),
+              },
+            })
+            .then((res) => {
+              reviews.value = { ...res.data };
+              // console.log(res.data.reviews);
+              console.log(reviews.value);
+              // console.log(typeof reviews.value);
+            });
           // console.log(store.state.memberId);
         });
     };
     res();
+    // console.log(reviews.value);
 
     //메인사진 클릭시 변경
     const changePic = () => {
@@ -400,10 +439,12 @@ export default {
       locClick,
       showLocation,
       showReviews,
+      reviews,
       showQna,
       moveToPage,
       useInfoModal,
       useInfoString,
+      companyId,
     };
   },
 };
@@ -586,13 +627,12 @@ iframe {
 }
 .reviews {
   width: 90%;
-  margin-top: 10%;
+  margin-top: 5%;
   font-size: 1.4rem;
   line-height: 2.5;
   color: black;
-  margin-top: 5%;
   display: flex;
-  width: 80%;
+  border-bottom: 1px solid silver;
 }
 .profilePic {
   width: 10%;

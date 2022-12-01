@@ -10,17 +10,22 @@
         <table class="answer">
           <tr>
             <td>
-              <p>내리뷰{{ reviewer }}</p>
+              <p>내리뷰</p>
               <p>
-                <span style="color: gold; font-size: 1.5rem">★ </span>
-                { qnaAnswer.answerDate }
+                <span
+                  v-for="num in reviewer.rating"
+                  :key="num"
+                  style="color: gold; font-size: 1.5rem"
+                  >★
+                </span>
               </p>
-              <p>{ qnaAnswer.anwserContents }</p>
+              <p>{{ reviewer.content }}</p>
+              <!-- <p>{{ reviewer }}</p> -->
             </td>
             <td>
               <div class="buttons">
                 <button id="edit" @click="change">수정</button>
-                <button id="del" @click="change">삭제</button>
+                <button id="del" @click="del">삭제</button>
               </div>
             </td>
           </tr>
@@ -35,21 +40,48 @@
 
 <script>
 import { ref } from "vue";
+import axios from "axios";
 export default {
   props: {
     reviewer: {
-      type: Number,
+      type: Object,
       required: true,
     },
   },
   setup(props, context) {
     const write = ref(false);
+    const reviewId = ref(props.reviewer);
 
     const change = (e) => {
       context.emit("editOrDel", e.target.id);
+      context.emit("reviewId", reviewId.value.reviewId);
+
+      console.log(reviewId.value.reviewId);
     };
 
-    return { write, change };
+    const del = async () => {
+      try {
+        alert("정말 삭제하시겠습니까?");
+        await axios
+          .delete(`review/delete/${reviewId.value.reviewId}`, {
+            headers: { Authorization: localStorage.getItem("access_token") },
+          })
+          .then((res) => {
+            if (res.status === 200) {
+              alert("삭제가 완료되었습니다");
+              window.location.reload(true);
+            }
+          });
+      } catch (error) {
+        if (error.response.status < 500 && error.response.status >= 400) {
+          alert("삭제가 완료되지 않았습니다.");
+        } else if (error.response.status >= 500) {
+          alert("일시적인 서버장애 오류입니다 나중에 다시 확인해주세요");
+        }
+      }
+    };
+
+    return { reviewId, write, change, del };
   },
 };
 </script>

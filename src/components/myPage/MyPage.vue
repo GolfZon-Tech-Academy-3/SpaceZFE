@@ -138,13 +138,13 @@
       </div>
     </div>
 
-    <div v-show="!mil" class="form">
+    <div v-show="!mil" class="otherForm">
       <Mileage />
     </div>
-    <div v-show="!res" class="form">
+    <div v-show="!res" class="otherForm">
       <MyResVue />
     </div>
-    <div v-show="!qna" class="form">
+    <div v-show="!qna" class="otherForm">
       <QNA />
     </div>
   </div>
@@ -365,10 +365,14 @@ p {
 }
 .form {
   width: 85%;
-
   float: right;
   text-align: center;
   padding-top: 4%;
+}
+.otherForm {
+  width: 85%;
+  float: right;
+  text-align: center;
 }
 .board {
   margin: auto;

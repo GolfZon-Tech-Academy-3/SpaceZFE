@@ -12,15 +12,12 @@
         >
           <span style="color: white" @click="onClose">&times;</span>
           <p
-            v-if="editOrDel !== 'edit'"
+            v-if="edit.edit !== 'edit'"
             style="color: white; font-size: 1.5rem"
           >
             리뷰를 작성해주세요!
           </p>
-          <p
-            v-if="editOrDel === 'edit'"
-            style="color: white; font-size: 1.5rem"
-          >
+          <p v-if="edit.edit == 'edit'" style="color: white; font-size: 1.5rem">
             리뷰를 수정해주세요!
           </p>
           <p class="inner">
@@ -44,6 +41,7 @@
           </p>
         </div>
       </div>
+      {{ editOrDel }}
       <div class="modal-content">
         <textarea
           v-model="revContent"
@@ -54,10 +52,10 @@
         ></textarea>
       </div>
       <div class="modal-content">
-        <button v-if="editOrDel != 'edit'" class="btn" @click="submit">
+        <button v-if="edit.edit != 'edit'" class="btn" @click="submit">
           제출
         </button>
-        <button v-if="editOrDel == 'edit'" class="btn" @click="submit">
+        <button v-if="edit.edit == 'edit'" class="btn" @click="put">
           수정
         </button>
       </div>
@@ -67,16 +65,28 @@
 
 <script>
 import { ref } from "vue";
+import axios from "axios";
 export default {
   props: {
-    editOrDel: {
-      type: String,
+    writePack: {
+      type: Object,
+      required: true,
+    },
+    edit: {
+      type: Object,
       required: true,
     },
   },
   setup(props, { emit }) {
     const score = ref(0);
     const revContent = ref("");
+    const ids = ref(props.writePack);
+    const edit = ref(props.edit);
+
+    console.log(edit.value);
+
+    console.log(ids.value.companyId);
+    console.log(ids.value.spaceId);
 
     const onClose = () => {
       emit("close");
@@ -84,19 +94,65 @@ export default {
 
     const check = (index) => {
       score.value = index + 1;
-      // console.log(index);
-      // console.log(score.value);
       if (score.value == 2 && index == 1) {
-        // console.log(0);
         index = !index;
       }
     };
 
-    const submit = () => {
-      // reviewed.value = true
-      onClose();
-      emit("reviewed", true);
-      // console.log(score.value - 1, revContent.value);
+    //리뷰수정 쏘기
+    const submit = async () => {
+      try {
+        await axios
+          .post(
+            "review/post",
+            {
+              spaceId: ids.value.spaceId,
+              companyId: ids.value.companyId,
+              content: revContent.value,
+              rating: score.value - 1,
+            },
+            {
+              headers: { Authorization: localStorage.getItem("access_token") },
+            }
+          )
+          .then((res) => {
+            if (res.status == 200) {
+              alert("리뷰작성완료");
+              onClose();
+              window.location.reload(true);
+            }
+          });
+      } catch (error) {
+        alert("예상치 못한 오류가 발생했습니다");
+      }
+    };
+
+    //리뷰수정put
+    const put = async () => {
+      console.log(1);
+      try {
+        await axios
+          .put(
+            "review/update",
+            {
+              reviewId: edit.value.id,
+              content: revContent.value,
+              rating: score.value - 1,
+            },
+            {
+              headers: { Authorization: localStorage.getItem("access_token") },
+            }
+          )
+          .then((res) => {
+            if (res.status == 200) {
+              alert("리뷰수정완료");
+              onClose();
+              window.location.reload(true);
+            }
+          });
+      } catch (error) {
+        alert("예상치 못한 오류가 발생했습니다");
+      }
     };
 
     return {
@@ -105,6 +161,8 @@ export default {
       check,
       submit,
       revContent,
+      ids,
+      put,
     };
   },
 };
@@ -129,9 +187,7 @@ export default {
   width: fit-content;
   text-align: center;
   border-radius: 15px;
-  margin-top: 5%;
-  margin-bottom: 5%;
-  margin: 2% 10% 2% 10%;
+  margin: 1%40%1%40%;
 }
 .btn {
   height: 10%;
