@@ -60,24 +60,27 @@ export default {
     };
 
     const del = async () => {
-      try {
-        alert("정말 삭제하시겠습니까?");
-        await axios
-          .delete(`review/delete/${reviewId.value.reviewId}`, {
-            headers: { Authorization: localStorage.getItem("access_token") },
-          })
-          .then((res) => {
-            if (res.status === 200) {
-              alert("삭제가 완료되었습니다");
-              window.location.reload(true);
-            }
-          });
-      } catch (error) {
-        if (error.response.status < 500 && error.response.status >= 400) {
-          alert("삭제가 완료되지 않았습니다.");
-        } else if (error.response.status >= 500) {
-          alert("일시적인 서버장애 오류입니다 나중에 다시 확인해주세요");
+      let con = confirm("정말 삭제하시겠습니까?");
+      if (con == true) {
+        try {
+          await axios
+            .delete(`review/delete/${reviewId.value.reviewId}`, {
+              headers: { Authorization: localStorage.getItem("access_token") },
+            })
+            .then((res) => {
+              if (res.status === 200) {
+                alert("삭제가 완료되었습니다");
+                window.location.reload(true);
+              }
+            });
+        } catch (error) {
+          if (error.response.status < 500 && error.response.status >= 400) {
+            alert("삭제가 완료되지 않았습니다.");
+          } else if (error.response.status >= 500) {
+            alert("일시적인 서버장애 오류입니다 나중에 다시 확인해주세요");
+          }
         }
+      } else {
       }
     };
 

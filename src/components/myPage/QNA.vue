@@ -1,32 +1,80 @@
 <template>
   <div class="form">
-    <h1 style="font-family: 'Italiana'; font-style: normal; font-weight: 500">
+    <p
+      style="
+        font-family: 'Italiana';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 2.5rem;
+        text-align: center;
+        width: fit-content;
+        margin-top: 1%;
+        margin-left: 25%;
+      "
+    >
       문의 내용 확인
-    </h1>
+    </p>
     <div class="frame">
       <tr class="nav">
         <td style="border-top-left-radius: 10px" class="head">Space</td>
         <td class="head">문의 날짜</td>
         <td style="border-top-right-radius: 10px" class="head">답변 유무</td>
       </tr>
-      <table v-for="num in dumy.qnas" :key="num">
+      <table v-for="num in qnas.length" :key="num">
         <tr>
           <td>
-            <b>{{ num.spaceName }}</b>
+            <b>{{ qnas[num - 1].spaceName }}</b>
           </td>
-          <td style="color: rgba(133, 133, 137, 1)">{{ num.date }}</td>
-          <td v-if="num.answered === true"><b>완료</b></td>
-          <td v-if="num.answered !== true"><b>미완료</b></td>
-          <button class="btns" v-show="!num.show" @click="showContent(num)">
+          <td style="color: rgba(133, 133, 137, 1)">
+            {{ qnas[num - 1].inquiryTime }}
+          </td>
+          <td v-if="qnas[num - 1].answers === ''"><b>미완료</b></td>
+          <td v-if="qnas[num - 1].answers !== ''"><b>완료</b></td>
+          <button
+            class="btns"
+            v-show="!qnas[num - 1].showMyqna"
+            @click="showContent(qnas[num - 1].inquiryId)"
+          >
             펼치기
           </button>
-          <button class="btns" v-show="num.show" @click="showContent(num)">
+          <button
+            class="btns"
+            v-show="qnas[num - 1].showMyqna"
+            @click="showContent(qnas[num - 1].inquiryId)"
+          >
             접기
           </button>
         </tr>
-        <tr v-show="num.show">
-          <td colspan="3">
-            <QnaAnswers :qnaAnswer="qnaAnswer" v-show="num.show" />
+        <tr v-show="qnas[num - 1].showMyqna">
+          <td colspan="3" style="text-align: left">
+            <p>{{ qnas[num - 1].inquiries }}</p>
+            <button
+              class="qnaButton"
+              @click="showAnwer(qnas[num - 1].inquiryId)"
+              v-if="qnas[num - 1].answers !== ''"
+            >
+              답변보기
+              <span style="color: black" v-show="!qnas[num - 1].showMyAnswer"
+                >&#8744;</span
+              >
+              <span style="color: black" v-show="qnas[num - 1].showMyAnswer">
+                &#8743;</span
+              >
+            </button>
+            <button class="qnaButton" v-if="qnas[num - 1].answers === ''">
+              답변보기
+              <span style="color: black" v-show="!qnas[num - 1].showMyAnswer"
+                >&#8744;</span
+              >
+              <span style="color: black" v-show="qnas[num - 1].showMyAnswer">
+                &#8743;</span
+              >
+            </button>
+            <QnaAnswers
+              v-if="qnas[num - 1] !== null"
+              :qnaAnswer="qnaAnswer"
+              v-show="qnas[num - 1].showMyAnswer"
+            />
           </td>
         </tr>
       </table>
@@ -35,134 +83,64 @@
 </template>
 <script>
 import { ref } from "vue";
+import axios from "axios";
 import QnaAnswers from "@/components/myPage/QnaAnswers.vue";
 export default {
   components: {
     QnaAnswers,
   },
   setup() {
-    const content = ref(false);
-    const dumy = ref({
-      qnas: [
-        {
-          qnaId: 1,
-          memberId: "최슈",
-          date: "2022-11-16",
-          spaceName: "기다림에 익숙해진 내모습 뒤에",
-          contents:
-            "가나다라마바사아자차카타파하" +
-            "기니디리미비시이지치키티피히" +
-            "거너더러머버서어저처커터퍼허",
-          answerShow: false,
-          answerDate: "2022-11-28",
-          anwserContents:
-            "ㅏㅑㅓㅕㅗㅛnvcmnvcnvzxcnvncvxmvlsdvxcvdsvxvajwblsnfewiohfu2b3fsjdbfugbwkjfbsofobfwejkfbwauefoweabfwefbusdbfkjasbdfibweafubasdjkfbweuabfkjasdbfibweaufbslkadnㅜㅠㅐㅔㅢ",
-          answered: false,
-        },
-        {
-          qnaId: 2,
-          memberId: "최슈",
-          date: "2022-11-16",
-          spaceName: "언제나 눈물이 흐르고 있어",
-          contents:
-            "가나다라마바사아자차카타파하" +
-            "기니디리미비시이지치키티피히" +
-            "거너더러머버서어저처커터퍼허",
-          answerShow: false,
-          answerDate: "2022-11-28",
-          anwserContents: "abdefghijklmnopqrstuvwxyz",
-          answered: true,
-        },
-        {
-          qnaId: 3,
-          memberId: "최슈",
-          date: "2022-11-16",
-          spaceName: "오늘밤 내방에 파티가 열렸지",
-          contents:
-            "가나다라마바사아자차카타파하" +
-            "기니디리미비시이지치키티피히" +
-            "거너더러머버서어저처커터퍼허",
-          answerShow: false,
-          answerDate: "2022-11-28",
-          anwserContents: "123456789",
-          answered: true,
-        },
-        {
-          qnaId: 4,
-          memberId: "최슈",
-          date: "2022-11-16",
-          spaceName: "그대를 위해 준비한 꽃은 어느새 시들고",
-          contents:
-            "가나다라마바사아자차카타파하" +
-            "기니디리미비시이지치키티피히" +
-            "거너더러머버서어저처커터퍼허",
-          answerShow: false,
-          answerDate: "2022-11-28",
-          anwserContents: "qwertyuiop",
-          answered: false,
-        },
-        {
-          qnaId: 5,
-          memberId: "최슈",
-          date: "2022-11-16",
-          spaceName: "술잔을 비우며 힘없이 울었지",
-          contents:
-            "가나다라마바사아자차카타파하" +
-            "기니디리미비시이지치키티피히" +
-            "거너더러머버서어저처커터퍼허",
-          answerShow: false,
-          answerDate: "2022-11-28",
-          anwserContents: "asdfghjkl",
-          answered: true,
-        },
-        {
-          qnaId: 6,
-          memberId: "최슈",
-          date: "2022-11-16",
-          spaceName: "또 다시 상상속으로 그댈 초대하는거야",
-          contents:
-            "가나다라마바사아자차카타파하" +
-            "기니디리미비시이지치키티피히" +
-            "거너더러머버서어저처커터퍼허",
-          answerShow: false,
-          answerDate: "2022-11-28",
-          anwserContents: "zxcvbnm",
-          answered: true,
-        },
-        {
-          qnaId: 7,
-          memberId: "최슈",
-          date: "2022-11-16",
-          spaceName: "워워어예에~~~",
-          contents:
-            "가나다라마바사아자차카타파하" +
-            "기니디리미비시이지치키티피히" +
-            "거너더러머버서어저처커터퍼허",
-          answerShow: false,
-          answerDate: "2022-11-28",
-          anwserContents: "qazwsxdec",
-          answered: false,
-        },
-      ],
-    });
-
     const qnaAnswer = ref({});
+    const qnas = ref([]);
+    let find;
+
+    const getQnas = async () => {
+      const res = await axios.get("mypage/inquiry/total", {
+        headers: {
+          Authorization: `${localStorage.getItem("access_token")}`,
+        },
+      });
+      qnas.value = res.data;
+      console.log(qnas.value);
+      for (let i = 0; i < qnas.value.length; i++) {
+        qnas.value[i].showMyqna = false;
+        qnas.value[i].showMyAnswer = false;
+      }
+    };
+    getQnas();
 
     //qna배열에 담긴 정보 객체들에 접근해서 qna띄움
     const showContent = (num) => {
-      num.show = !num.show;
-      qnaAnswer.value = num;
+      let i = num;
+      find = qnas.value.find((num) => num.inquiryId === i);
+      find.showMyqna = !find.showMyqna;
+      qnaAnswer.value = find;
+      console.log(find.showMyqna);
     };
-    return { dumy, content, showContent, qnaAnswer };
+
+    const showAnwer = (num) => {
+      let i = num;
+      find = qnas.value.find((num) => num.inquiryId === i);
+      find.showMyAnswer = !find.showMyAnswer;
+      qnaAnswer.value = find;
+      console.log(find.showMyAnswer);
+    };
+    return {
+      qnas,
+      showContent,
+      showAnwer,
+      qnaAnswer,
+      find,
+    };
   },
 };
 </script>
 <style scoped>
 .form {
   width: 85%;
-  /* float: right; */
   text-align: center;
-  padding: 2%4%04%;
+  padding-top: 0%;
+  /* padding: 2%0%0%4%; */
 }
 .frame {
   margin: auto;
@@ -173,10 +151,7 @@ export default {
   width: 90%;
 }
 table {
-  margin-left: 15%;
-  /* margin: auto; */
   width: 90%;
-  padding: 5%;
 }
 td {
   height: 7vh;
@@ -191,7 +166,6 @@ td {
   font-weight: 600;
   font-size: 1.5rem;
   height: 7vh;
-  /* padding: 0.5%; */
 }
 .btns {
   float: left;
@@ -202,5 +176,12 @@ td {
   border-radius: 15px;
   /* background-color: white; */
   border: 1px solid white;
+}
+.qnaButton {
+  color: #1e6ff4;
+  font-weight: 800;
+  background-color: white;
+  border: 1px solid white;
+  margin-bottom: 2.5%;
 }
 </style>
