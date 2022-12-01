@@ -40,15 +40,15 @@
                             </td>
                             <td v-if="res.approveStatus === '000'">
                                 <div class="checkAct" @click="approve(res.companyId)">✓</div>
-                                <div class="xAct" @click="decline(res.companyId)">x</div>
+                                <div class="xAct" @click="decline(res.companyId)">&times;</div>
                             </td>
                             <td v-else-if="res.approveStatus === '001'">
                                 <div class="checkDe">✓</div>
-                                <div class="xAct" @click="decline(res.companyId)">x</div>
+                                <div class="xAct" @click="decline(res.companyId)">&times;</div>
                             </td>
                             <td v-else>
                                 <div class="checkAct" @click="approve(res.companyId)">✓</div>
-                                <div class="xDe">x</div>
+                                <div class="xDe">&times;</div>
                             </td>
                         </tr>
                     </tbody>
@@ -69,6 +69,7 @@ export default {
     setup() {
         const selected = ref('all');
         const result = ref([]);
+        console.log(localStorage.getItem('authority'));
 
         const getCompanys = async (type) => {
             await axios.get(`../../company/manager/list`, {

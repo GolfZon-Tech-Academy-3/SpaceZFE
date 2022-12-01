@@ -2,6 +2,10 @@
     <div style="display:flex">
         <MenuBar />
         <div class="content">
+            <div style="width: 50%; height:100vh">
+            </div>
+            <div style="width: 50%; height:100vh">
+            </div>
         </div>
     </div>
 </template>
@@ -23,5 +27,6 @@ export default {
     overflow-x: hidden;
     overflow-y: auto;
     text-align: center;
+    display:flex;
 }
 </style>
