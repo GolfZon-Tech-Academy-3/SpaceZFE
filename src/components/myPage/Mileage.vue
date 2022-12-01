@@ -56,19 +56,19 @@
         <th>상태</th>
         <!-- <hr /> -->
         <tr v-for="num in mileages.length" :key="num">
-          <td>{{ mileages[num - 1].usedDay }}</td>
-          <td>{{ mileages[num - 1].companyId }}</td>
-          <td>{{ Math.abs(mileages[num - 1].mileageChange) }}</td>
-          <td v-show="mileages[num - 1].status === 'used'">
+          <td>{{ mileages[num - 1].mileageDate }}</td>
+          <td>{{ mileages[num - 1].spaceName }}</td>
+          <td>{{ Math.abs(mileages[num - 1].score) }}</td>
+          <td v-show="mileages[num - 1].status === '사용'">
             <b style="color: red">사용</b>
           </td>
-          <td v-show="mileages[num - 1].status === 'get'">
+          <td v-show="mileages[num - 1].status === '적립'">
             <b style="color: blue">적립</b>
           </td>
-          <td v-show="mileages[num - 1].status === 'refund'">
+          <td v-show="mileages[num - 1].status === '환급'">
             <b style="color: blue">환급</b>
           </td>
-          <td v-show="mileages[num - 1].status === 'cancel'"><b>취소</b></td>
+          <td v-show="mileages[num - 1].status === '취소'"><b>취소</b></td>
         </tr>
       </table>
       <table class="table" v-show="!earnedClick">
@@ -76,21 +76,13 @@
         <th>업체</th>
         <th>마일리지</th>
         <th>상태</th>
-        <!-- <hr /> -->
         <tr v-for="num in getMile.length" :key="num">
-          <td>{{ getMile[num - 1].usedDay }}</td>
-          <td>{{ getMile[num - 1].companyId }}</td>
-          <td>{{ Math.abs(getMile[num - 1].mileageChange) }}</td>
-          <td v-show="getMile[num - 1].status === 'used'">
-            <b style="color: red">사용</b>
-          </td>
-          <td v-show="getMile[num - 1].status === 'get'">
+          <td>{{ getMile[num - 1].mileageDate }}</td>
+          <td>{{ getMile[num - 1].spaceName }}</td>
+          <td>{{ Math.abs(getMile[num - 1].score) }}</td>
+          <td>
             <b style="color: blue">적립</b>
           </td>
-          <td v-show="getMile[num - 1].status === 'refund'">
-            <b style="color: blue">환급</b>
-          </td>
-          <td v-show="getMile[num - 1].status === 'cancel'"><b>취소</b></td>
         </tr>
       </table>
       <table class="table" v-show="!usedClick">
@@ -100,19 +92,12 @@
         <th>상태</th>
         <!-- <hr /> -->
         <tr v-for="num in useMile.length" :key="num">
-          <td>{{ useMile[num - 1].usedDay }}</td>
-          <td>{{ useMile[num - 1].companyId }}</td>
-          <td>{{ Math.abs(useMile[num - 1].mileageChange) }}</td>
-          <td v-show="useMile[num - 1].status === 'used'">
+          <td>{{ useMile[num - 1].mileageDate }}</td>
+          <td>{{ useMile[num - 1].spaceName }}</td>
+          <td>{{ Math.abs(useMile[num - 1].score) }}</td>
+          <td>
             <b style="color: red">사용</b>
           </td>
-          <td v-show="useMile[num - 1].status === 'get'">
-            <b style="color: blue">적립</b>
-          </td>
-          <td v-show="useMile[num - 1].status === 'refund'">
-            <b style="color: blue">환급</b>
-          </td>
-          <td v-show="useMile[num - 1].status === 'cancel'"><b>취소</b></td>
         </tr>
       </table>
       <table class="table" v-show="!canceledClick">
@@ -120,21 +105,11 @@
         <th>업체</th>
         <th>마일리지</th>
         <th>상태</th>
-        <!-- <hr /> -->
         <tr v-for="num in cancelMile.length" :key="num">
-          <td>{{ cancelMile[num - 1].usedDay }}</td>
-          <td>{{ cancelMile[num - 1].companyId }}</td>
-          <td>{{ Math.abs(cancelMile[num - 1].mileageChange) }}</td>
-          <td v-show="cancelMile[num - 1].status === 'used'">
-            <b style="color: red">사용</b>
-          </td>
-          <td v-show="cancelMile[num - 1].status === 'get'">
-            <b style="color: blue">적립</b>
-          </td>
-          <td v-show="cancelMile[num - 1].status === 'refund'">
-            <b style="color: blue">환급</b>
-          </td>
-          <td v-show="cancelMile[num - 1].status === 'cancel'"><b>취소</b></td>
+          <td>{{ cancelMile[num - 1].mileageDate }}</td>
+          <td>{{ cancelMile[num - 1].spaceName }}</td>
+          <td>{{ Math.abs(cancelMile[num - 1].score) }}</td>
+          <td v-show="cancelMile[num - 1].status === '취소'"><b>취소</b></td>
         </tr>
       </table>
       <table class="table" v-show="!refundedClick">
@@ -142,21 +117,13 @@
         <th>업체</th>
         <th>마일리지</th>
         <th>상태</th>
-        <!-- <hr /> -->
         <tr v-for="num in refundMile.length" :key="num">
-          <td>{{ refundMile[num - 1].usedDay }}</td>
-          <td>{{ refundMile[num - 1].companyId }}</td>
-          <td>{{ Math.abs(refundMile[num - 1].mileageChange) }}</td>
-          <td v-show="refundMile[num - 1].status === 'used'">
-            <b style="color: red">사용</b>
-          </td>
-          <td v-show="refundMile[num - 1].status === 'get'">
-            <b style="color: blue">적립</b>
-          </td>
-          <td v-show="refundMile[num - 1].status === 'refund'">
+          <td>{{ refundMile[num - 1].mileageDate }}</td>
+          <td>{{ refundMile[num - 1].spaceName }}</td>
+          <td>{{ Math.abs(refundMile[num - 1].score) }}</td>
+          <td>
             <b style="color: blue">환급</b>
           </td>
-          <td v-show="refundMile[num - 1].status === 'cancel'"><b>취소</b></td>
         </tr>
       </table>
     </div>
@@ -187,6 +154,7 @@
 
 <script>
 import { ref } from "vue";
+import axios from "axios";
 export default {
   setup() {
     const allClick = ref(false);
@@ -206,74 +174,39 @@ export default {
     const cancelMile = ref([]);
     const refundMile = ref([]);
 
-    const mileages = ref([
-      {
-        mileageId: 1,
-        usedDay: "2022-11-22",
-        companyId: 1,
-        mileageChange: -100,
-        status: "used",
-      },
-      {
-        mileageId: 2,
-        usedDay: "2022-11-23",
-        companyId: 11,
-        mileageChange: 200,
-        status: "get",
-      },
-      {
-        mileageId: 3,
-        usedDay: "2022-11-26",
-        companyId: 2,
-        mileageChange: 1000,
-        status: "get",
-      },
-      {
-        mileageId: 4,
-        usedDay: "2022-11-30",
-        companyId: 1,
-        mileageChange: -1000,
-        status: "cancel",
-      },
-      {
-        mileageId: 5,
-        usedDay: "2022-12-20",
-        companyId: 2,
-        mileageChange: 1000,
-        status: "refund",
-      },
-    ]);
+    const mileages = ref([]);
 
-    //총 마일리지 계산
-    const mileCalcul = () => {
-      for (let i = 0; i < mileages.value.length; i++) {
-        totalMileage.value =
-          totalMileage.value + mileages.value[i].mileageChange;
+    const getMileInfo = async () => {
+      const res = await axios.get("mypage/mileage?type=" + "전체", {
+        headers: { Authorization: localStorage.getItem("access_token") },
+      });
+      totalMileage.value = res.data.totalScore;
+      totalGet.value = res.data.rewardScore;
+      totalCancel.value = res.data.canceledScore;
+      totalUse.value = res.data.usedScore;
+      totalRefund.value = res.data.refundScore;
+      // console.log(res.data);
+      for (let i = 0; i < res.data.mileages.length; i++) {
+        mileages.value.push(res.data.mileages[i]);
       }
-    };
-    mileCalcul();
-
-    //마일 상태에 따라 분류 및 마일 상태에 따른 합 계산
-    const sortMil = () => {
+      //마일 상태에 따라 분류 및 마일 상태에 따른 합 계산
       for (let i = 0; i < mileages.value.length; i++) {
-        if (mileages.value[i].status === "get") {
+        if (mileages.value[i].status === "적립") {
           getMile.value.push(mileages.value[i]);
-          totalGet.value = totalGet.value + mileages.value[i].mileageChange;
-        } else if (mileages.value[i].status === "used") {
+          totalGet.value = totalGet.value + mileages.value[i].score;
+        } else if (mileages.value[i].status === "사용") {
           useMile.value.push(mileages.value[i]);
-          totalRefund.value =
-            totalRefund.value + mileages.value[i].mileageChange;
-        } else if (mileages.value[i].status === "cancel") {
+          totalRefund.value = totalRefund.value + mileages.value[i].score;
+        } else if (mileages.value[i].status === "취소") {
           cancelMile.value.push(mileages.value[i]);
-          totalUse.value = totalUse.value + mileages.value[i].mileageChange;
-        } else if (mileages.value[i].status === "refund") {
+          totalUse.value = totalUse.value + mileages.value[i].score;
+        } else if (mileages.value[i].status === "환급") {
           refundMile.value.push(mileages.value[i]);
-          totalCancel.value =
-            totalCancel.value + mileages.value[i].mileageChange;
+          totalCancel.value = totalCancel.value + mileages.value[i].score;
         }
       }
     };
-    sortMil();
+    getMileInfo();
 
     //버튼 바꿔주는 함수들
     const all = () => {
@@ -314,6 +247,7 @@ export default {
     return {
       totalMileage,
       mileages,
+      status,
       all,
       earned,
       used,
@@ -339,10 +273,10 @@ export default {
 
 <style scoped>
 .form {
-  width: 85%;
+  width: 100%;
   float: right;
   text-align: center;
-  padding: 2%4%04%;
+  padding-right: 10%;
 }
 .btn {
   font-family: "Inter";
@@ -357,6 +291,7 @@ export default {
   border: 1px solid #fafafa;
   margin-left: 0.5%;
   margin-right: 0.5%;
+  width: 5%;
 }
 .btn:hover {
   background-color: rgb(4, 20, 97, 1);
