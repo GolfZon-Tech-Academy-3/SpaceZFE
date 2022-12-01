@@ -277,6 +277,7 @@ export default {
   float: right;
   text-align: center;
   padding-right: 10%;
+  padding-bottom: 2%;
 }
 .btn {
   font-family: "Inter";

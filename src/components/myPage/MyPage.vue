@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100vh">
+  <div style="height: auto; overflow: hidden; display: flex; min-height: 400px">
     <div class="sideBar">
       <p>
         <button class="btn" @click="myShow" v-show="!my">
@@ -373,6 +373,8 @@ p {
   width: 85%;
   float: right;
   text-align: center;
+  overflow: hidden;
+  height: auto;
 }
 .board {
   margin: auto;

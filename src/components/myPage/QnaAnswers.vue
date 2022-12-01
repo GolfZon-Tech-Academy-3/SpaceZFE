@@ -8,8 +8,9 @@
     >
       <div class="offcanvas-header">
         <form class="answer">
-          <p>호스트답변 {{ qnaAnswer.answerDate }}</p>
-          <p>{{ qnaAnswer.anwserContents }}</p>
+          <p>호스트답변</p>
+          <!-- {{ qnaAnswer }} -->
+          <p>{{ qnaAnswer.answers }}</p>
         </form>
       </div>
       <div class="offcanvas-body"></div>

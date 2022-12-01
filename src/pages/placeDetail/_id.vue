@@ -97,9 +97,7 @@
         <ul class="nav" @click="showQna">
           <p class="hover" v-if="!qnaClicked">
             Q&A
-            <!-- <a style="opacity: 0.6; margin-left: 10px">{{
-              dumy.qnas.length
-            }}</a> -->
+            <a style="opacity: 0.6; margin-left: 10px">{{ qnas.count }}</a>
           </p>
           <p
             class="hover"
@@ -107,9 +105,7 @@
             style="color: blue; border-bottom: 1px solid blue"
           >
             Q&A
-            <!-- <a style="opacity: 0.6; margin-left: 10px">{{
-              dumy.qnas.length
-            }}</a> -->
+            <a style="opacity: 0.6; margin-left: 10px">{{ qnas.count }}</a>
           </p>
         </ul>
       </nav>
@@ -198,6 +194,48 @@
           >
           </pagination> -->
         </div>
+        <div class="qnaClicked" v-show="qnaClicked">
+          <h2 @click="uploadQna">질문하기</h2>
+          <div
+            style="margin-top: 2%"
+            v-for="num in qnas.list.length"
+            :key="num"
+          >
+            <div class="qnas">
+              <img class="profilePic" :src="qnas.list[num - 1].imagePath" />
+              <div style="line-height: 1.6; margin-left: 3%">
+                <p>
+                  <b>
+                    {{ qnas.list[num - 1].memberName }}
+                  </b>
+                  {{ qnas.list[num - 1].inquiryTime }}
+                </p>
+                {{ qnas.list[num - 1].inquiries }}
+              </div>
+            </div>
+            <button
+              class="qnaButton"
+              @click="showCanvas(qnas.list[num - 1].inquiryId)"
+            >
+              답변보기
+              <span
+                style="color: black"
+                v-show="!qnas.list[num - 1].showMyAnswer"
+                >&#8744;</span
+              >
+              <span
+                style="color: black"
+                v-show="qnas.list[num - 1].showMyAnswer"
+              >
+                &#8743;</span
+              >
+            </button>
+            <QnaOffcanvas
+              :qnaAnswer="qnaAnswer"
+              v-show="qnas.list[num - 1].showMyAnswer"
+            />
+          </div>
+        </div>
       </div>
     </div>
     <UseInfo :details="useInfoString" v-if="useInfoModal" @close="closeModal" />
@@ -205,10 +243,10 @@
 </template>
 
 <script>
-import KaKaoMap from "@/components/KaKaoMapOne.vue";
-import UseInfo from "@/components/UseInfo.vue";
-import pagination from "@/components/Pagination.vue";
-import QnaOffcanvas from "@/components/QnaOffcanvas.vue";
+import KaKaoMap from "@/components/details/KaKaoMapOne.vue";
+import UseInfo from "@/components/details/UseInfo.vue";
+import pagination from "@/components/details/Pagination.vue";
+import QnaOffcanvas from "@/components/details/QnaOffcanvas.vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "@/axios";
 import { ref } from "vue";
@@ -265,7 +303,10 @@ export default {
     const useInfoString = ref({});
     const companyId = ref();
     const reviews = ref([]);
+    const qnas = ref([]);
+    const qnaAnswer = ref({});
 
+    //리뷰 qna 장소 상세 get하는 함수
     const res = async () => {
       await axios
         .get(`company/details/${id.value}`, {
@@ -292,6 +333,19 @@ export default {
               // console.log(typeof reviews.value);
             });
           // console.log(store.state.memberId);
+          axios
+            .get(`inquiry/total/${companyId.value}`, {
+              headers: {
+                Authorization: localStorage.getItem("access_token"),
+              },
+            })
+            .then((res) => {
+              qnas.value = { ...res.data };
+              for (let i = 0; i < qnas.value.length; i++) {
+                qnas.value[i].showMyAnswer = false;
+              }
+              console.log(qnas.value);
+            });
         });
     };
     res();
@@ -360,11 +414,17 @@ export default {
       useInfoModal.value = false;
     };
 
-    //  //qna답변보여주기
-    // const showCanvas = (num) => {
-    //   num.answerShow = !num.answerShow;
-    //   qnaAnswer.value = num;
-    // };
+    let find;
+
+    //qna답변보여주기
+    const showCanvas = (e) => {
+      console.log(e);
+      let i = e;
+      find = qnas.value.list.find((e) => e.inquiryId === i);
+      console.log(find);
+      find.showMyAnswer = !find.showMyAnswer;
+      qnaAnswer.value = find;
+    };
 
     const moveToPage = (id) => {
       router.push({
@@ -373,6 +433,9 @@ export default {
           id: id,
         },
       });
+    };
+    const uploadQna = () => {
+      console.log(1);
     };
 
     // 하단 nav바 버튼들
@@ -440,11 +503,15 @@ export default {
       showLocation,
       showReviews,
       reviews,
+      qnas,
       showQna,
       moveToPage,
       useInfoModal,
       useInfoString,
       companyId,
+      showCanvas,
+      qnaAnswer,
+      uploadQna,
     };
   },
 };
@@ -452,8 +519,10 @@ export default {
 
 <style scoped>
 .entireForm {
-  min-height: 150vh;
-  height: 220vh;
+  height: auto;
+  min-height: 200vh;
+  overflow: hidden;
+  display: flex;
 }
 .picsAndIntro {
   width: 75vw;
@@ -565,7 +634,13 @@ export default {
   background-color: white;
   border: 1px solid white;
 }
-
+.qnaButton {
+  color: #1e6ff4;
+  font-weight: 800;
+  background-color: white;
+  border: 1px solid white;
+  margin-bottom: 2.5%;
+}
 .lists {
   width: 90%;
   height: 20vh;

@@ -142,8 +142,8 @@
             </td>
           </tr>
           <tr>
-            <td colspan="3" style="border-bottom: none;">
-              <MyReview v-if="(resDone[num-1].review!==null)" v-show="resDone[num-1].reviewToggle" :reviewer="resDone[num-1].review" @editOrDel="showWrite" @reviewId="showWrite2"/>
+            <td  colspan="3" style="border-bottom: 1px solid silver;" v-if="(resDone[num-1].review!==null)" v-show="resDone[num-1].reviewToggle">
+              <MyReview  :reviewer="resDone[num-1].review" @editOrDel="showWrite" @reviewId="showWrite2"/>
             </td>
           </tr>
         </table>
@@ -222,28 +222,31 @@ export default {
 
     //예약 취소시킬 함수
     const cancelRes = async(resId)=>{
-      alert('정말 취소하시겠습니까?')
-      // const res = await axios.put(``)
-      let url
-      if(resId.type=='오피스'){
-        url = 'reservation/office-cancel/'
-      } else{
-        url='reservation/desk-cancel/'
-      }
-      try {
-      await axios.put(url+resId.reservationId,{
-        headers: { Authorization: localStorage.getItem("access_token") },
-      }).then(res=>{
-        if(res.status < 300 && res.status >= 200){
-          alert('취소가 완료되었습니다')
+      let con = confirm('정말 취소하시겠습니까?')
+      if(con==true){
+        let url
+        if(resId.type=='오피스'){
+          url = 'reservation/office-cancel/'
+        } else{
+          url='reservation/desk-cancel/'
         }
-      })  
-      } catch (error) {
-        if (error.response.status < 500 && error.response.status >= 400) {
-          alert("다시 확인해주세요.");
-        } else if (error.response.status >= 500) {
-          alert("일시적인 서버장애 오류입니다 나중에 다시 확인해주세요");
+        try {
+        await axios.put(url+resId.reservationId,{
+          headers: { Authorization: localStorage.getItem("access_token") },
+        }).then(res=>{
+          if(res.status < 300 && res.status >= 200){
+            alert('취소가 완료되었습니다')
+          }
+        })  
+        } catch (error) {
+          if (error.response.status < 500 && error.response.status >= 400) {
+            alert("다시 확인해주세요.");
+          } else if (error.response.status >= 500) {
+            alert("일시적인 서버장애 오류입니다 나중에 다시 확인해주세요");
+          }
         }
+      }else{
+        
       }
     }
 
