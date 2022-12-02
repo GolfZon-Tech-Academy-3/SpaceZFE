@@ -119,7 +119,7 @@ export default {
             if (res.status == 200) {
               alert("리뷰작성완료");
               onClose();
-              window.location.reload(true);
+              router.go();
             }
           });
       } catch (error) {
@@ -147,7 +147,7 @@ export default {
             if (res.status == 200) {
               alert("리뷰수정완료");
               onClose();
-              window.location.reload(true);
+              router.go();
             }
           });
       } catch (error) {
