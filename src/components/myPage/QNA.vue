@@ -1,35 +1,22 @@
 <template>
   <div class="form">
-    <p
-      style="
-        font-family: 'Italiana';
-        font-style: normal;
-        font-weight: 500;
-        font-size: 2.5rem;
-        text-align: center;
-        width: fit-content;
-        margin-top: 1%;
-        margin-left: 25%;
-      "
-    >
-      문의 내용 확인
-    </p>
+    <p class="qnaHeader">문의 내용 확인</p>
     <div class="frame">
       <tr class="nav">
-        <td style="border-top-left-radius: 10px" class="head">Space</td>
+        <td style="border-top-left-radius: 10px" class="head">장소 이름</td>
         <td class="head">문의 날짜</td>
         <td style="border-top-right-radius: 10px" class="head">답변 유무</td>
       </tr>
       <table v-for="num in qnas.length" :key="num">
         <tr>
           <td>
-            <b>{{ qnas[num - 1].spaceName }}</b>
+            <b>{{ qnas[num - 1].companyName }}</b>
           </td>
           <td style="color: rgba(133, 133, 137, 1)">
             {{ qnas[num - 1].inquiryTime }}
           </td>
-          <td v-if="qnas[num - 1].answers === ''"><b>미완료</b></td>
-          <td v-if="qnas[num - 1].answers !== ''"><b>완료</b></td>
+          <td v-if="!qnas[num - 1].answers"><b>미완료</b></td>
+          <td v-if="qnas[num - 1].answers"><b>완료</b></td>
           <button
             class="btns"
             v-show="!qnas[num - 1].showMyqna"
@@ -85,6 +72,7 @@
 import { ref } from "vue";
 import axios from "axios";
 import QnaAnswers from "@/components/myPage/QnaAnswers.vue";
+
 export default {
   components: {
     QnaAnswers,
@@ -136,6 +124,16 @@ export default {
 };
 </script>
 <style scoped>
+.qnaHeader {
+  font-family: "Italiana";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 2.5rem;
+  text-align: center;
+  width: fit-content;
+  margin-top: 1%;
+  margin-left: 25%;
+}
 .form {
   width: 85%;
   text-align: center;

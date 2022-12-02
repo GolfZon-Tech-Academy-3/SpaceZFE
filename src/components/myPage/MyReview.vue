@@ -70,7 +70,7 @@ export default {
             .then((res) => {
               if (res.status === 200) {
                 alert("삭제가 완료되었습니다");
-                window.location.reload(true);
+                router.go();
               }
             });
         } catch (error) {
