@@ -160,7 +160,7 @@
             </ul>
           </div>
         </div>
-        <div class="locClicked" v-show="locClicked">
+        <div class="locClicked" v-if="locClicked">
           {{ details.info }}
           <section style="text-align: left">
             <p class="locClicked"><b style="color: red">&#63;</b>장소 위치</p>
@@ -259,26 +259,6 @@ export default {
     pagination,
     QnaOffcanvas,
   },
-  data() {
-    return {
-      mapOption: {
-        center: {
-          lat: 33.450701,
-          lng: 126.570667,
-        },
-        level: 8,
-        location: null,
-      },
-    };
-  },
-
-  mounted() {
-    fetch("company/details/" + useRoute().query.id)
-      .then((res) => res.json())
-      .then((res) => {
-        this.mapOption.location = res.space.location;
-      });
-  },
 
   setup() {
     const store = useStore();
@@ -306,6 +286,15 @@ export default {
     const qnas = ref([]);
     const qnaAnswer = ref({});
 
+    const mapOption = ref({
+      center: {
+        lat: 33.450701,
+        lng: 126.570667,
+      },
+      level: 5,
+      location: null,
+    });
+
     //리뷰 qna 장소 상세 get하는 함수
     const res = async () => {
       await axios
@@ -319,6 +308,7 @@ export default {
           currentImg.value = details.value.spaceImages[currentImgNum.value];
           resDetails.value = details.value.spaces;
           companyId.value = res.data.companyId;
+          mapOption.value.location = details.value.location;
           console.log(details.value);
           axios
             .get(`review/total/${companyId.value}?page=1`, {
@@ -345,6 +335,7 @@ export default {
                 qnas.value[i].showMyAnswer = false;
               }
               console.log(qnas.value);
+              console.log(mapOption.value);
             });
         });
     };
@@ -512,6 +503,7 @@ export default {
       showCanvas,
       qnaAnswer,
       uploadQna,
+      mapOption,
     };
   },
 };

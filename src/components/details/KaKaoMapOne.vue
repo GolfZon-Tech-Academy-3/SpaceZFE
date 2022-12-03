@@ -22,7 +22,7 @@ export default {
       let container = document.getElementById("map");
       let options = {
         center: new kakao.maps.LatLng(37.566826, 126.9786567),
-        level: 3,
+        level: 5,
       };
 
       let map = new kakao.maps.Map(container, options);
@@ -33,6 +33,7 @@ export default {
     },
     searchSubmit() {
       const { location } = this.options;
+      console.log(this.options);
       this.geocoder.addressSearch(location, (result, status) => {
         if (status === kakao.maps.services.Status.OK) {
           let bounds = new kakao.maps.LatLngBounds();
@@ -47,6 +48,7 @@ export default {
           }
 
           this.map.setBounds(bounds);
+          map.relayout();
         }
       });
     },
@@ -54,9 +56,9 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #map {
-  width: 40vw;
+  width: 30vw;
   height: 60vh;
   /* top: 20px;
   left: 170px; */
