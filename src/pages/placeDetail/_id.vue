@@ -294,7 +294,7 @@ export default {
     });
 
     //리뷰 qna 장소 상세 get하는 함수
-    
+
     const res = async () => {
       await axios
         .get(`company/details/${id.value}`, {
@@ -504,7 +504,7 @@ export default {
       qnaAnswer,
       uploadQna,
       mapOption,
-
+      qnaInfo,
     };
   },
 };
