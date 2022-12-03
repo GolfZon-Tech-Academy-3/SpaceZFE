@@ -80,7 +80,7 @@ export default {
         
         const searchModal = async (event) => {
             searchWord.value = event.target.value;
-            await axios.post(`../../../company/total?page=1`,
+            await axios.post(`/company/total?page=1`,
                     {
                         date: null,
                         time: null,
@@ -93,7 +93,6 @@ export default {
                     })
                         .then((res) => {
                             result.value = res.data.company;
-                            console.log(res.data.company);
                         })
         }
 

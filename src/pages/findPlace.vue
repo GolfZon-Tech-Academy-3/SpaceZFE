@@ -291,6 +291,7 @@ export default {
         const resetCondition = () => {
             store.dispatch('updateDate', null);
             store.dispatch('updateTime', null);
+            store.dispatch('updateWord', '');
         }
 
         const addFavorite = async (companyId) => {

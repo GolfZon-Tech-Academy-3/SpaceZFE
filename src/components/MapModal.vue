@@ -104,7 +104,7 @@ export default {
         });
         nowMarker.setMap(map.value);
         map.value.setCenter(locPosition.value);
-        map.value.setLevel(4);
+        await map.value.setLevel(4);
         loading.value = false;
     }
 
