@@ -27,7 +27,7 @@
         </span>
         <span class="res1">
           <b class="resConduct"
-            >예약상품<span style="color: #5271ff">{{ resStatuses.length+resDone.length }}</span></b
+            >예약상품<span style="color: #5271ff">{{ resStatuses.length + resDone.length }}</span></b
           >
         </span>
       </p>
@@ -40,10 +40,35 @@
                 <span style="font-size: 2rem; margin-right: 3%;">{{ resStatuses[num - 1].spaceName }}</span> 
                 <span style="font-size: 1.3rem; color:#9E9E9E;margin-right: 5%">{{resStatuses[num - 1].type}}</span> 
                 <span
+                    v-if="resStatuses[num - 1].payStatus ==='003'"
+                    class="payStatusBtn"
+                    style="background-color: blue;
+                            color: white;"
+                  >보증금 결제완료</span>
+                <span
+                    v-if="resStatuses[num - 1].payStatus ==='002'"
                     class="payStatusBtn"
                     style="background-color: blue;
                             color: white;"
                   >결제완료</span>
+                <span
+                    v-if="resStatuses[num - 1].payStatus ==='001'"
+                    class="payStatusBtn"
+                    style="background-color: blue;
+                            color: white;"
+                  >결제 전</span>
+                  <span
+                    class="payStatusBtn"
+                    style="background-color: white;
+                        color: #041461;"
+                        v-if="resStatuses[num - 1].status === '001'"
+                  >예약 중</span>
+                <span
+                    class="payStatusBtn"
+                    style="background-color: #041461;
+                        color: white;"
+                        v-if="resStatuses[num - 1].status === '004'"
+                  >이용 완료</span>
               </p>
               <p>
                 {{ resStatuses[num - 1].startDate.slice(0,10) }} ~ {{ resStatuses[num - 1].endDate.slice(0,10) }}
@@ -65,7 +90,7 @@
                     <p style="font-size:1.3rem">{{resStatuses[num - 1].companyIdId}}</p>
                     <p style="margin-left: 3%; font-size:0.7rem;color:#838383">{{resStatuses[num - 1].location}}</p>
                     <p style="margin-left: 3%; font-size:1rem;color:#838383">{{resStatuses[num - 1].details}}</p>
-                    <p><button class="cancelBtn" @click="cancelRes(resStatuses[num - 1])">취소하기</button></p>
+                    <p><button class="cancelBtn" @click="cancelRes(resStatuses[num - 1])">예약 취소하기</button></p>
                 </div>
             </td>
           </tr>
@@ -81,17 +106,23 @@
                 <span style="font-size: 1.3rem; color:#9E9E9E;margin-right: 5%">{{resDone[num - 1].type}}</span> 
                 <span
                     class="payStatusBtn"
+                    style="background-color: white;
+                        color: #041461;"
+                        v-if="resDone[num - 1].status === '001'"
+                  >예약 중</span>
+                <span
+                    class="payStatusBtn"
                     style="background-color: #041461;
                         color: white;"
-                        v-if="resDone[num - 1].status === '002'"
+                        v-if="resDone[num - 1].status === '004'"
                   >이용 완료</span>
                 <span
                     class="payStatusBtn"
-                    v-if="resDone[num - 1].status === '003'"
+                    v-if="resDone[num - 1].status === '002'||'003'"
                     style="background-color: white;
                         color: red;
                         border: 1px solid red;"
-                  >결제 취소</span>
+                  >예약 취소</span>
               </p>
               <p>
                 {{ resDone[num - 1].startDate.slice(0,10) }} ~ {{ resDone[num - 1].endDate.slice(0,10) }}
@@ -137,7 +168,7 @@
                       리뷰 접기
                     </button>
                     </p>
-                      <ReviewWrite v-if="reviewShow" @close="closeModal" @reviewed='changeRevBtn' :writePack="writePack" :edit="editOrDel"/>
+                      <ReviewWrite v-if="reviewShow" @close="closeModal" :writePack="writePack" :edit="editOrDel"/>
                 </div>
             </td>
           </tr>
@@ -158,6 +189,7 @@ import { ref } from "vue";
 import axios from "@/axios";
 import ReviewWrite from '@/components/myPage/ReviewWrite.vue'
 import MyReview from '@/components/myPage/MyReview.vue'
+import {useRouter} from 'vue-router'
 
 export default {
     components:{
@@ -167,7 +199,8 @@ export default {
   setup() {
     const resStatus = ref(false);
     const resRecord = ref(true);
-    const reviewShow = ref(false)
+    const reviewShow = ref(false);
+    const router = useRouter()
 
     const editOrDel = ref({})
     const writePack = ref({
@@ -203,7 +236,6 @@ export default {
       for(let i = 0;i<res.data.length;i++){
         resDone.value.push(res.data[i])
         resDone.value[i].reviewToggle=false
-        // console.log(resDone.value[i])
       }
       console.log(resDone.value)
     }
@@ -236,6 +268,7 @@ export default {
         }).then(res=>{
           if(res.status < 300 && res.status >= 200){
             alert('취소가 완료되었습니다')
+            router.go()
           }
         })  
         } catch (error) {
@@ -265,37 +298,29 @@ export default {
       showDelete.value = false
     };
 
-    //리뷰 보기로 바꿀 함수
-    const changeRevBtn = ()=>{
-        // find.reviewed = true
-    }
 
-    //리뷰 바꾸면서 예약 정보들 객체에 접근해서 각각의 버튼들을 리뷰 작성 완료로 바꾸는 함수
+    //예약 정보들 객체에 담긴 불린값(리뷰토글)을 이용해 각각의 버튼들을 리뷰 작성을 보기로 바꾸는 함수
     const reviewToggle = (e)=>{
-      // console.log(e)
       let i = e;
       find = resDone.value.find(e=>e.reservationId===i)
-      // console.log(find)
       find.reviewToggle = !find.reviewToggle
     }
 
-    //마이리뷰에서 수정, 삭제를 누를시 여기에 임포트된 컴포넌트들을 조절하는 함수
+    //마이리뷰에서 수정을 누르면 emit으로 수정할 리뷰에게 수정할 것이라고 알려주고 ReviewWrite컴포넌트에게 수정을 전달해줘서 수정페이지로 변환
     const showWrite=(todo)=>{
       if(todo==='edit'){
         editOrDel.value.edit = todo
         reviewShow.value = !reviewShow.value;
       }else{
-        // console.log(todo);
         showDelete.value = true
       }
     }
+
+    //자식 컴포넌트인 MyReview에서 리뷰 아이디 받아오기
     const showWrite2=(id)=>{
       editOrDel.value.id = id
     }
 
-    // const resGet =async()=>{
-    //     const res= await axios.get()
-    // }
     return {
       resStatus,
       resRecord,
@@ -308,7 +333,6 @@ export default {
       reviewShow,
       reviewed,
       cancelRes,
-      changeRevBtn,
       reviewToggle,
       myReview,
       showWrite,

@@ -22,7 +22,7 @@
           </li>
           <li>
             <p>
-              휴계시간 : {{ details.breakOpen }}시 ~ {{ details.breakClose }}시
+              청소시간 : {{ details.breakOpen }}시 ~ {{ details.breakClose }}시
             </p>
           </li>
         </ul>

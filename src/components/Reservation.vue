@@ -174,7 +174,7 @@
           <li>보증금으로 예약 시 전 금액의 20% 가 결제됩니다.</li>
         </ul>
         <ul v-show="resInfos.type == '오피스'">
-          <li>오피스 예약은 후불로 이루어지며, 선결제가 불가합니다.</li>
+          <li>오피스 예약은 후불로 이루어지며, 선결제가 불가능합니다.</li>
         </ul>
         <div v-show="resInfos.type != '오피스'">
           <button class="nOfficePayBtn" @click="prePay">선결제</button>
@@ -196,11 +196,12 @@ import axios from "@/axios";
 import { useStore } from "vuex";
 
 export default {
+  name: "Reservation",
   setup() {
     const route = useRoute();
     const router = useRouter();
-    const store = useStore();
-    const id = ref(route.query.id);
+    const sid = ref(route.query.sid);
+    const cid = ref(route.query.cid);
 
     const phoneRes = ref();
     const phoneNum = ref();
@@ -252,26 +253,22 @@ export default {
 
     const startingTime = ref([]);
 
-    // const dates = ref([]);
-    // const yearMonth = ref("");
-    // let dateBoard = ref("");
+    let reserved;
 
     const date = new Date();
-    now = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+    now = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 
     //예약할 장소의 정보 불러오기
     const getResInfos = async () => {
-      const res = await axios.get(`reservation/details/${id.value}`, {
+      const res = await axios.get(`reservation/details/${sid.value}`, {
         headers: {
           Authorization: localStorage.getItem("access_token"),
         },
       });
       resInfos.value = { ...res.data };
+
       totalMileage.value = res.data.mileage;
       console.log(resInfos.value);
-      console.log(resInfos.value.breakOpen);
-      console.log(resInfos.value.breakClose);
-      // console.log(store.state.memberId);
 
       //운영시간 구하기
       let open = parseInt(resInfos.value.openTime);
@@ -284,13 +281,37 @@ export default {
           runningTime.value.push(i);
         }
       }
-      console.log(runningTime.value);
-      // if (resInfos.value.breakClose && resInfos.value.breakOpen) {
+
       runningTime.value.slice(
         parseInt(resInfos.value.breakOpen),
         parseInt(resInfos.value.breakClose)
       );
-      // }
+      console.log(runningTime.value);
+
+      let reservered = resInfos.value.reservedTime;
+      for (let i = 0; i < reservered.length; i++) {
+        // console.log(reservered[i].slice(12, 13));
+        // if(runningTime[i])
+        let found = runningTime.value.find(
+          (e) => e == reservered[i].slice(12, 13)
+        );
+        console.log(found);
+        for (let j = 0; j < runningTime.value.length; j++) {
+          if (runningTime.value[j] == found) {
+            runningTime.value.splice(j, 1);
+            j--;
+          }
+        }
+      }
+
+      //예약가능 날짜 구하기(오피스)
+      reserved = resInfos.value.reservedTime;
+      for (let i = 0; i < reserved.length; i++) {
+        let found = startDates.value.find((e) => e == reserved[i]);
+        for (let j = 0; j < startDates.value.length; j++) {
+          if (startDates.value[j] == found) startDates.value[j] = "x";
+        }
+      }
 
       //단위 변완기
       price.value = resInfos.value.price
@@ -461,8 +482,7 @@ export default {
                       impUid: rsp.imp_uid,
                       prepayUid: rsp.merchant_uid,
                       reservationName: resName.value,
-                      companyId: resInfos.value.companyId,
-                      price: total.value,
+                      companyId: cid.value,
                       spaceId: resInfos.value.spaceId,
                       mileage: mileage.value,
                       memberId: localStorage.getItem("memberId"),
@@ -547,8 +567,7 @@ export default {
                       prepayUid: rsp.merchant_uid,
                       memberId: parseInt(localStorage.getItem("memberId")),
                       reservationName: resName.value,
-                      companyId: resInfos.value.companyId,
-                      payStatus: "002",
+                      companyId: cid.value,
                       price: total.value,
                       prepay: "000",
                       spaceId: resInfos.value.spaceId,
@@ -606,7 +625,8 @@ export default {
 
       let days = new Date(currentYear, currentMonth, 0).getDate();
 
-      const today = date.getDate();
+      const today = 11;
+      //  date.getDate();
       let dates = [];
 
       //일수 만큼 배열에 추가
@@ -634,12 +654,15 @@ export default {
       //배열에 들어간 일수 만큼 출력
       for (let i = 0; i < dates.length; i++) {
         //1일이 있으면 달 증가
-        if (dates[i] === 1) {
+        if (dates[0] != 1 && dates[i] === 1) {
           currentMonth++;
           //달이 12월이 넘으면 1월로 변경
           if (currentMonth > 12) {
             currentMonth = 1;
             currentYear++;
+            if (currentMonth > 0 && currentMonth < 10) {
+              currentMonth = "0" + currentMonth;
+            }
           }
         }
         //일이 10미만일때 앞에 0붙여줌
@@ -648,7 +671,7 @@ export default {
           // dates[i] = dates[i].replace(1, "");
           // console.log(dates[i]);
         }
-        startDates.value.push(`${currentYear}/${currentMonth}/${dates[i]}`);
+        startDates.value.push(`${currentYear}-${currentMonth}-${dates[i]}`);
         // startDates.value[0] = "오늘";
       }
     };
@@ -656,9 +679,16 @@ export default {
 
     //클릭하면 버튼목록 지우고 클릭한 날짜 띄우는 함수
     const startDate = (e) => {
-      showingStart.value = true;
-      showingSTartDates.value = !showingSTartDates.value;
-      startingDay.value = e.target.value;
+      if (e.target.value == "x") {
+        alert("이미 예약된 날짜 입니다 다른 날짜를 선택해주세요");
+        showingSTartDates.value = !showingSTartDates.value;
+        startingDay.value = "";
+        showingStart.value = false;
+      } else {
+        showingStart.value = true;
+        showingSTartDates.value = !showingSTartDates.value;
+        startingDay.value = e.target.value;
+      }
     };
     const endDate = (e) => {
       showingEnd.value = true;
@@ -738,7 +768,16 @@ export default {
         if (dates[i] === 1 && dates[0] !== 1) {
           resMonth++;
         }
-        endDates.value.push(`${resYear}/${resMonth}/${dates[i]}`);
+        endDates.value.push(`${resYear}-${resMonth}-${dates[i]}`);
+      }
+      reserved = resInfos.value.reservedTime;
+      console.log(reserved);
+      for (let i = 0; i < reserved.length; i++) {
+        let found = endDates.value.find((e) => e == reserved[i]);
+        console.log(found);
+        for (let j = 0; j < endDates.value.length; j++) {
+          if (endDates.value[j] == found) endDates.value[j] = "x";
+        }
       }
     };
 
@@ -783,8 +822,7 @@ export default {
                       reservationName: resName.value,
                       prepayUid: rsp.merchant_uid,
                       memberId: parseInt(localStorage.getItem("memberId")),
-                      companyId: resInfos.value.companyId,
-                      payStatus: "001",
+                      companyId: cid.value,
                       price: total.value,
                       prepay: "002",
                       spaceId: resInfos.value.spaceId,
@@ -952,6 +990,9 @@ export default {
 .tdTypePrice {
   font-size: 1.3rem;
 }
+.tdTypeTime {
+  font-size: 1rem;
+}
 .typePriceTable {
   margin-top: 5%;
   margin-bottom: 5%;
@@ -962,6 +1003,7 @@ export default {
   border-radius: 7px;
   margin-bottom: 5%;
   opacity: 0.6;
+  font-size: 1.2rem;
 }
 .mileageBtn {
   height: 1.3rem;

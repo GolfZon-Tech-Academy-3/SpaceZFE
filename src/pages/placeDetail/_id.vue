@@ -25,9 +25,6 @@
             </button>
             <p class="placeLoc">{{ details.location }}</p>
             <ul class="placeDetails">
-              <!-- <li v-for="num in details.summary" :key="num">
-                  {{ details.summary[num - 1] }}
-                </li> -->
               <li>{{ details.summary }}</li>
             </ul>
           </div>
@@ -65,11 +62,11 @@
             장소 소개
           </p>
         </ul>
-        <ul class="nav" @click="showLocation">
-          <p class="hover" v-if="!locationClicked">이용 규칙</p>
+        <ul class="nav" @click="showrules">
+          <p class="hover" v-if="!rulesClicked">이용 규칙</p>
           <p
             class="hover"
-            v-if="locationClicked"
+            v-if="rulesClicked"
             style="color: blue; border-bottom: 1px solid blue"
           >
             이용 규칙
@@ -123,13 +120,13 @@
                 <b> 가격 </b>
                 <b
                   style="margin-left: 60%"
-                  v-show="resDetails[num - 1].type == office"
+                  v-show="resDetails[num - 1].type == '오피스'"
                 >
                   {{ resDetails[num - 1].price }}원/일
                 </b>
                 <b
                   style="margin-left: 60%"
-                  v-show="resDetails[num - 1].type != office"
+                  v-show="resDetails[num - 1].type != '오피스'"
                 >
                   {{
                     resDetails[num - 1].price
@@ -186,16 +183,13 @@
               {{ reviews.reviews[num - 1].content }}
             </div>
           </div>
-          <!-- <pagination
-            v-if="reviews.length"
-            :numberOfPages="numberOfPages"
-            :currentPage="currentPage"
-            @click="getDetails"
-          >
-          </pagination> -->
         </div>
         <div class="qnaClicked" v-show="qnaClicked">
           <h2 @click="uploadQna">질문하기</h2>
+          <span v-show="showWrite" @click="showWrite = true">접기</span>
+          <div>
+            <QnaWrite :qnaAnswer="qnaInfo" v-if="showWrite" />
+          </div>
           <div
             style="margin-top: 2%"
             v-for="num in qnas.list.length"
@@ -246,7 +240,8 @@
 import KaKaoMap from "@/components/details/KaKaoMapOne.vue";
 import UseInfo from "@/components/details/UseInfo.vue";
 import pagination from "@/components/details/Pagination.vue";
-import QnaOffcanvas from "@/components/details/QnaOffcanvas.vue";
+import QnaOffcanvas from "@/components/details/QnaAnswer.vue";
+import QnaWrite from "@/components/details/QnaWrite.vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "@/axios";
 import { ref } from "vue";
@@ -258,6 +253,7 @@ export default {
     UseInfo,
     pagination,
     QnaOffcanvas,
+    QnaWrite,
   },
 
   setup() {
@@ -285,6 +281,8 @@ export default {
     const reviews = ref([]);
     const qnas = ref([]);
     const qnaAnswer = ref({});
+    const showWrite = ref(false);
+    const qnaInfo = ref({});
 
     const mapOption = ref({
       center: {
@@ -296,6 +294,7 @@ export default {
     });
 
     //리뷰 qna 장소 상세 get하는 함수
+    
     const res = async () => {
       await axios
         .get(`company/details/${id.value}`, {
@@ -305,6 +304,8 @@ export default {
         })
         .then((res) => {
           details.value = { ...res.data };
+          qnaInfo.value.cid = details.value.companyId;
+          qnaInfo.value.cName = details.value.companyName;
           currentImg.value = details.value.spaceImages[currentImgNum.value];
           resDetails.value = details.value.spaces;
           companyId.value = res.data.companyId;
@@ -318,11 +319,8 @@ export default {
             })
             .then((res) => {
               reviews.value = { ...res.data };
-              // console.log(res.data.reviews);
               console.log(reviews.value);
-              // console.log(typeof reviews.value);
             });
-          // console.log(store.state.memberId);
           axios
             .get(`inquiry/total/${companyId.value}`, {
               headers: {
@@ -340,12 +338,11 @@ export default {
         });
     };
     res();
-    // console.log(reviews.value);
 
     //메인사진 클릭시 변경
     const changePic = () => {
       currentImgNum.value++;
-      if (currentImgNum.value === details.value.images.length) {
+      if (currentImgNum.value === details.value.spaceImages.length) {
         currentImgNum.value = 0;
       }
       currentImg.value = details.value.spaceImages[currentImgNum.value];
@@ -387,7 +384,7 @@ export default {
           },
         })
         .then(() => {
-          window.location.reload();
+          router.go();
         });
       console.log(details.value.companyLike);
     };
@@ -421,12 +418,14 @@ export default {
       router.push({
         name: "Reservation",
         query: {
-          id: id,
+          sid: id,
+          cid: route.query.id,
         },
       });
     };
     const uploadQna = () => {
       console.log(1);
+      showWrite.value = !showWrite.value;
     };
 
     // 하단 nav바 버튼들
@@ -447,7 +446,7 @@ export default {
       resClicked.value = false;
     };
 
-    const showLocation = () => {
+    const showrules = () => {
       rulesClicked.value = !rulesClicked.value;
       locClicked.value = false;
       reviewClicked.value = false;
@@ -491,11 +490,12 @@ export default {
       closeModal,
       resClick,
       locClick,
-      showLocation,
+      showrules,
       showReviews,
       reviews,
       qnas,
       showQna,
+      showWrite,
       moveToPage,
       useInfoModal,
       useInfoString,
@@ -504,6 +504,7 @@ export default {
       qnaAnswer,
       uploadQna,
       mapOption,
+
     };
   },
 };
@@ -581,16 +582,13 @@ export default {
 
 .navContainer {
   width: 900px;
-  /* min-height: 10vh; */
   height: fit-content;
 }
 .img {
   width: 70vw;
   text-align: left;
-  /* float: left; */
 }
 .big {
-  /* float: left; */
   width: 80vh;
   height: 60vh;
   position: relative;
@@ -602,7 +600,6 @@ export default {
   width: 100px;
   height: 100px;
   margin: 1.5%;
-  /* opacity: 0.5; */
 }
 .lineIntro {
   text-align: left;
@@ -666,7 +663,6 @@ export default {
   display: inline-block;
   list-style: none;
   margin-bottom: none;
-  /* position: inherit; */
 }
 
 iframe {
