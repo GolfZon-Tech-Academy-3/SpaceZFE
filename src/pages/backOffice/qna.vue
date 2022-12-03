@@ -7,7 +7,6 @@
                     <thead>
                         <th>회원번호</th>
                         <th>닉네임</th>
-                        <th>Space</th>
                         <th>문의 날짜</th>
                         <th>답변 유무</th>
                         <th></th>
@@ -16,7 +15,6 @@
                         <tr v-for="(qna, index) in qnas" :key="index">
                             <td>{{qna.memberId}}</td>
                             <td>{{qna.memberName}}</td>
-                            <td>{{qna.spaceName}}</td>
                             <td>{{qna.inquiryTime}}</td>
                             <td v-if="qna.isAnswer">답변완료</td>
                             <td v-else>미 답변</td>
@@ -47,7 +45,7 @@ export default {
 
         const getQnas = async () => {
             const companyId = localStorage.getItem('company_id');
-            await axios.get(`../back-office/inquiry/total/${companyId}`, {
+            await axios.get(`/back-office/inquiry/total/${companyId}`, {
                 headers: {
                     Authorization: localStorage.getItem('access_token')
                 }
@@ -106,11 +104,12 @@ table {
     margin: 3em auto;
     overflow: auto;
     font-weight: bold;
-    border-bottom: 2px #A69A9A solid;
+    border-collapse: collapse;
 }
 thead {
     height: 5%;
     min-height: 20px;
+    border-bottom: 2px #A69A9A solid;
 }
 th {
     padding: 0.5em 0;

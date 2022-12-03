@@ -226,7 +226,7 @@ export default {
                 alert('청소 시작 시간 또는 청소 종료 시간을 입력하세요');
             } else {
                 try {
-                    await axios.put(`../space/update?spaceId=${spaceId.value}`, {
+                    await axios.put(`/space/update?spaceId=${spaceId.value}`, {
                         spaceName: spaceName.value,
                         facilities: facilities.value.join(","),
                         price: price.value,

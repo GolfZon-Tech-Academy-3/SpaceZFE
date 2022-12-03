@@ -53,7 +53,7 @@ export default {
         const reservations = ref([]);
 
         const getResvs = async () => {
-            await axios.get(`../back-office/reservation/total/${localStorage.getItem('company_id')}`, {
+            await axios.get(`/back-office/reservation/total/${localStorage.getItem('company_id')}`, {
                 headers: {
                     Authorization: localStorage.getItem('access_token'),
                 }
@@ -69,7 +69,7 @@ export default {
         const cancelResv = async (type, id) => {
             if(type === '오피스') {
                 if(confirm("예약을 취소하시겠습니까?")) {
-                    await axios.put(`../reservation/office-cancel/${id}`, {
+                    await axios.put(`/reservation/office-cancel/${id}`, {
                         headers: {
                             Authorization: localStorage.getItem('access_token'),
                         }
@@ -80,7 +80,7 @@ export default {
                 }
             } else {
                 if(confirm("예약을 취소하시겠습니까?")) {
-                    await axios.put(`../reservation/desk-cancel/${id}`, {
+                    await axios.put(`/reservation/desk-cancel/${id}`, {
                         headers: {
                             Authorization: localStorage.getItem('access_token'),
                         }

@@ -368,6 +368,20 @@ export default {
       });
     };
 
+    //편의점 CS2, 지하철 SW8, 숙박 AD5, 음식점 FD6, 카페 CE7
+    const test = async () => {
+      await axios.get(`https://dapi.kakao.com/v2/local/search/category.json?category_group_code=CS2&x=126.73206089548538&y=37.52580830698037&radius=200`, {
+        headers: {
+          Authorization: 'KakaoAK 076ace465a5b49eeff44095c98711587',
+        }
+      }).then((res) => {
+        console.log(res.data);
+      })
+    }
+
+    test();
+    
+
     return {
       moveToAll,
       hotPlaces1,

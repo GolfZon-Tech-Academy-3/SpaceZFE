@@ -236,7 +236,7 @@ export default {
                 });
                 form.append('companyId', localStorage.getItem('company_id'));
                 try {
-                    await axios.post('../space/post', form, {
+                    await axios.post('/space/post', form, {
                         headers: {
                             Authorization: localStorage.getItem('access_token'),
                             'Content-Type': 'multipart/form-data',

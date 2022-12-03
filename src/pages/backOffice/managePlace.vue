@@ -54,7 +54,7 @@ export default {
 
         const getSpaces = async () => {
             const companyId = localStorage.getItem('company_id');
-            await axios.get(`../space/list/${companyId}`, {
+            await axios.get(`/space/list/${companyId}`, {
                 headers: {
                     Authorization: localStorage.getItem('access_token')
                 }

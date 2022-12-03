@@ -72,7 +72,7 @@ export default {
         console.log(localStorage.getItem('authority'));
 
         const getCompanys = async (type) => {
-            await axios.get(`../../company/manager/list`, {
+            await axios.get(`/company/manager/list`, {
                 headers: {
                     Authorizaion: localStorage.getItem('access_token'),
                 }
@@ -132,7 +132,7 @@ export default {
         const approve = async (id) => {
             if(confirm('매니저로 승인하시겠습니까?')) {
                 try {
-                    await axios.put(`../../company/approve/${id}`, {
+                    await axios.put(`/company/approve/${id}`, {
                         headers: {
                             Authorization: localStorage.getItem('access_token')
                         }
@@ -150,7 +150,7 @@ export default {
         const decline = async (id) => {
             if(confirm('매니저 승인을 거절하시겠습니까?')) {
                 try {
-                    await axios.put(`../../company/disapprove/${id}`, {
+                    await axios.put(`/company/disapprove/${id}`, {
                         headers: {
                             Authorization: localStorage.getItem('access_token')
                         }
@@ -255,43 +255,43 @@ tbody {
     height: 95%;
 }
 .wait {
-    background-color: #D8EAD5;
-    color:#96C58B;
-    padding: 0.5em;
-    border-radius: 1em;
-}
-.completed {
-    background-color: #ECD2CE;
-    color:#CD786C;
-    padding: 0.5em;
-    border-radius: 1em;
-}
-.declined {
     background-color: #A09EFF;
     color:#2A32F2;
     padding: 0.5em;
     border-radius: 1em;
 }
+.completed {
+    background-color: #D8EAD5;
+    color:#96C58B;
+    padding: 0.5em;
+    border-radius: 1em;
+}
+.declined {
+    background-color: #ECD2CE;
+    color:#CD786C;
+    padding: 0.5em;
+    border-radius: 1em;
+}
 .checkAct {
     font-size: 1.5em;
-    background-color: #D8EAD5;
+    color: #96C58B;
     border-radius: 50%;
     cursor: pointer;
 }
 .checkDe {
     font-size: 1.5em;
-    background-color: #EDEDED;
+    color: #EDEDED;
     border-radius: 50%;
 }
 .xAct {
     font-size: 1.5em;
-    background-color: #ECD2CE;
+    color: #CD786C;
     border-radius: 50%;
     cursor: pointer;
 }
 .xDe {
     font-size: 1.5em;
-    background-color: #EDEDED;
+    color: #EDEDED;
     border-radius: 50%;
 }
 </style>

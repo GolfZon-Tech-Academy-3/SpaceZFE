@@ -40,7 +40,7 @@ export default {
         const todayResv = ref(0);
         const todayCancel = ref(0);
         const getTodayResv = async () => {
-            await axios.get(`../back-office/reservation/count/${localStorage.getItem('company_id')}`, {
+            await axios.get(`/back-office/reservation/count/${localStorage.getItem('company_id')}`, {
                 headers: {
                     Authorization: localStorage.getItem('access_token'),
                 }
@@ -50,14 +50,12 @@ export default {
                 })
         }
         const getTodayCancel = async () => {
-            await axios.get(`../back-office/cancel/count/${localStorage.getItem('company_id')}`, {
+            await axios.get(`/back-office/cancel/count/${localStorage.getItem('company_id')}`, {
                 headers: {
                     Authorization: localStorage.getItem('access_token'),
                 }
             })
                 .then((res) => {
-                    console.log(localStorage.getItem('company_id'));
-                    console.log(res.data);
                     todayCancel.value = res.data;
                 })
         }
