@@ -463,6 +463,29 @@ export default {
         alert("입력을 다시 확인해주세요.");
         window.location.reload(true);
       } else {
+        try {
+            await axios.post(
+                    "reservation/check",
+                    {
+                      spaceId: resInfos.value.spaceId,
+                      startDate: now + " " + startSelected.value,
+                      endDate: now + " " + endSelected.value,
+                    },
+                    {
+                      headers: {
+                        Authorization: localStorage.getItem("access_token"),
+                      },
+                    }
+                  )
+                  .then((res) => {
+                    console.log(res);
+                  })
+                }
+                catch(error) {
+                  console.log(error.message);
+                  alert('타인이 현재 예약 중인 시간입니다');
+                  return;
+                }
         IMP.init("imp76177137");
         IMP.request_pay(
           {
@@ -547,6 +570,29 @@ export default {
         alert("입력을 다시 확인해주세요.");
         window.location.reload(true);
       } else {
+        try {
+            await axios.post(
+                    "reservation/check",
+                    {
+                      spaceId: resInfos.value.spaceId,
+                      startDate: now + " " + startSelected.value,
+                      endDate: now + " " + endSelected.value,
+                    },
+                    {
+                      headers: {
+                        Authorization: localStorage.getItem("access_token"),
+                      },
+                    }
+                  )
+                  .then((res) => {
+                    console.log(res);
+                  })
+                }
+                catch(error) {
+                  console.log(error.message);
+                  alert('타인이 현재 예약 중인 시간입니다');
+                  return;
+                }
         IMP.init("imp76177137");
         IMP.request_pay(
           {
@@ -805,7 +851,7 @@ export default {
     };
 
     //오피스 결제
-    const officePayBtn = () => {
+    const officePayBtn = async () => {
       if (
         !resName.value ||
         !total.value ||
@@ -821,6 +867,29 @@ export default {
         alert("입력을 다시 확인해주세요.");
         window.location.reload(true);
       } else {
+        try {
+            await axios.post(
+                    "reservation/check",
+                    {
+                      spaceId: resInfos.value.spaceId,
+                      startDate: resStartDay.value + " " + "00:00",
+                      endDate: resEndDay.value + " " + "23:59",
+                    },
+                    {
+                      headers: {
+                        Authorization: localStorage.getItem("access_token"),
+                      },
+                    }
+                  )
+                  .then((res) => {
+                    console.log(res);
+                  })
+                }
+                catch(error) {
+                  console.log(error.message);
+                  alert('타인이 현재 예약 중인 시간입니다');
+                  return;
+                }
         IMP.init("imp76177137");
         IMP.request_pay(
           {
