@@ -86,6 +86,7 @@ export default {
           await axios.post('member/mail', {email: email.value})
           .then(
             (res) => {
+              console.log(res.data);
               localStorage.setItem('certificationNum', res.data);
               emailOK.value = true;
             }

@@ -87,7 +87,6 @@ export default {
                     form.append('location', address.value);
                     form.append('details', detailAddress.value);
                     form.append('summary', placeSummary.value);
-                    form.append('companyName', placeName.value);
                     form.append('multipartFile', file);
                     try {
                         await axios.post('company/post', form, {
