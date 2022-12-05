@@ -16,7 +16,7 @@
                     <router-link class="element" v-if="isMaster" :to="{name: 'MasterCompany'}" @click="closeSearchModal">마스터</router-link>
                 </li>
                 <li>
-                    <router-link class="element" v-if="isManager" :to="{name: 'Dashboard'}" @click="closeSearchModal">매니저</router-link>
+                    <router-link class="element" v-if="isManager" :to="{name: 'ReservationStatus'}" @click="closeSearchModal">매니저</router-link>
                 </li>
                 <li>
                     <span class="element" v-if="!isLogined" @click= "openLoginModal" >로그인</span>
