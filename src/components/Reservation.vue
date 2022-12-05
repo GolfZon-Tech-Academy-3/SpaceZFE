@@ -244,8 +244,12 @@ export default {
     const showingEndDates = ref(false);
     const showingStart = ref(false);
     const showingEnd = ref(false);
+
     const startingDay = ref("");
+    const resStartDay = ref("");
     const endingDay = ref("");
+    const resEndDay = ref("");
+
     const rentDays = ref(30);
     const runningTime = ref([]);
 
@@ -625,8 +629,7 @@ export default {
 
       let days = new Date(currentYear, currentMonth, 0).getDate();
 
-      const today = 11;
-      //  date.getDate();
+      const today = date.getDate();
       let dates = [];
 
       //일수 만큼 배열에 추가
@@ -688,12 +691,32 @@ export default {
         showingStart.value = true;
         showingSTartDates.value = !showingSTartDates.value;
         startingDay.value = e.target.value;
+        let [year, month, date] = startingDay.value.split("-");
+        if (month.charAt(0) == "0") {
+          month = month.substr(1);
+        }
+        if (date.charAt(0) == "0") {
+          date = date.substr(1);
+        }
+        resStartDay.value = `${year}-${month}-${date}`;
+        console.log(resStartDay.value);
       }
     };
+
+    //예약 종료일 버튼
     const endDate = (e) => {
       showingEnd.value = true;
       showingEndDates.value = !showingEndDates.value;
       endingDay.value = e.target.value;
+      let [year, month, date] = endingDay.value.split("-");
+      if (month.charAt(0) == "0") {
+        month = month.substr(1);
+      }
+      if (date.charAt(0) == "0") {
+        date = date.substr(1);
+      }
+      resEndDay.value = `${year}-${month}-${date}`;
+      console.log(resEndDay.value);
       showCoast();
     };
 
@@ -826,8 +849,8 @@ export default {
                       price: total.value,
                       prepay: "002",
                       spaceId: resInfos.value.spaceId,
-                      startDate: startingDay.value + " " + "00:00",
-                      endDate: endingDay.value + " " + "23:59",
+                      startDate: resStartDay.value + " " + "00:00",
+                      endDate: resEndDay.value + " " + "23:59",
                       mileage: mileage.value,
                     },
                     {
@@ -922,6 +945,8 @@ export default {
       showEndDates,
       officePayBtn,
       runningTime,
+      resStartDay,
+      resEndDay,
     };
   },
 };
