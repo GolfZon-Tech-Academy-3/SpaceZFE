@@ -3,7 +3,6 @@
     <div class="picsAndIntro">
       <div class="form">
         <p class="lineIntro">{{ details.companyName }}</p>
-        <p class="shortInto">{{ details.info }}</p>
         <div class="buttons">
           <button class="button" value="minus" @click="movePic">&lt;</button>
           <button class="button" value="plus" @click="movePic">&gt;</button>
