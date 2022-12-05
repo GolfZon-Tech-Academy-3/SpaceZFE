@@ -375,6 +375,23 @@ export default {
       );
     };
 
+    //마일리지 계산기
+    const milCalcul = () => {
+      if (mileage.value > totalMileage.value) {
+        alert("사용가능한 마일리지를 초과했습니다");
+        mileage.value = 0;
+        return;
+      }
+      totalMileage.value -= mileage.value;
+      // totalCoast.value = (total.value - mileage.value)
+      //   .toString()
+      //   .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      total.value -= mileage.value;
+      totalCoast.value = total.value
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+
     //비용 계산기
     const showCoast = () => {
       showTotalCoast.value = true;
@@ -400,23 +417,6 @@ export default {
           getDateDiff(endingDay.value, startingDay.value) *
           resInfos.value.price;
       }
-      totalCoast.value = total.value
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    };
-
-    //마일리지 계산기
-    const milCalcul = () => {
-      if (mileage.value > totalMileage.value) {
-        alert("사용가능한 마일리지를 초과했습니다");
-        mileage.value = 0;
-        return;
-      }
-      totalMileage.value -= mileage.value;
-      // totalCoast.value = (total.value - mileage.value)
-      //   .toString()
-      //   .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      total.value -= mileage.value;
       totalCoast.value = total.value
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
