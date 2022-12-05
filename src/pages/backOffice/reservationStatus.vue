@@ -2,12 +2,27 @@
     <div style="display:flex">
         <MenuBar />
         <div class="content">
+            <div style="width: 70% height: 2em;">
+                <div class="status">
+                    <div class="reserved">
+                        <div style="font-weight: bold;">
+                            금일 예약 {{todayResv}} 건
+                        </div>
+                    </div>
+                    <div class="canceled">
+                        <div style="font-weight: bold;">
+                            금일 취소 예약 {{todayCancel}} 건
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="condition">
-                날짜
-                <input class="date" type="date" />
+                <span style="font-weight: bold">기간별 대여 금액 조회{{money}}</span>
+                <input class="date" type="date" v-model="startDate" />
                 ~
-                <input class="date" type="date" />
-                <button class="search">검색</button>
+                <input class="date" type="date" v-model="endDate" />
+                <button class="search" @click="searchWithDateCondition">검색</button>
             </div>
 
             <div class="result">
@@ -29,7 +44,7 @@
                             <td>{{resv.reservationName}}</td>
                             <td v-if="resv.status === '001'" style="color: #383ED8;">예약 중<br/>
                                 <button class="button" @click="cancelResv(resv.type, resv.reservationId)">취소</button>
-                                <button class="button">완료 처리</button>
+                                <button class="button" @click="completeResv(resv.reservationId)">완료 처리</button>
                             </td>
                             <td v-if="resv.status === '002'" style="color: #383ED8;">예약 취소</td>
                             <td v-if="resv.status === '004'" style="color: #383ED8;">이용 완료</td>
@@ -51,6 +66,34 @@ export default {
     },
     setup() {
         const reservations = ref([]);
+        const todayResv = ref(0);
+        const todayCancel = ref(0);
+        const startDate = ref('');
+        const endDate = ref('');
+        const money = ref('');
+        const getTodayResv = async () => {
+            await axios.get(`/back-office/reservation/count/${localStorage.getItem('company_id')}`, {
+                headers: {
+                    Authorization: localStorage.getItem('access_token'),
+                }
+            })
+                .then((res) => {
+                    todayResv.value = res.data;
+                })
+        }
+        const getTodayCancel = async () => {
+            await axios.get(`/back-office/cancel/count/${localStorage.getItem('company_id')}`, {
+                headers: {
+                    Authorization: localStorage.getItem('access_token'),
+                }
+            })
+                .then((res) => {
+                    todayCancel.value = res.data;
+                })
+        }
+
+        getTodayResv();
+        getTodayCancel();
 
         const getResvs = async () => {
             await axios.get(`/back-office/reservation/total/${localStorage.getItem('company_id')}`, {
@@ -92,15 +135,81 @@ export default {
             }
         }
 
+        const completeResv = async (id) => {
+            if(confirm("이용 완료 처리하시겠습니까?")) {
+                    await axios.put(`/back-office/reservation//done/${id}`, {
+                        headers: {
+                            Authorization: localStorage.getItem('access_token'),
+                        }
+                    })
+                        .then(() => {
+                            window.location.reload();
+                        })
+                }
+        }
+
+        const searchWithDateCondition = async () => {
+            if(startDate.value > endDate.value) {
+                alert('시작 날짜가 마지막 날짜보다 늦습니다');
+                startDate.value = '';
+                endDate.value = '';
+                return;
+            }
+            if(startDate.value != '' && endDate.value != '') {
+                await axios.post(`/back-office/total-incomes/${localStorage.getItem('company_id')}`, {
+                    startDate : startDate.value, endDate : endDate.value},
+                    {
+                        headers: {
+                            Authorization: localStorage.getItem('access_token'),
+                        }
+                    }).then((res) => {
+                        console.log(res.data);
+                        money.value = ' : ' + res.data.totalIncome.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원';
+                        reservations.value = res.data.reservations;
+                    })
+            }
+        }
+
         return {
             reservations,
             cancelResv,
+            completeResv,
+            todayResv,
+            todayCancel,
+            getTodayResv,
+            getTodayCancel,
+            startDate,
+            endDate,
+            searchWithDateCondition,
+            money,
         }
     }
 }
 </script>
 
 <style scoped>
+.reserved {
+    width: 40%;
+    height: 100%;
+    background-color:#EDF8E7;
+    float: left;
+    text-align: center;
+    border-radius: 1em;
+    display : flex;
+    justify-content: center;
+    align-items : center;
+}
+.canceled {
+    width: 40%;
+    height: 100%;
+    background-color:#FCDDDD;
+    float: right;
+    text-align: center;
+    border-radius: 1em;
+    display : flex;
+    justify-content: center;
+    align-items : center;
+}
 .content {
     width: 85%;
     height:100vh;
@@ -110,7 +219,7 @@ export default {
     text-align: center;
 }
 .condition {
-    width : 60%;
+    width : 80%;
     height: 4%;
     margin: 1em auto;
 }
@@ -125,6 +234,11 @@ export default {
 }
 .date:focus {
     outline: none;
+}
+.status {
+    width: 50%;
+    height: 4em;
+    margin: 1em auto;
 }
 .search {
     padding: 1% 3%;

@@ -1,10 +1,5 @@
 <template>
     <div class="wrapper">
-        <div :class="[link === '/backoffice/dashboard' ? 'menuSelected' : 'menu']" @click="moveToDashboard">
-            <div style="text-decoration:none; color:white">
-                대시보드
-            </div>
-        </div>
         <div :class="[link === '/backoffice/reservationstatus' ? 'menuSelected' : 'menu']" @click="moveToReservationStatus">
             <div style="text-decoration:none; color:white">
                 예약 현황
@@ -13,11 +8,6 @@
         <div :class="[link === '/backoffice/manageplace' ? 'menuSelected' : 'menu']" @click="moveToManagePlace">
             <div style="text-decoration:none; color:white">
                 공간 정보/수정
-            </div>
-        </div>
-        <div :class="[link === '/backoffice/payment' ? 'menuSelected' : 'menu']" @click="moveToPayment">
-            <div style="text-decoration:none; color:white">
-                결제
             </div>
         </div>
         <div :class="[link === '/backoffice/qna' ? 'menuSelected' : 'menu']" @click="moveToQna">
@@ -34,18 +24,13 @@ export default {
     setup() {
         const router = useRouter();
         const link =  window.location.pathname;
-
-        const moveToDashboard = () => {router.push({name:'Dashboard'})}
         const moveToReservationStatus = () => {router.push({name:'ReservationStatus'})}
         const moveToManagePlace = () => {router.push({name: 'ManagePlace'})}
-        const moveToPayment = () => {router.push({name: 'Payment'})}
         const moveToQna = () => {router.push({name: 'Qna'})}
 
         return {
-            moveToDashboard,
             moveToReservationStatus,
             moveToManagePlace,
-            moveToPayment,
             moveToQna,
             link
         }

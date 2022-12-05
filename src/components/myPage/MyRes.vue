@@ -118,7 +118,7 @@
                   >이용 완료</span>
                 <span
                     class="payStatusBtn"
-                    v-if="resDone[num - 1].status === '002'||'003'"
+                    v-if="resDone[num - 1].status === '002'"
                     style="background-color: white;
                         color: red;
                         border: 1px solid red;"

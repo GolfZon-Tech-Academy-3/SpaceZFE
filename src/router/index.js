@@ -4,10 +4,8 @@ import SignUp from "../pages/signup.vue";
 import Main from "../pages/main.vue";
 import Guide from "../pages/guide.vue";
 import FindPlace from "../pages/findPlace.vue";
-import Dashboard from "../pages/backOffice/dashBoard.vue";
 import ReservationStatus from "../pages/backOffice/reservationStatus.vue";
 import ManagePlace from "../pages/backOffice/managePlace.vue";
-import Payment from "../pages/backOffice/payment.vue";
 import Qna from "../pages/backOffice/qna.vue";
 import MasterCompany from "../pages/master/company.vue";
 import MasterAccount from "../pages/master/account.vue";
@@ -57,11 +55,6 @@ const router = createRouter({
       component: Guide,
     },
     {
-      path: "/backoffice/dashboard",
-      name: "Dashboard",
-      component: Dashboard,
-    },
-    {
       path: "/backoffice/reservationstatus",
       name: "ReservationStatus",
       component: ReservationStatus,
@@ -70,11 +63,6 @@ const router = createRouter({
       path: "/backoffice/manageplace",
       name: "ManagePlace",
       component: ManagePlace,
-    },
-    {
-      path: "/backoffice/payment",
-      name: "Payment",
-      component: Payment,
     },
     {
       path: "/backoffice/qna",
