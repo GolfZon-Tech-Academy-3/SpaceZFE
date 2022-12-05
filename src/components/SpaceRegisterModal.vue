@@ -33,7 +33,7 @@
                     <div style="padding: 0 1em 0.5em 0">
                         Space 가격
                     </div>
-                    <input v-if="isOffice" style="padding: 0.5em" type="text" />
+                    <input v-if="isOffice" style="padding: 0.5em" v-model="price" type="text" />
                     <span v-if="isOffice" style="font-size:0.8em; padding-left: 0.5em">원 / 일</span>
                     <label v-if="!isOffice">{{price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} 원 / 시간</label>
                 </div>
