@@ -66,6 +66,7 @@
 <script>
 import { ref } from "vue";
 import axios from "axios";
+import { useRouter } from "vue-router";
 export default {
   props: {
     writePack: {
@@ -82,6 +83,7 @@ export default {
     const revContent = ref("");
     const ids = ref(props.writePack);
     const edit = ref(props.edit);
+    const router = useRouter();
 
     console.log(edit.value);
 
@@ -99,7 +101,7 @@ export default {
       }
     };
 
-    //리뷰수정 쏘기
+    //리뷰 쏘기
     const submit = async () => {
       try {
         await axios
@@ -123,7 +125,8 @@ export default {
             }
           });
       } catch (error) {
-        alert("예상치 못한 오류가 발생했습니다");
+        console.log(error);
+        // alert("예상치 못한 오류가 발생했습니다");
       }
     };
 
