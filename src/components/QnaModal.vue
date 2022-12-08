@@ -13,7 +13,7 @@
                 <button v-else class="btn" @click="registerAnswer(qna.inquiryId)">답변 등록</button>
             </div>
             <div class="answer">
-                <textarea id="answer" v-model="qna.answers" maxlength="500" style="width: 96%; height: 88%;padding:2%;resize:none;outline:none;font-family: Inter;background-color:#F5F7F8;border:none;border-radius: 1em;">
+                <textarea id="answer" v-model="qna.answers" maxlength="500" style="width: 96%; height: 88%;padding:2%;resize:none;outline:none;background-color:#F5F7F8;border:none;border-radius: 1em;">
                 </textarea>
             </div>
         </div>
@@ -159,8 +159,5 @@ export default {
     cursor: pointer;
     float: right;
     margin-left: 1em;
-}
-.btn:hover {
-    background-color: skyblue;
 }
 </style>

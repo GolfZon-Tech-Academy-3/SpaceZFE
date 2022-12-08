@@ -94,9 +94,6 @@ export default {
     border-radius: 1vw;
     cursor: pointer;
 }
-.regPlace:hover {
-    background-color: rgb(63, 149, 184);
-}
 .title {
     font-size: 1.3em;
     border-radius: 50%;

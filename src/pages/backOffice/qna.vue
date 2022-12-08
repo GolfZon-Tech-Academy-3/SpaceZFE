@@ -133,7 +133,4 @@ tbody {
     cursor: pointer;
     border-radius: 0.5em;
 }
-.btn:hover {
-    background-color: skyblue;
-}
 </style>

@@ -228,7 +228,6 @@ export default {
     border: 1px #9E9E9E solid;
     padding: 0.7% 0.7%;
     border-radius: 2em;
-    font-family: Inter;
     margin-left: 1em;
     margin-right: 1em;
 }
@@ -248,9 +247,6 @@ export default {
     border-radius: 2em;
     cursor: pointer;
 }
-.search:hover {
-    background-color: skyblue;
-}
 .button {
     padding: 1% 3%;
     background-color: #041461;
@@ -258,9 +254,6 @@ export default {
     border: none;
     border-radius: 2em;
     cursor: pointer;
-}
-.button:hover {
-    background-color: skyblue;
 }
 .result {
     width: 100%;

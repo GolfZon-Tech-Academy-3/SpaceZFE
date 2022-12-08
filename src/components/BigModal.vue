@@ -93,7 +93,4 @@ export default {
   margin: 0.2em;
   cursor: pointer;
 }
-.close:hover {
-  color: grey;
-}
 </style>

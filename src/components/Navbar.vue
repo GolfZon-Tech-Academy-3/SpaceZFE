@@ -1,36 +1,29 @@
 <template>
     <div>
         <nav class="nav">
-            <div class="menu">
-                <router-link class="logo" :to="{name: 'Home'} ">
-                    SPACEZ
-                </router-link>
+            <div class="logo" @click="moveTo('Home')">
+                SPACEZ
             </div>
-            <input id="searchInput" autocomplete="off" @focus="openSearchModal" @keyup.enter="moveToSearch" :value="searchWord" @input="searchModal"/>
-            <button v-if="showClose" class="closeBtn" @click="closeSearchModal">X</button>
-            <ul class="elements">
-                <li v-if="!isManager && !isMaster && isLogined" @click="controlMapModal">
-                    지도
-                </li>
-                <li>
-                    <router-link class="element" v-if="isMaster" :to="{name: 'MasterCompany'}" @click="closeSearchModal">마스터</router-link>
-                </li>
-                <li>
-                    <router-link class="element" v-if="isManager" :to="{name: 'ReservationStatus'}" @click="closeSearchModal">매니저</router-link>
-                </li>
-                <li>
-                    <span class="element" v-if="!isLogined" @click= "openLoginModal" >로그인</span>
-                </li>
-                <li>
-                    <span class="element" v-if="isLogined" @click="logout">로그아웃</span>
-                </li>
-                <li>
-                    <router-link class="element" :to="{name: 'MyPage'}" @click="closeSearchModal">마이페이지</router-link>
-                </li>
-                <li>
-                    <img style="width:1.2em; height:1.2em;border-radius: 50%;" v-if="isLogined" :src="profile_image" @click="closeSearchModal"/>
-                </li>
-            </ul>
+            <input v-if="isLogined" id="searchInput" autocomplete="off" @focus="openSearchModal" @keyup.enter="moveToSearch" :value="searchWord" @input="searchModal"/>
+            <div v-if="!isManager && !isMaster && isLogined" style="cursor: pointer;margin: 0 1em;" @click="controlMapModal">
+                map
+            </div>
+            <div v-if="isMaster" style="cursor: pointer;margin: 0 1em;" @click="moveTo('MasterCompany')">
+                master
+            </div>
+            <div v-if="isManager" style="cursor: pointer;margin: 0 1em;" @click="moveTo('ReservationStatus')">
+                manager
+            </div>
+            <div class="element" style="cursor: pointer;margin: 0 1em;" v-if="!isLogined" @click= "openLoginModal" >
+                login
+            </div>
+            <div class="element" style="cursor: pointer;margin: 0 1em;" v-if="isLogined" @click="logout">
+                logout
+            </div>
+            <div v-if="(isLogined && !isMaster)" style="cursor: pointer;margin: 0 1em;" @click="moveTo('MyPage')">
+                mypage
+            </div>
+            <img style="width:1.8em; height:1.8em;border-radius: 50%;margin: 0 1em;" v-if="isLogined" :src="profile_image" @click="closeSearchModal"/>
         </nav>
         <LoginModal v-if="showLoginModal" @close="closeLoginModal" />
         <SearchModal v-if="showSearchModal" @close="closeSearchModal" :result="result" />
@@ -147,6 +140,13 @@ export default {
             showMapModal.value = !showMapModal.value;
         }
 
+        const moveTo = (page) => {
+            router.push({
+                name: page,
+            })
+            closeSearchModal();
+        }
+
         return {
             showLoginModal,
             openLoginModal,
@@ -166,6 +166,7 @@ export default {
             result,
             controlMapModal,
             showMapModal,
+            moveTo,
         }
     }
 }
@@ -173,27 +174,25 @@ export default {
 
 <style scoped>
 .nav {
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3.75em;
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5vh 0.5vw;
-    border-bottom: 1px solid grey;
-}
-.menu {
-    height: 100%;
+    box-shadow: 0 0 10px 0 gray;
+    background-color: white;
+    z-index: 100;
 }
 .logo{
-    font-size: 5vh;
     font-family: Archivo;
-    float:left;
     cursor: pointer;
     color: #041461;
-    margin-left: 2em;
-}
-.logo:hover {
-    color: rgb(63, 149, 184);
+    font-size: 2em;
+    margin-left: 1em;
+    margin-right:23%;
 }
 ul {
     list-style: none;
@@ -209,23 +208,17 @@ a {
     text-decoration: none;
     color: grey;
 }
-a:hover {
-    color: #041461;
-}
 #searchInput {
     width: 10em;
     font-size: 1.4em;
     color: grey;
     border: none;
     background-color: #EDEDED;
-    border-radius: 5vw;
-    padding: 0.7% 2%;
+    border-radius: 1em;
+    padding: 0.2em 1em;
 }
 #searchInput:focus {
     outline: none;
-}
-.element:hover {
-    color: #041461;
 }
 .closeBtn {
     background-color: white;
