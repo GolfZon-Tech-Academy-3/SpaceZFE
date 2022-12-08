@@ -16,7 +16,9 @@
             <textarea class="textarea" placeholder="장소 소개를 입력해주세요" maxlength="250" v-model="placeIntro" />
             <div class="item">이용 규칙</div>
             <textarea class="textarea" placeholder="장소 이용 규칙을 입력해주세요" maxlength="250" v-model="rule" />
-            <button class="submit" @click="submit">신청</button>
+            <div style="text-align: center;">
+                <button class="submit" @click="submit">신청</button>
+            </div>
         </div>
     </div>
 </template>
@@ -131,7 +133,7 @@ export default {
 
 <style scoped>
 .wrapper {
-    width: 40%;
+    width: 500px;
     height: 100%;
     margin: 0 auto;
 }
@@ -148,9 +150,6 @@ export default {
     border-radius: 1em;
     cursor: pointer;
 }
-.file::file-selector-button:hover {
-    background-color:skyblue;
-}
 .btn {
     padding: 1em;
     background-color: #041461;
@@ -160,9 +159,6 @@ export default {
     border-radius: 1em;
     margin-left: 1em;
     cursor: pointer;
-}
-.btn:hover {
-    background-color: skyblue;
 }
 .input {
     width: 60%;
@@ -175,25 +171,21 @@ export default {
     border-bottom: 1px solid black;
 }
 .textarea {
-    width: 100%;
+    width: 485px;
     height: 90px;
-    font-family: Inter;
     resize: none;
     padding: 0.5em;
+    border-radius: 1em;
 }
 .submit {
     padding: 1em 3em;
+    width: 90%;
     background-color: #041461;
     color: white;
     font-weight: bold;
     border: none;
     border-radius: 1em;
-    margin-top: 2em;
-    margin-left: 1em;
+    margin: 2em 0;
     cursor: pointer;
-    float: right;
-}
-.submit:hover {
-    background-color: skyblue;
 }
 </style>

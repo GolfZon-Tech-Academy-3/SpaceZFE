@@ -3,61 +3,36 @@
     <div class="popular">
       <div class="inner">
         <div class="title">
-          <span>인기장소</span>
+          인기장소
           <span class="hot">HOT</span>
           <button :disabled="disabled" @click="changePage" class="button">
-            >
+            <span class="material-symbols-outlined">
+              chevron_left
+            </span>
           </button>
           <button :disabled="disabled" @click="changePage" class="button">
-            &lt;
+            <span class="material-symbols-outlined">
+              chevron_right
+            </span>
           </button>
         </div>
         <div v-if="page" class="places">
           <div v-for="place in hotPlaces1" :key="place.companyId" class="place">
             <div style="width: 80%; height: 70%; margin: 0 auto">
-              <img
-                class="img"
-                :src="place.firstImage"
-                @click="moveToPlaceDetail(place.companyId)"
-              />
+              <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)" />
             </div>
-            <div
-              style="
-                width: 80%;
-                height: 7%;
-                margin: 0 auto;
-                font-size: 100%;
-                color: #9e9e9e;
-              "
-            >
+            <div style=" width: 80%; height: 7%; margin: 0 auto; font-size: 100%; color: #9e9e9e; " >
               <span>{{ place.location }}</span>
               <span v-for="type in place.types" :key="type">·{{ type }}</span>
-              <img
-                class="favorite_red"
-                @click="addFavorite(place.companyId)"
-                v-if="place.companyLike"
-                src="../assets/heart_red.png"
-              />
-              <img
-                class="favorite"
-                @click="addFavorite(place.companyId)"
-                v-else
-                src="../assets/heart.png"
-              />
+              <img class="favorite_red" @click="addFavorite(place.companyId)" v-if="place.companyLike" src="../assets/heart_red.png" />
+              <img class="favorite" @click="addFavorite(place.companyId)" v-else src="../assets/heart.png" />
             </div>
-            <div
-              style="width: 80%; height: 16%; margin: 0 auto; font-size: 160%"
-            >
+            <div style="width: 80%; height: 16%; margin: 0 auto; font-size: 160%" >
               <span style="cursor: pointer">{{ place.companyName }}</span>
             </div>
             <div style="width: 80%; height: 7%; margin: 0 auto">
-              <span
-                >{{
-                  place.lowPrice
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                }}
-                원
+              <span>
+                {{ place.lowPrice .toString() .replace(/\B(?=(\d{3})+(?!\d))/g, ",") }} 원
               </span>
               <span style="color: #f6ca4e">★</span>
               <span>{{ place.avgReview }}</span>
@@ -70,29 +45,12 @@
         <div v-else class="places">
           <div v-for="place in hotPlaces2" :key="place.companyId" class="place">
             <div style="width: 80%; height: 70%; margin: 0 auto">
-              <img
-                class="img"
-                :src="place.firstImage"
-                @click="moveToPlaceDetail(place.companyId)"
-              />
+              <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)" />
             </div>
-            <div
-              style="
-                width: 80%;
-                height: 7%;
-                margin: 0 auto;
-                font-size: 100%;
-                color: #9e9e9e;
-              "
-            >
+            <div style=" width: 80%; height: 7%; margin: 0 auto; font-size: 100%; color: #9e9e9e; " >
               <span>{{ place.location }}</span>
               <span v-for="type in place.types" :key="type">·{{ type }}</span>
-              <img
-                class="favorite_red"
-                @click="addFavorite(place.companyId)"
-                v-if="place.companyLike"
-                src="../assets/heart_red.png"
-              />
+              <img class="favorite_red" @click="addFavorite(place.companyId)" v-if="place.companyLike" src="../assets/heart_red.png" />
               <img
                 class="favorite"
                 @click="addFavorite(place.companyId)"
@@ -106,42 +64,25 @@
               <span style="cursor: pointer">{{ place.companyName }}</span>
             </div>
             <div style="width: 80%; height: 7%; margin: 0 auto">
-              <span
-                >{{
-                  place.lowPrice
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                }}
-                원
+              <span>
+                {{ place.lowPrice .toString() .replace(/\B(?=(\d{3})+(?!\d))/g, ",") }} 원
               </span>
               <span style="color: #f6ca4e">★</span>
               <span>{{ place.avgReview }}</span>
-              <span style="color: #9e9e9e; margin-left: 1em"
-                >리뷰 {{ place.reviewSize }}</span
-              >
+              <span style="color: #9e9e9e; margin-left: 1em" >
+                리뷰 {{ place.reviewSize }}
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="guide">
       <div class="box40">
         <router-link class="hostingGuide" :to="{ name: 'Guide' }">
-          <div
-            style="
-              color: white;
-              font-size: 3vh;
-              font-weight: bold;
-              padding-left: 3%;
-              margin-top: 3.4%;
-            "
-          >
+          <div style=" color: white; font-size: 3vh; font-weight: bold; padding-left: 3%; margin-top: 3.4%; " >
             장소 등록, 시작해볼까요?
-            <img
-              style="float: right; width: 7%; margin-right: 3%"
-              src="../assets/reg.png"
-            />
+            <img style="float: right; width: 7%; margin-right: 3%" src="../assets/reg.png" />
           </div>
           <div style="color: white; font-weight: bold; padding-left: 3%">
             호스팅 가이드 보기
@@ -151,65 +92,38 @@
       <div class="box40">
         <div class="views">
           <div class="view1" @click="moveToOffice">
-            <div
-              style="
-                margin: 5% 5%;
-                font-size: 2vw;
-                font-weight: bold;
-                color: #041461;
-              "
-            >
+            <div style=" margin: 5% 5%; font-size: 1.5em; font-weight: bold; color: #041461; " >
               OFFICE
             </div>
           </div>
           <div class="view2" @click="moveToMeeting">
-            <div style="margin: 5% 5%; font-size: 2vw; font-weight: bold">
+            <div style="margin: 5% 5%; font-size: 1.5em;; font-weight: bold">
               MEETING ROOM
             </div>
           </div>
           <div class="view3" @click="moveToDesk">
-            <div
-              style="
-                margin: 5% 5%;
-                font-size: 2vw;
-                font-weight: bold;
-                color: white;
-              "
-            >
+            <div style=" margin: 5% 5%; font-size: 1.5em; font-weight: bold; color: white; " >
               DESK
             </div>
           </div>
         </div>
       </div>
-      <div class="box20" @click="moveToAll">
-        <div class="findPlace">전체 보기</div>
+      <div class="box20">
+        <div class="findPlace" @click="moveToAll">전체 보기</div>
       </div>
-    </div>
 
     <div class="new">
       <div class="inner">
         <div class="title">
-          <span>새로 등록된 장소</span>
+          새로 등록된 장소
           <span class="newP">NEW</span>
         </div>
-        <div class="places2">
+        <div class="places">
           <div v-for="place in newPlaces" :key="place.companyId" class="place">
             <div style="width: 80%; height: 70%; margin: 0 auto">
-              <img
-                class="img"
-                :src="place.firstImage"
-                @click="moveToPlaceDetail(place.companyId)"
-              />
+              <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)" />
             </div>
-            <div
-              style="
-                width: 80%;
-                height: 7%;
-                margin: 0 auto;
-                font-size: 100%;
-                color: #9e9e9e;
-              "
-            >
+            <div style=" width: 80%; height: 7%; margin: 0 auto; font-size: 100%; color: #9e9e9e; " >
               <span>{{ place.location }}</span>
               <span v-for="type in place.types" :key="type">·{{ type }}</span>
               <img
@@ -245,11 +159,6 @@
                 >리뷰 {{ place.reviewSize }}</span
               >
             </div>
-          </div>
-        </div>
-        <div class="box20">
-          <div class="findPlace" @click="moveToAll">
-            <div>새로 등록된 장소 더보기</div>
           </div>
         </div>
       </div>
@@ -403,25 +312,26 @@ export default {
 <style scoped>
 .popular {
   width: 100%;
-  min-width: 1000px;
-  height: 40vw;
-  min-height: 400px;
+  height: 450px;
   background-color: #f0f3f5;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .inner {
-  width: 90%;
+  width: 1200px;
   height: 80%;
 }
 .title {
   width: 100%;
-  height: 10%;
+  height: 2em;
   color: #041461;
   float: left;
   font-size: 1.5em;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1em;
 }
 .hot {
   margin-left: 1em;
@@ -429,38 +339,25 @@ export default {
   font-weight: lighter;
   color: #ff5252;
   background-color: white;
-  padding: 0.3vw 1.2vw;
+  padding: 0.3em 1em;
   border: 1px #ff5252 solid;
-  border-radius: 2vw;
+  border-radius: 1em;
+  margin-right: 1em;
 }
 .places {
   width: 100%;
   height: 80%;
 }
 .button {
-  width: 2.5vw;
-  height: 2.5vw;
-  font-size: 1.5vw;
-  float: right;
-  border-radius: 50%;
+  width: 2em;
+  height: 2em;
   border: none;
-  background-color: white;
   cursor: pointer;
-}
-.button:hover {
-  background-color: grey;
 }
 .place {
   width: 25%;
   height: 100%;
   float: left;
-}
-.guide {
-  width: 100%;
-  min-width: 1000px;
-  height: 40vw;
-  min-height: 400px;
-  background-color: white;
 }
 .box40 {
   width: 100%;
@@ -468,6 +365,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 3em 0;
 }
 .box20 {
   width: 100%;
@@ -477,16 +375,16 @@ export default {
   align-items: center;
 }
 .hostingGuide {
-  width: 80%;
-  height: 60%;
+  width: 1000px;
+  height: 140px;
   background-color: #041461;
   border-radius: 1em;
   cursor: pointer;
   text-decoration: none;
 }
 .views {
-  width: 70%;
-  height: 50%;
+  width: 1000px;
+  height: 100px;
   display: flex;
 }
 .view1 {
@@ -520,13 +418,14 @@ export default {
   background-size: contain;
 }
 .findPlace {
-  width: 30%;
-  height: 60%;
-  font-size: 2vw;
-  font-weight: bold;
-  color: grey;
-  background-color: #ededed;
-  border-radius: 1vw;
+  width: 200px;
+  height: 50px;
+  font-size: 1em;
+  font-weight: lighter;
+  color: gray;
+  background-color: white;
+  border: 1px solid gray;
+  border-radius: 1em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -534,7 +433,8 @@ export default {
   text-decoration: none;
 }
 .findPlace:hover {
-  background-color: black;
+  background-color: gray;
+  color: white;
 }
 .favorite {
   float: right;
@@ -549,16 +449,14 @@ export default {
 .img {
   width: 100%;
   height: 80%;
-  object-fit: fill;
+  object-fit: cover;
   margin: 0 auto;
   cursor: pointer;
   border-radius: 1em;
 }
 .new {
   width: 100%;
-  min-width: 1000px;
-  height: 40vw;
-  min-height: 400px;
+  height: 450px;
   background-color: white;
   display: flex;
   justify-content: center;
@@ -570,12 +468,8 @@ export default {
   font-weight: lighter;
   color: #5271ff;
   background-color: white;
-  padding: 0.3vw 1.2vw;
+  padding: 0.3em 1em;
   border: 1px #5271ff solid;
   border-radius: 2vw;
-}
-.places2 {
-  width: 100%;
-  height: 70%;
 }
 </style>

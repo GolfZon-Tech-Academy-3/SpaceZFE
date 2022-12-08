@@ -147,9 +147,6 @@ tbody {
     cursor: pointer;
     border-radius: 0.5em;
 }
-.edit:hover {
-    background-color: skyblue;
-}
 .submit {
     float:right;
     margin: 2em 0;
@@ -159,8 +156,5 @@ tbody {
     color: white;
     cursor: pointer;
     border-radius: 0.5em;
-}
-.submit:hover {
-    background-color: black;
 }
 </style>

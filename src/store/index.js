@@ -6,7 +6,7 @@ export default createStore({
     currentPage: 1,
     searchType: "total",
     searchDate: "",
-    searchTime: "",
+    searchTime: "none",
     searchWord: "",
     // memberId: "",
     // authority: "",

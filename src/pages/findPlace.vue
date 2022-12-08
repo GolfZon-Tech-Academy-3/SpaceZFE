@@ -33,7 +33,7 @@
             <span style="display:inline-block;width: 13%; height: 100%;margin-left:1%;">
                 <div style="color: #9E9E9E; font-size: 1em;">시간</div>
                 <select id="timeSelector" @change="changeTime($event)" :value="searchTime">
-                    <option value="null" selected>선택안함</option>
+                    <option value="none" selected>선택안함</option>
                     <option v-for="val in 23" :key="val">{{val}} 시</option>
                 </select>
             </span>
@@ -54,7 +54,7 @@
         <div v-else :class="{'grid1': isOne, 'grid2':isTwo, 'grid3':isThree}">
             <div v-for="place in resultPlace" :key="place.companyId">
                 <div style="height: 50%;padding: 1em 1em 0 1em;">
-                    <img :src="place.firstImage" style="width:100%;height:100%;object-fit:fill;border-radius: 1em;cursor: pointer;" @click="moveToPlaceDetail(place.companyId)"/>
+                    <img :src="place.firstImage" style="width:100%;height:100%;object-fit:cover;border-radius: 1em;cursor: pointer;" @click="moveToPlaceDetail(place.companyId)"/>
                 </div>
                 <div style="height: 10%;padding: 0 2em;margin-top:1em;color:#9E9E9E">
                     <span>{{place.location}}</span>
@@ -392,7 +392,6 @@ export default {
     border: 1px #9E9E9E solid;
     padding: 0.7% 0.7%;
     border-radius: 2em;
-    font-family: Inter;
 }
 #dateSelector:focus {
     outline: none;
@@ -425,9 +424,6 @@ export default {
   border-radius: 2em;
   cursor: pointer;
   margin-right: 1em;
-}
-.searchButton:hover {
-    background-color: skyblue;
 }
 .grid1 {
     display: grid;

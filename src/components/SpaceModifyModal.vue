@@ -348,9 +348,6 @@ export default {
     border-radius: 0.5em;
     cursor: pointer;
 }
-.cancel:hover {
-    background-color: black;
-}
 .reg {
     background-color: #041461;
     color: white;
@@ -359,8 +356,5 @@ export default {
     border: none;
     border-radius: 0.5em;
     cursor: pointer;
-}
-.reg:hover {
-    background-color: skyblue;
 }
 </style>

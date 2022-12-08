@@ -1,59 +1,41 @@
 <template>
-  <div class="wrapper">
-    <div class="deco">
-      <img class="signUpLogo" src="../assets/signUpLogo.png" />
-    </div>
-    <div class="signUp">
-      <div style="height: 10%;">
-        <h2>회원가입</h2>
-      </div>
-      <div class="signUpForm">
-        <div>
-          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 1vh);">
-            <span>
-              이메일
-            </span>
+  <div style="width : 400px;height : 600px;margin: 0 auto;">
+    <h2 style="width: 100%;">회원가입</h2>
+      <div style="width: 400px;height: 600px;margin: 0 auto;">
+          <div style="width: 100%">
+            이메일
           </div>
-        
-          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 4vh);">
+          <div style="width: 100%;margin-bottom: 1em;">
             <input :disabled="emailOK" class="input" type="text" placeholder="이메일" v-model="email">
             <button :disabled="emailOK" class="button" @click="sendCertification">인증번호 보내기</button>
           </div>
-          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 12vh);">
-            <span>
-              인증번호
-            </span>
+          <div style="width: 100%">
+            인증번호
           </div>
-          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 15vh);">
+          <div style="width: 100%;margin-bottom: 1em;">
             <input :disabled="certificationOK" class="input" type="text" placeholder="인증번호 입력" v-model="certificationNum">
             <button :disabled="certificationOK" class="button" @click="checkCertificationNum">확인</button>
           </div>
-          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 23vh);">
-            <span>
-              비밀번호
-            </span>
+          <div style="width: 100%;">
+            비밀번호
           </div>
-          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 26vh);">
+          <div style="width: 100%;margin-bottom: 1em;">
             <input class="input" type="password" placeholder="비밀번호 입력" v-model="pw">
           </div>
-          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 33vh);">
+          <div style="width: 100%;margin-bottom: 1em;">
             <input class="input" type="password" placeholder="비밀번호 재입력" v-model="pwCheck">
           </div>
-          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 40vh);">
-            <span>
-              닉네임
-            </span>
+          <div style="width: 100%;">
+            닉네임
           </div>
-          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 43vh);">
+          <div style="width: 100%;margin-bottom: 1em;">
             <input :disabled="nicknameOK" class="input" type="text" placeholder="닉네임 입력" v-model="nickname">
             <button :disabled="nicknameOK" class="button" @click="checkNickName">중복확인</button>
           </div>
-          <div style="min-width: 400px;width: 40%;height: 3%;float:left; position: absolute;top: 20%;left: 75%;transform: translate(-50%, 50vh);">
-            <button type="submit" class="submit" @click="signUp">회원가입 하기</button>
+          <div style="text-align: center;">
+            <button class="submit" @click="signUp">회원가입 하기</button>
           </div>
-        </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -175,66 +157,20 @@ export default {
 </script>
 
 <style scoped>
-.wrapper {
-  width : 100%;
-  height : 95vh;
-  
-}
-.deco {
-  width: 50%;
-  height: 100%;
-  background-color: #041461;
-  text-align: center;
-  display : flex;
-  justify-content: center;
-  align-items : center;
-  float: left;
-}
-@media (max-width: 1000px) {
-  .deco {
-    display: none;
-  }
-}
-.signUpLogo {
-  width: 50vh;
-}
-.signUp {
-  width: 50%;
-  height: 100%;
-  background-color: transparent;
-  float: left;
-}
-.signUpForm {
-  height: 90%;
-}
-h2 {
-  color:#041461;
-  float: left;
-  padding-left: 5%;
-}
-.title {
-  height: 10%;
-  display : flex;
-  justify-content: center;
-  align-items : center;
-}
 .button {
-  padding: 3%;
+  padding: 1em;
   background-color: #041461;
   color: white;
   border: none;
   border-radius: 2em;
-  margin-left: 3%;
+  margin-left: 1em;
   cursor: pointer;
-}
-.button:hover {
-  background-color: skyblue;
 }
 .input {
   width: 60%;
   border: 1px solid white;
   border-bottom: 1px solid gray;
-  padding: 3%;
+  padding: 1em;
 }
 .input:focus {
   outline: none;
@@ -242,15 +178,12 @@ h2 {
 }
 .submit {
   width: 70%;
-  padding: 3%;
-  margin-top: 10%;
+  padding: 1em;
+  margin: 1em 0;
   background-color: #041461;
   color: white;
   border: none;
   border-radius: 2em;
   cursor: pointer;
-}
-.submit:hover {
-  background-color: skyblue;
 }
 </style>

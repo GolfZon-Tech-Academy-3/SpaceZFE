@@ -1,5 +1,6 @@
 <template>
     <div class="wrapper" @click="closeModal">
+        <div style="width: 100%; height: 3.75em;" />
         <div class="results">
             <div v-for="res in result" :key="res.companyId" class="result" @click="moveToPlaceDetail(res.companyId)">
                 <div style="float:left">{{res.companyName}}</div>
@@ -75,8 +76,5 @@ export default {
     height: 1em;
     padding:1em;
     cursor:pointer;
-}
-.result:hover {
-    background-color: #EDEDED;
 }
 </style>

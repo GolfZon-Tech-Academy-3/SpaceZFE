@@ -139,9 +139,6 @@ export default {
   padding: 1em;
   border-radius: 1em;
 }
-.login:hover {
-  background-color: rgb(63, 149, 184);
-}
 .submit {
   color: grey;
   text-decoration: none;
