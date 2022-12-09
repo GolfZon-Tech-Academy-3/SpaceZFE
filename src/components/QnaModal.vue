@@ -1,16 +1,14 @@
 <template>
-    <div class="wrapper">
-        <div class="modal-back">
-            <div style="width: 100%; height: 1.7em;">
-                <button class="close" @click="closeModal">X</button>
-            </div>
+    <div class="wrapper" @click="closeModal">
+        <div class="modal-back" @click.stop>
             <div class="question">
-                {{qna.inquiries}}
+                <textarea disabled id="answer" :value="qna.inquiries" maxlength="500" style="width: 96%; height: 88%;padding:2%;resize:none;outline:none;background-color:#F5F7F8;border:none;border-radius: 1em;">
+                </textarea>
             </div>
-            <div style="width: 90%; height: 10%;margin: auto;">
-                <button v-if="qna.isAnswer" class="btn" @click="modifyAnswer(qna.inquiryId)">답변 수정</button>
-                <button v-if="qna.isAnswer" class="btn" @click="deleteAnswer(qna.inquiryId)">답변 삭제</button>
-                <button v-else class="btn" @click="registerAnswer(qna.inquiryId)">답변 등록</button>
+            <div style="width: 90%; height: 10%;margin:1em auto">
+                <button v-if="qna.isAnswer" class="btn" @click.stop="modifyAnswer(qna.inquiryId)">답변 수정</button>
+                <button v-if="qna.isAnswer" class="btn" @click.stop="deleteAnswer(qna.inquiryId)">답변 삭제</button>
+                <button v-else class="btn" @click.stop="registerAnswer(qna.inquiryId)">답변 등록</button>
             </div>
             <div class="answer">
                 <textarea id="answer" v-model="qna.answers" maxlength="500" style="width: 96%; height: 88%;padding:2%;resize:none;outline:none;background-color:#F5F7F8;border:none;border-radius: 1em;">
@@ -139,14 +137,14 @@ export default {
     cursor: pointer;
 }
 .question {
-    width: 90%;
-    height: 40%;
-    margin: auto;
+    width: 97%;
+    height: 35%;
+    margin: 1em auto 2em auto;
     color: #858589;
 }
 .answer {
-    width: 90%;
-    height: 40%;
+    width: 97%;
+    height: 35%;
     margin: auto;
     border-radius: 1em;
 }

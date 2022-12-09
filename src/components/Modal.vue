@@ -56,7 +56,7 @@ export default {
   width: 100%;
   text-align: center;
   background-color: white;
-  border-radius: 2rem;
+  border-radius: 2em;
 }
 .modal-header {
   font-family: Archivo;

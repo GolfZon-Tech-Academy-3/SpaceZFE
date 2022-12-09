@@ -1,5 +1,5 @@
 <template>
-    <div style="display:flex">
+    <div style="display:flex;">
         <MenuBar />
         <div class="content">
             <div class="scrolltable">
@@ -25,8 +25,7 @@
             
             <div style="width: 70%;height: 20%;margin: 0 auto;">
                 <button class="submit" @click="openRegister">등록하기</button>
-            </div>
-            
+            </div> 
         </div>
 
         <SpaceRegisterModal v-if="showRegisterSpace" @close="closeRegister" />
@@ -101,21 +100,21 @@ export default {
 
 <style scoped>
 .scrolltable {
-    width: 100%;
-    max-height: 80%;
+    width: 80%;
+    max-height: 75%;
     display:block;
     overflow: scroll;
     overflow-x: hidden;
     overflow-y: auto;
+    margin: 3em auto;
 }
 .content {
     width: 85%;
     height:100vh;
 }
 table {
-    width: 80%;
+    width: 100%;
     height: 80%;
-    margin: 3em auto;
     overflow: auto;
     font-weight: bold;
     border-collapse: collapse;
@@ -149,7 +148,6 @@ tbody {
 }
 .submit {
     float:right;
-    margin: 2em 0;
     padding: 0.5em 1em;
     border: none;
     background-color: #5AA8D9;

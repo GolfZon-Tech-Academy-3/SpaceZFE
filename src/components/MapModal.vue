@@ -1,5 +1,5 @@
 <template>
-    <div class="modal-wrapper" @click="close">
+    <div class="modal-wrapper" @dblclick="close">
         <div class="modal-dialog" @click.stop>
           <div id="kakaoMap">
             <div id="loading" v-show="loading" />

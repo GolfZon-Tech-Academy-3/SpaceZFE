@@ -33,7 +33,7 @@
                     <div style="padding: 0 1em 0.5em 0">
                         Space 가격
                     </div>
-                    <input v-if="isOffice" style="padding: 0.5em" v-model="price" type="text" />
+                    <input v-if="isOffice" style="padding: 0.5em" v-model="officePrice" type="text" />
                     <span v-if="isOffice" style="font-size:0.8em; padding-left: 0.5em">원 / 일</span>
                     <label v-if="!isOffice">{{price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} 원 / 시간</label>
                 </div>
@@ -104,7 +104,8 @@ export default {
         const spaceName = ref('');
         const facilities = ref([]);
         const type = ref('');
-        const price = ref('');
+        const price = ref(0);
+        const officePrice = ref(0);
         const isOffice = ref(false);
         const startTime = ref('');
         const endTime = ref('');
@@ -225,6 +226,9 @@ export default {
                 const form = new FormData();
                 form.append('spaceName', spaceName.value);
                 form.append('facilities', facilities.value.join(","));
+                if(type.value === '오피스') {
+                    price.value = officePrice.value;
+                }
                 form.append('price', price.value);
                 form.append('type', type.value);
                 form.append('openTime', startTime.value);
@@ -258,6 +262,7 @@ export default {
             spaceName,
             type,
             price,
+            officePrice,
             isOffice,
             facilities,
             startTime,
