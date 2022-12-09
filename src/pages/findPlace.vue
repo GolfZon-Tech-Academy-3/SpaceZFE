@@ -56,8 +56,8 @@
         <div v-if="noResult" style="margin:3% auto; width : 100%;text-align:center;font-size:2em;">
             검색결과 없음
         </div>
-        <div v-else :class="{'grid1': isOne, 'grid2':isTwo, 'grid3':isThree}">
-            <div v-for="place in resultPlace" :key="place.companyId">
+        <div v-else class="grid">
+            <div v-for="place in resultPlace" :key="place.companyId" @scroll="handleScroll">
                 <div style="height: 50%;padding: 1em 1em 0 1em;">
                     <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)"/>
                 </div>
@@ -87,16 +87,9 @@
             </div>
         </div>
 
-        <div v-if="!noResult" class="pagination">
-            <div v-if="currentPage != 1" class="nav-btn" @click="decreasePage">이전</div>
-            <div v-for="page in pageNum" :key="page" :class="{'curPage' : (page === currentPage), 'notCurPage' : (page !== currentPage)}"
-                @click="updatePage(page)">
-                {{page}}
-            </div>  
-            <div v-if="currentPage != pageNum" class="nav-btn" @click="increasePage">다음</div>
-        </div>
         <SearchMapModal @close="controlMapModal" v-if="showMapModal" :placeInfo="resultPlace" />
         <Toast v-if="showToast" :message="toastMessage" />
+        <div id="loading" v-show="loading" />
     </div>
 </template>
 
@@ -120,16 +113,14 @@ export default {
         const searchDate = computed(() => store.state.searchDate);
         const searchTime = computed(() => store.state.searchTime);
         const searchWord = computed(() => store.state.searchWord);
-        const resultCurrentNum = ref(0);
         const resultPlace = ref([]);
-        const isOne = ref(false);
-        const isTwo = ref(false);
-        const isThree = ref(false);
         const noResult = ref(false);
         const resultAllNum = ref(0);
         const pageNum = ref(0);
-        const currentPage = computed(() => store.state.currentPage);
+        const currentPage = ref(1);
         const showMapModal = ref(false);
+        const loading = ref(false);
+        const stopLoading = ref(false);
 
         const {
             toastMessage, showToast, triggerToast,
@@ -145,7 +136,10 @@ export default {
 
         const scrollEvent = () => {
             document.documentElement.scrollTop;
-            if(document.querySelector('html').scrollTop > 165) {
+            let scrollTop = document.querySelector('html').scrollTop;
+            let clientHeight = document.querySelector('html').clientHeight;
+            let scrollHeight = document.querySelector('html').scrollHeight;
+            if(scrollTop > 165) {
                 document.getElementById('fixed').style = 'position: fixed;top: 3.75em;left:0;width: 100%;background-color: white;box-shadow: 0 0 5px 0 gray';
                 document.getElementById('title').style = 'display: none;';
                 document.getElementById('fake').style = 'width: 100%;height: 250px;';
@@ -154,12 +148,22 @@ export default {
                 document.getElementById('title').style = '';
                 document.getElementById('fake').style = '';
             }
+            if(scrollTop + clientHeight === scrollHeight) {
+                if(!stopLoading.value) {
+                    loading.value = true;
+                    setTimeout(() => {
+                        loading.value = false;
+                        currentPage.value += 1;
+                        search(currentPage.value);
+                    }, 1000);
+                }
+            }
         }
 
-        const search = async () => {
+        const search = async (page) => {
             if(searchTime.value != null) { //검색 시간이 존재할때
                 if(searchTime.value.length === 3) {
-                    await axios.post(`company/${searchType.value}?page=${currentPage.value}`,
+                    await axios.post(`company/${searchType.value}?page=${page}`,
                     {
                         date: searchDate.value,
                         time: searchTime.value[0] + ':00',
@@ -173,20 +177,16 @@ export default {
                         .then((res) => {
                             resultAllNum.value = res.data.totalSize;
                             pageNum.value = res.data.totalPage;
-                            resultCurrentNum.value = res.data.company.length;
-                            if(resultCurrentNum.value === 0) {
-                                noResult.value = true;
+                            if(res.data.company.length === 0) {
+                                triggerToast('더 로드할 장소가 없습니다');
+                                stopLoading.value = true;
                             }
-                            if((resultCurrentNum.value - 1) / 3 < 1) {
-                                isOne.value = true;
-                            } else if((resultCurrentNum.value - 1) / 3 < 2) {
-                                isTwo.value = true;
-                            } else {
-                                isThree.value = true;
-                            }
+                            res.data.company.forEach(place => {
+                                resultPlace.value.push(place);
+                            });
                         })
                 } else {
-                    await axios.post(`company/${searchType.value}?page=${currentPage.value}`,
+                    await axios.post(`company/${searchType.value}?page=${page}`,
                         {
                             date: searchDate.value,
                             time: searchTime.value[0] + searchTime.value[1] + ':00',
@@ -200,22 +200,17 @@ export default {
                             .then((res) => {
                                 resultAllNum.value = res.data.totalSize;
                                 pageNum.value = res.data.totalPage;
-                                resultCurrentNum.value = res.data.company.length;
-                                resultPlace.value = res.data.company;
-                                if(resultCurrentNum.value === 0) {
-                                    noResult.value = true;
+                                if(res.data.company.length === 0) {
+                                    triggerToast('더 로드할 장소가 없습니다');
+                                    stopLoading.value = true;
                                 }
-                                if((resultCurrentNum.value - 1) / 3 < 1) {
-                                    isOne.value = true;
-                                } else if((resultCurrentNum.value - 1) / 3 < 2) {
-                                    isTwo.value = true;
-                                } else {
-                                    isThree.value = true;
-                                }
+                                res.data.company.forEach(place => {
+                                    resultPlace.value.push(place);
+                                });
                             })
                 }
             } else { //검색 시간이 존재하지 않을 때
-                await axios.post(`company/${searchType.value}?page=${currentPage.value}`,
+                await axios.post(`company/${searchType.value}?page=${page}`,
                     {
                         date: searchDate.value,
                         time: searchTime.value,
@@ -227,25 +222,21 @@ export default {
                         }
                     })
                         .then((res) => {
+                            console.log(res.data);
                             resultAllNum.value = res.data.totalSize;
                             pageNum.value = res.data.totalPage;
-                            resultCurrentNum.value = res.data.company.length;
-                            resultPlace.value = res.data.company;
-                            if(resultCurrentNum.value === 0) {
-                                noResult.value = true;
+                            if(res.data.company.length === 0) {
+                                triggerToast('더 로드할 장소가 없습니다');
+                                stopLoading.value = true;
                             }
-                            if((resultCurrentNum.value - 1) / 3 < 1) {
-                                isOne.value = true;
-                            } else if((resultCurrentNum.value - 1) / 3 < 2) {
-                                isTwo.value = true;
-                            } else {
-                                isThree.value = true;
-                            }
+                            res.data.company.forEach(place => {
+                                resultPlace.value.push(place);
+                            });
                         })
             }
         }
 
-        search();
+        search(1);
 
         const changeDate = (event) => {
             if(event.target.value === '') {
@@ -284,25 +275,25 @@ export default {
 
         const selectAll = () => {
             store.dispatch('updateType', 'total');
-            store.dispatch('updatePage', 1);
-            search();
+            currentPage.value = 1;
+            window.location.reload();
         }
 
         const selectOffice = () => {
             store.dispatch('updateType', 'office');
-            store.dispatch('updatePage', 1);
+            currentPage.value = 1;
             window.location.reload();
         }
 
         const selectDesk = () => {
             store.dispatch('updateType', 'desk');
-            store.dispatch('updatePage', 1);
+            currentPage.value = 1;
             window.location.reload();
         }
 
         const selectMeeting = () => {
             store.dispatch('updateType', 'meeting-room');
-            store.dispatch('updatePage', 1);
+            currentPage.value = 1;
             window.location.reload();
         }
 
@@ -311,22 +302,7 @@ export default {
                 alert('날짜와 시간을 모두 선택해주세요');
                 return;
             }
-            store.dispatch('updatePage', 1);
-            window.location.reload();
-        }
-
-        const updatePage = (page) => {
-            store.dispatch('updatePage', page);
-            window.location.reload();
-        }
-
-        const increasePage = () => {
-            store.dispatch('updatePage', currentPage.value + 1);
-            window.location.reload();
-        }
-
-        const decreasePage = () => {
-            store.dispatch('updatePage', currentPage.value - 1);
+            currentPage.value = 1;
             window.location.reload();
         }
 
@@ -377,11 +353,7 @@ export default {
             selectOffice,
             selectDesk,
             selectMeeting,
-            resultCurrentNum,
             noResult,
-            isOne,
-            isTwo,
-            isThree,
             searchWithCondition,
             search,
             resultAllNum,
@@ -395,9 +367,6 @@ export default {
             changeDate,
             changeTime,
             changeWord,
-            updatePage,
-            increasePage,
-            decreasePage,
             resetCondition,
             resultPlace,
             addFavorite,
@@ -408,6 +377,8 @@ export default {
             toastMessage,
             showToast,
             triggerToast,
+            loading,
+            stopLoading,
         }
     }
 }
@@ -476,29 +447,12 @@ export default {
   cursor: pointer;
   margin-right: 1em;
 }
-.grid1 {
+.grid {
     display: grid;
-    width: 80%;
-    height: 50vh;
-    margin: 3% auto;
+    width: 1000px;
+    margin: 2em auto;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-auto-rows: 50vh;
-}
-.grid2 {
-    display: grid;
-    width: 80%;
-    height: 100vh;
-    margin: 3% auto;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-auto-rows: 50vh;
-}
-.grid3 {
-    display: grid;
-    width: 80%;
-    height: 150vh;
-    margin: 3% auto;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-auto-rows: 50vh;
+    grid-auto-rows: 410px;
 }
 .pagination {
     width: 100%;
@@ -586,5 +540,24 @@ export default {
     width: 90%;
     height: 90%;
     margin: 5%;
+}
+#loading {
+    position: fixed;
+    top: calc(50% - 25px);
+    left: calc(50% - 25px);
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: black;
+    animation: spin 1s ease-in-out infinite;
+    -webkit-animation: spin 1s ease-in-out infinite;
+    z-index: 1000;
+}
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
 }
 </style>
