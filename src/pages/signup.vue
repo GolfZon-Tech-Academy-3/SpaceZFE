@@ -68,6 +68,7 @@ export default {
           await axios.post('member/mail', {email: email.value})
           .then(
             (res) => {
+              alert('인증번호가 전송되었습니다');
               console.log(res.data);
               localStorage.setItem('certificationNum', res.data);
               emailOK.value = true;

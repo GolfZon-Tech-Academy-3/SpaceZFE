@@ -1,19 +1,23 @@
 <template>
-    <div class="wrapper">
-        <div :class="[link === '/backoffice/reservationstatus' ? 'menuSelected' : 'menu']" @click="moveToReservationStatus">
-            <div style="text-decoration:none; color:white">
-                예약 현황
+    <div>
+        <div class="wrapper">
+            <div :class="[link === '/backoffice/reservationstatus' ? 'menuSelected' : 'menu']" @click="moveToReservationStatus">
+                <div style="text-decoration:none; color:white">
+                    예약 현황
+                </div>
+            </div>
+            <div :class="[link === '/backoffice/manageplace' ? 'menuSelected' : 'menu']" @click="moveToManagePlace">
+                <div style="text-decoration:none; color:white">
+                    공간 정보/수정
+                </div>
+            </div>
+            <div :class="[link === '/backoffice/qna' ? 'menuSelected' : 'menu']" @click="moveToQna">
+                <div style="text-decoration:none; color:white">
+                    문의
+                </div>
             </div>
         </div>
-        <div :class="[link === '/backoffice/manageplace' ? 'menuSelected' : 'menu']" @click="moveToManagePlace">
-            <div style="text-decoration:none; color:white">
-                공간 정보/수정
-            </div>
-        </div>
-        <div :class="[link === '/backoffice/qna' ? 'menuSelected' : 'menu']" @click="moveToQna">
-            <div style="text-decoration:none; color:white">
-                문의
-            </div>
+        <div class="fake">
         </div>
     </div>
 </template>
@@ -40,6 +44,14 @@ export default {
 
 <style scoped>
 .wrapper {
+    min-width: 200px;
+    width: 15%;
+    height: 100vh;
+    background-color: #041461;
+    text-align: center;
+    position: fixed;
+}
+.fake {
     min-width: 200px;
     width: 15%;
     height: 100vh;

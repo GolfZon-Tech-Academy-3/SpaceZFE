@@ -20,14 +20,12 @@
             <div class="element" style="cursor: pointer;margin: 0 1em;" v-if="isLogined" @click="logout">
                 logout
             </div>
-            <div v-if="(isLogined && !isMaster)" style="cursor: pointer;margin: 0 1em;" @click="moveTo('MyPage')">
-                mypage
-            </div>
-            <img style="width:1.8em; height:1.8em;border-radius: 50%;margin: 0 1em;" v-if="isLogined" :src="profile_image" @click="closeSearchModal"/>
+            <img style="width:1.8em; height:1.8em;border-radius: 50%;margin: 0 1em;cursor: pointer;" v-if="isLogined" :src="profile_image" @click="moveTo('MyPage')"/>
         </nav>
         <LoginModal v-if="showLoginModal" @close="closeLoginModal" />
         <SearchModal v-if="showSearchModal" @close="closeSearchModal" :result="result" />
         <MapModal v-if="showMapModal" @close="controlMapModal" />
+        <Toast v-if="showToast" :message="toastMessage" />
     </div>
     
 </template>
@@ -40,11 +38,14 @@ import MapModal from '@/components/MapModal.vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import axios from '@/axios';
+import Toast from '@/components/Toast.vue'
+import { useToast } from '@/composables/toast';
 export default {
     components: {
         LoginModal,
         SearchModal,
         MapModal,
+        Toast,
     },
     setup() {
         const showSearchModal = ref(false);
@@ -58,6 +59,10 @@ export default {
         const isMaster = ref(false);
         const profile_image = localStorage.getItem("profile_image");
         const result = ref([]);
+
+        const {
+            toastMessage, showToast, triggerToast,
+        } = useToast();
 
         if(localStorage.getItem('authority') == null) {
             isLogined.value = false;
@@ -137,6 +142,9 @@ export default {
         }
 
         const controlMapModal = () => {
+            if(showMapModal.value === false) {
+                triggerToast('지도를 닫으려면 회색 영역을 더블클릭');
+            }
             showMapModal.value = !showMapModal.value;
         }
 
@@ -167,6 +175,9 @@ export default {
             controlMapModal,
             showMapModal,
             moveTo,
+            toastMessage,
+            showToast,
+            triggerToast,
         }
     }
 }
@@ -192,7 +203,7 @@ export default {
     color: #041461;
     font-size: 2em;
     margin-left: 1em;
-    margin-right:23%;
+    margin-right:21%;
 }
 ul {
     list-style: none;

@@ -14,6 +14,70 @@ import PlaceDetail from "../pages/placeDetail/_id.vue";
 import Reservation from "../pages/Reservation/_id.vue";
 import MyPage from "../pages/myPage.vue";
 
+const beforeMypage = () => (to, from, next) => {
+  if(localStorage.getItem('authority') == null) {
+    alert('로그인이 필요합니다');
+    next('/');
+    return;
+  } else if (localStorage.getItem('authority') === 'member') {
+    next();
+    return;
+  } else if (localStorage.getItem('authority') === 'manager') {
+    next();
+    return;
+  } else if (localStorage.getItem('authority') === 'master') {
+    alert('접근 권한이 없습니다');
+  }
+}
+
+const beforeRegisterCompany = () => (to, from, next) => {
+  if(localStorage.getItem('authority') == null) {
+    alert('로그인이 필요합니다');
+    return;
+  } else if (localStorage.getItem('authority') === 'member') {
+    next();
+    return;
+  } else if (localStorage.getItem('authority') === 'manager') {
+    alert('이미 매니저입니다');
+    return;
+  } else if (localStorage.getItem('authority') === 'master') {
+    alert('접근할 수 없습니다');
+  }
+};
+
+const beforeSignup = () => (to, from, next) => {
+  if(localStorage.getItem('authority') == null) {
+    next();
+    return;
+  } else {
+    alert('로그아웃이 필요합니다');
+  }
+};
+
+const beforeBackoffice = () => (to, from, next) => {
+  if(localStorage.getItem('authority') === 'manager') {
+    next();
+  } else {
+    alert('접근 권한이 없습니다');
+  }
+};
+
+const beforeMaster = () => (to, from, next) => {
+  if(localStorage.getItem('authority') === 'master') {
+    next();
+  } else {
+    alert('접근 권한이 없습니다');
+  }
+};
+
+const exceptMaster = () => (to, from, next) => {
+  if(localStorage.getItem('authority') === 'master') {
+    alert('접근 권한이 없습니다');
+  } else {
+    next();
+  }
+};
+
 const router = createRouter({
   history: createWebHistory(),
   scrollBehavior(to, from, savedPosition) {
@@ -43,11 +107,13 @@ const router = createRouter({
       path: "/mypage",
       name: "MyPage",
       component: MyPage,
+      beforeEnter: beforeMypage(),
     },
     {
       path: "/signup",
       name: "SignUp",
       component: SignUp,
+      beforeEnter: beforeSignup(),
     },
     {
       path: "/guide",
@@ -58,41 +124,49 @@ const router = createRouter({
       path: "/backoffice/reservationstatus",
       name: "ReservationStatus",
       component: ReservationStatus,
+      beforeEnter: beforeBackoffice(),
     },
     {
       path: "/backoffice/manageplace",
       name: "ManagePlace",
       component: ManagePlace,
+      beforeEnter: beforeBackoffice(),
     },
     {
       path: "/backoffice/qna",
       name: "Qna",
       component: Qna,
+      beforeEnter: beforeBackoffice(),
     },
     {
       path: "/master/company",
       name: "MasterCompany",
       component: MasterCompany,
+      beforeEnter: beforeMaster(),
     },
     {
       path: "/master/account",
       name: "MasterAccount",
       component: MasterAccount,
+      beforeEnter: beforeMaster(),
     },
     {
       path: "/registercompany",
       name: "RegisterCompany",
       component: RegisterCompany,
+      beforeEnter: beforeRegisterCompany(),
     },
     {
       path: "/placedetail",
       name: "PlaceDetail",
       component: PlaceDetail,
+      beforeEnter: exceptMaster(),
     },
     {
       path: "/reservation",
       name: "Reservation",
       component: Reservation,
+      beforeEnter: exceptMaster(),
     },
   ],
 });

@@ -25,7 +25,7 @@
                     <div style="padding: 0 1em 0.5em 0">
                         Space 가격
                     </div>
-                    <input v-if="isOffice" style="padding: 0.5em" type="text" />
+                    <input v-if="isOffice" v-model="officePrice" style="padding: 0.5em" type="text" />
                     <span v-if="isOffice" style="font-size:0.8em; padding-left: 0.5em">원 / 일</span>
                     <label v-if="!isOffice">{{price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} 원 / 시간</label>
                 </div>
@@ -102,6 +102,7 @@ export default {
         const spaceName = ref('');
         const type = ref('');
         const price = ref(0);
+        const officePrice = ref(0);
         const isOffice = ref(false);
         const startTime = ref('');
         const endTime = ref('');
@@ -124,6 +125,7 @@ export default {
             isOffice.value = false;
         } else if(type.value === '오피스') {
             isOffice.value = true;
+            price.value = info.value.price;
         } else if(type.value === '회의실 4인') {
             price.value = 20000;
             isOffice.value = false;
@@ -216,15 +218,21 @@ export default {
         }
 
         const modifySpace = async () => {
+            console.log(officePrice.value);
             if(spaceName.value.length < 3) {
                 alert('공간 이름을 두 자 이상 입력하세요');
             } else if(type.value === '') {
                 alert('공간 타입을 선택하세요');
+            } else if(type.value === '오피스' && officePrice.value === 0) {
+                alert('오피스의 가격을 입력하세요');
             } else if(startTime.value === '' || endTime.value === '') {
                 alert('오픈 시간 또는 마감 시간을 입력하세요');
             } else if(startCleanTime.value === '' || endCleanTime.value === '') {
                 alert('청소 시작 시간 또는 청소 종료 시간을 입력하세요');
             } else {
+                if(type.value === '오피스') {
+                    price.value = officePrice.value;
+                }
                 try {
                     await axios.put(`/space/update?spaceId=${spaceId.value}`, {
                         spaceName: spaceName.value,
@@ -266,6 +274,7 @@ export default {
             endCleanTime,
             facilities,
             modifySpace,
+            officePrice,
         }
     }
 }

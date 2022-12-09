@@ -55,6 +55,7 @@
                 </table>
             </div>
         </div>
+        <Toast v-if="showToast" :message="toastMessage" />
     </div>
 </template>
 
@@ -62,13 +63,19 @@
 import { ref } from 'vue';
 import axios from '@/axios';
 import MenuBar from './menuBar.vue';
+import Toast from '@/components/Toast.vue'
+import { useToast } from '@/composables/toast';
 export default {
     components: {
         MenuBar,
+        Toast,
     },
     setup() {
         const selected = ref('all');
         const result = ref([]);
+        const {
+            toastMessage, showToast, triggerToast,
+        } = useToast();
         console.log(localStorage.getItem('authority'));
 
         const getCompanys = async (type) => {
@@ -138,8 +145,7 @@ export default {
                         }
                     })
                         .then(() => {
-                            alert('승인되었습니다');
-                            window.location.reload();
+                            triggerToast('승인되었습니다. 새로고침 시 변경 상태가 나타납니다')
                         })
                 } catch (error) {
                     alert('승인에 실패했습니다');
@@ -156,8 +162,7 @@ export default {
                         }
                     })
                         .then(() => {
-                            alert('거절되었습니다');
-                            window.location.reload();
+                            triggerToast('거절되었습니다. 새로고침 시 변경 상태가 나타납니다');
                         })
                 } catch (error) {
                     alert('거절에 실패했습니다');
@@ -175,6 +180,9 @@ export default {
             result,
             approve,
             decline,
+            toastMessage,
+            showToast,
+            triggerToast,
         }
     }
 }
@@ -228,7 +236,7 @@ export default {
     color: white;
 }
 table {
-    width: 80%;
+    width: 90%;
     height: 80%;
     margin: 3em auto;
     overflow: auto;
@@ -250,6 +258,7 @@ tr {
 td {
     text-align: center;
     padding: 0.5em 0;
+    white-space: nowrap;
 }
 tbody {
     height: 95%;

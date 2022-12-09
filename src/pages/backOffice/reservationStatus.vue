@@ -256,15 +256,16 @@ export default {
     cursor: pointer;
 }
 .result {
-    width: 100%;
-    max-height: 90%;
+    width: 80%;
+    max-height: 70%;
     display:block;
     overflow: scroll;
     overflow-x: hidden;
     overflow-y: auto;
+    margin: 0 auto;
 }
 table {
-    width: 80%;
+    width: 100%;
     height: 80%;
     margin: 0 auto 3em auto;
     overflow: auto;

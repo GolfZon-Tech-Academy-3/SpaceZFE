@@ -3,7 +3,7 @@ module.exports = defineConfig({
   transpileDependencies: true,
   lintOnSave: false,
   devServer: {
-    proxy: 'http://spacez3.shop/'
+    proxy: 'http://3.39.191.21/'
   }
 })
 

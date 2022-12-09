@@ -3,20 +3,8 @@
     <template v-slot:title> SPACEZ </template>
     <template v-slot:body>
       <div class="loginform">
-        <input
-          class="email"
-          v-model="email"
-          type="email"
-          placeholder="이메일"
-          @keyup.enter="login"
-        />
-        <input
-          class="password"
-          v-model="pw"
-          type="password"
-          placeholder="비밀번호"
-          @keyup.enter="login"
-        />
+        <input class="email" v-model="email" type="email" placeholder="이메일" @keyup.enter="login" />
+        <input class="password" v-model="pw" type="password" placeholder="비밀번호" @keyup.enter="login" />
         <button type="button" class="login" @click="login">로그인</button>
       </div>
     </template>
@@ -77,22 +65,10 @@ export default {
             .post("member/login", { email: email.value, password: pw.value })
             .then((res) => {
               if (res.data === "") {
-                localStorage.setItem(
-                  "authority",
-                  parseJwt(res.headers.authorization).AUTHORITY
-                );
-                localStorage.setItem(
-                  "profile_image",
-                  parseJwt(res.headers.authorization).IMAGE_NAME
-                );
-                localStorage.setItem(
-                  "company_id",
-                  parseJwt(res.headers.authorization).COMPANY_ID
-                );
-                localStorage.setItem(
-                  "memberId",
-                  parseJwt(res.headers.authorization).MEMBER_ID
-                );
+                localStorage.setItem( "authority", parseJwt(res.headers.authorization).AUTHORITY );
+                localStorage.setItem( "profile_image", parseJwt(res.headers.authorization).IMAGE_NAME );
+                localStorage.setItem( "company_id", parseJwt(res.headers.authorization).COMPANY_ID );
+                localStorage.setItem( "memberId", parseJwt(res.headers.authorization).MEMBER_ID );
                 localStorage.setItem("access_token", res.headers.authorization);
                 onClose();
                 window.location.reload(true);

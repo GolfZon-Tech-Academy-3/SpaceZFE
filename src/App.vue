@@ -40,12 +40,4 @@ input {
 button {
   font-family: 'Noto Sans KR', sans-serif;
 }
-.material-symbols-outlined {
-  color: black;
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 48
-}
 </style>
