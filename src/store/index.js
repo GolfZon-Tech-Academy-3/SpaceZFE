@@ -3,7 +3,6 @@ import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
   state: {
-    currentPage: 1,
     searchType: "total",
     searchDate: "",
     searchTime: "none",
@@ -26,9 +25,6 @@ export default createStore({
     // GET_TOKEN(state, payload) {
     //   state.token = payload;
     // },
-    UPDATE_CURRENT_PAGE(state, payload) {
-      state.currentPage = payload;
-    },
     UPDATE_SEARCH_TYPE(state, payload) {
       state.searchType = payload;
     },
@@ -43,9 +39,6 @@ export default createStore({
     },
   },
   actions: {
-    updatePage({ commit }, newPage) {
-      commit("UPDATE_CURRENT_PAGE", newPage);
-    },
     updateType({ commit }, newType) {
       commit("UPDATE_SEARCH_TYPE", newType);
     },

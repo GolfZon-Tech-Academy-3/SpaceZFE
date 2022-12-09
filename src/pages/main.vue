@@ -204,7 +204,6 @@ export default {
     main();
 
     const moveToOffice = () => {
-      store.dispatch("updatePage", 1);
       store.dispatch("updateType", "office");
       store.dispatch("updateDate", null);
       store.dispatch("updateTime", null);
@@ -215,7 +214,6 @@ export default {
     };
 
     const moveToMeeting = () => {
-      store.dispatch("updatePage", 1);
       store.dispatch("updateType", "meeting-room");
       store.dispatch("updateDate", null);
       store.dispatch("updateTime", null);
@@ -226,7 +224,6 @@ export default {
     };
 
     const moveToDesk = () => {
-      store.dispatch("updatePage", 1);
       store.dispatch("updateType", "desk");
       store.dispatch("updateDate", null);
       store.dispatch("updateTime", null);
@@ -237,7 +234,6 @@ export default {
     };
 
     const moveToAll = () => {
-      store.dispatch("updatePage", 1);
       store.dispatch("updateType", "total");
       store.dispatch("updateDate", null);
       store.dispatch("updateTime", null);

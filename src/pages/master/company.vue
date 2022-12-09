@@ -198,7 +198,7 @@ export default {
     max-height: 80%;
     display:block;
     overflow: scroll;
-    overflow-x: hidden;
+    overflow-x: auto;
     overflow-y: auto;
 }
 .sorter {
