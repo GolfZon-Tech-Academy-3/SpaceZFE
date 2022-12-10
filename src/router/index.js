@@ -1,9 +1,11 @@
+import store from '../store';
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../pages/home.vue";
 import SignUp from "../pages/signup.vue";
 import Main from "../pages/main.vue";
 import Guide from "../pages/guide.vue";
 import FindPlace from "../pages/findPlace.vue";
+import ManageCompany from "../pages/backOffice/manageCompany.vue";
 import ReservationStatus from "../pages/backOffice/reservationStatus.vue";
 import ManagePlace from "../pages/backOffice/managePlace.vue";
 import Qna from "../pages/backOffice/qna.vue";
@@ -15,38 +17,38 @@ import Reservation from "../pages/Reservation/_id.vue";
 import MyPage from "../pages/myPage.vue";
 
 const beforeMypage = () => (to, from, next) => {
-  if(localStorage.getItem('authority') == null) {
+  if(store.state.authority == null) {
     alert('로그인이 필요합니다');
     next('/');
     return;
-  } else if (localStorage.getItem('authority') === 'member') {
+  } else if (store.state.authority === 'member') {
     next();
     return;
-  } else if (localStorage.getItem('authority') === 'manager') {
+  } else if (store.state.authority === 'manager') {
     next();
     return;
-  } else if (localStorage.getItem('authority') === 'master') {
+  } else if (store.state.authority === 'master') {
     alert('접근 권한이 없습니다');
   }
 }
 
 const beforeRegisterCompany = () => (to, from, next) => {
-  if(localStorage.getItem('authority') == null) {
+  if(store.state.authority == null) {
     alert('로그인이 필요합니다');
     return;
-  } else if (localStorage.getItem('authority') === 'member') {
+  } else if (store.state.authority === 'member') {
     next();
     return;
-  } else if (localStorage.getItem('authority') === 'manager') {
+  } else if (store.state.authority === 'manager') {
     alert('이미 매니저입니다');
     return;
-  } else if (localStorage.getItem('authority') === 'master') {
+  } else if (store.state.authority === 'master') {
     alert('접근할 수 없습니다');
   }
 };
 
 const beforeSignup = () => (to, from, next) => {
-  if(localStorage.getItem('authority') == null) {
+  if(store.state.authority == null) {
     next();
     return;
   } else {
@@ -55,7 +57,7 @@ const beforeSignup = () => (to, from, next) => {
 };
 
 const beforeBackoffice = () => (to, from, next) => {
-  if(localStorage.getItem('authority') === 'manager') {
+  if(store.state.authority === 'manager') {
     next();
   } else {
     alert('접근 권한이 없습니다');
@@ -63,7 +65,7 @@ const beforeBackoffice = () => (to, from, next) => {
 };
 
 const beforeMaster = () => (to, from, next) => {
-  if(localStorage.getItem('authority') === 'master') {
+  if(store.state.authority === 'master') {
     next();
   } else {
     alert('접근 권한이 없습니다');
@@ -71,7 +73,7 @@ const beforeMaster = () => (to, from, next) => {
 };
 
 const exceptMaster = () => (to, from, next) => {
-  if(localStorage.getItem('authority') === 'master') {
+  if(store.state.authority === 'master') {
     alert('접근 권한이 없습니다');
   } else {
     next();
@@ -119,6 +121,12 @@ const router = createRouter({
       path: "/guide",
       name: "Guide",
       component: Guide,
+    },
+    {
+      path: "/backoffice/managecompany",
+      name: "ManageCompany",
+      component: ManageCompany,
+      beforeEnter: beforeBackoffice(),
     },
     {
       path: "/backoffice/reservationstatus",

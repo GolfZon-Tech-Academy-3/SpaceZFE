@@ -39,6 +39,7 @@ import axios from '@/axios';
 import MenuBar from './menuBar.vue';
 import SpaceRegisterModal from '@/components/SpaceRegisterModal.vue';
 import SpaceModifyModal from '@/components/SpaceModifyModal.vue';
+import { useStore } from 'vuex';
 export default {
     components: {
         MenuBar,
@@ -46,16 +47,17 @@ export default {
         SpaceModifyModal,
     },
     setup() {
+        const store = useStore();
         const showRegisterSpace = ref(false);
         const showModifySpace = ref(false);
         const spaces = ref([]);
         var space = ref({});
 
         const getSpaces = async () => {
-            const companyId = localStorage.getItem('company_id');
+            const companyId = store.state.companyId;
             await axios.get(`/space/list/${companyId}`, {
                 headers: {
-                    Authorization: localStorage.getItem('access_token')
+                    Authorization: store.state.accessToken
                 }
             })
                 .then(
@@ -109,7 +111,7 @@ export default {
     margin: 3em auto;
 }
 .content {
-    width: 85%;
+    width: calc(100% - 200px);
     height:100vh;
 }
 table {

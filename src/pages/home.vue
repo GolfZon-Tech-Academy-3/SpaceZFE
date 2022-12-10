@@ -21,15 +21,17 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import LoginModal from '@/components/LoginModal.vue';
+import { useStore } from 'vuex';
 export default {
     components: {
         LoginModal,
     },
     setup() {
+        const store = useStore();
         const showLoginModal = ref(false);
         const router = useRouter();
         const start = () => {
-            if (localStorage.getItem("authority") != null) {
+            if (store.state.authority != null) {
                 router.push({
                     name: "Main",
                 });

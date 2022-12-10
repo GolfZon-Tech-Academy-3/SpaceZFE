@@ -90,6 +90,7 @@
 <script>
 import { ref, watch, getCurrentInstance } from 'vue';
 import axios from '@/axios';
+import { useStore } from 'vuex';
 export default {
     props: {
         space: {
@@ -98,6 +99,7 @@ export default {
         }
     },
     setup(props, {emit}) {
+        const store = useStore();
         const spaceId = ref(0);
         const spaceName = ref('');
         const type = ref('');
@@ -246,7 +248,7 @@ export default {
                     },
                     {
                         headers: {
-                            Authorization: localStorage.getItem('access_token'),
+                            Authorization: store.state.authority,
                         }
                     })
                         .then(() => {

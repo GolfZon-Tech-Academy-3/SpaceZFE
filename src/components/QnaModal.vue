@@ -21,6 +21,7 @@
 <script>
 import { ref, watch, getCurrentInstance } from 'vue';
 import axios from '@/axios';
+import { useStore } from 'vuex';
 export default {
     props: {
         qna: {
@@ -29,6 +30,7 @@ export default {
         }
     },
     setup() {
+        const store = useStore();
         const { emit } = getCurrentInstance();
 
         const closeModal = () => {
@@ -41,7 +43,7 @@ export default {
                     await axios.put(`/inquiry/answer/delete/${inquiryId}`,
                         {
                             headers: {
-                                Authorization: localStorage.getItem('access_token'),
+                                Authorization: store.state.authority,
                             }
                         }).then((res) => {console.log(res.data);})
                     alert('답변이 삭제되었습니다');
@@ -64,7 +66,7 @@ export default {
                     },
                     {
                         headers: {
-                            Authorization: localStorage.getItem('access_token'),
+                            Authorization: store.state.authority,
                         }
                     })
                     alert('답변이 수정되었습니다');
@@ -87,7 +89,7 @@ export default {
                     },
                     {
                         headers: {
-                            Authorization: localStorage.getItem('access_token'),
+                            Authorization: store.state.authority,
                         }
                     })
                     alert('답변이 등록되었습니다');

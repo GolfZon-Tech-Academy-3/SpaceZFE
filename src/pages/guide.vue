@@ -47,15 +47,17 @@
 
 <script>
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 export default {
     setup() {
         const router = useRouter();
+        const store = useStore();
         const MoveToRegisterPage = () => {
-            if(localStorage.getItem('authority') === 'member') {
+            if(store.state.authority === 'member') {
                 router.push({
                     name: 'RegisterCompany'
                 })
-            } else if(localStorage.getItem('authority') === 'manager') {
+            } else if(store.state.authority === 'manager') {
                 router.push({
                     name: 'ManagePlace'
                 })

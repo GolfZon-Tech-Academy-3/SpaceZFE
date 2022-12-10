@@ -127,7 +127,9 @@ export default {
         } = useToast();
 
         onMounted(() => {
-            document.addEventListener('scroll', scrollEvent);
+            setTimeout(() => {
+                document.addEventListener('scroll', scrollEvent);
+            }, 100);
         })
 
         onUnmounted(() => {
@@ -171,7 +173,7 @@ export default {
                     },
                     {
                         headers: {
-                            Authorization: localStorage.getItem('access_token')
+                            Authorization: store.state.accessToken
                         }
                     })
                         .then((res) => {
@@ -194,7 +196,7 @@ export default {
                         },
                         {
                             headers: {
-                                Authorization: localStorage.getItem('access_token')
+                                Authorization: store.state.accessToken
                             }
                         })
                             .then((res) => {
@@ -218,7 +220,7 @@ export default {
                     },
                     {
                         headers: {
-                            Authorization: localStorage.getItem('access_token')
+                            Authorization: store.state.accessToken
                         }
                     })
                         .then((res) => {
@@ -316,7 +318,7 @@ export default {
             try {
                 await axios.post(`company/like/${companyId}`, {
                     headers: {
-                        Authorization: localStorage.getItem('access_token')
+                        Authorization: store.state.accessToken
                     }
                 }).then(() => {
                     if(e.target.style["fontVariationSettings"] === "\"FILL\" 0") {//하트가 비어있을때
@@ -476,33 +478,6 @@ export default {
     align-items : center;
     border-radius: 50%;
     margin: 0 1%;
-}
-.notCurPage {
-    width: 5vh;
-    height:5vh;
-    position: relative;
-    color: white;
-    font-weight:bolder;
-    background-color: skyblue;
-    cursor: pointer;
-    display : flex;
-    justify-content: center;
-    align-items : center;
-    border-radius: 50%;
-    margin: 0 1%;
-}
-.notCurPage:hover {
-    background-color: blue;
-}
-.nav-btn {
-    background-color: #041461;
-    color:white;
-    padding: 0.7em;
-    border-radius: 1em;
-    cursor: pointer;
-}
-.nav-btn:hover {
-    background-color: skyblue;
 }
 .mapBtn {
     display: inline;

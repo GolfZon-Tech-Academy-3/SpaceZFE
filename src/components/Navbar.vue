@@ -57,19 +57,19 @@ export default {
         const isLogined = ref(false);
         const isManager = ref(false);
         const isMaster = ref(false);
-        const profile_image = localStorage.getItem("profile_image");
+        const profile_image = store.state.profile;
         const result = ref([]);
 
         const {
             toastMessage, showToast, triggerToast,
         } = useToast();
 
-        if(localStorage.getItem('authority') == null) {
+        if(store.state.authority == null) {
             isLogined.value = false;
-        } else if(localStorage.getItem('authority') === 'manager') {
+        } else if(store.state.authority === 'manager') {
             isLogined.value = true;
             isManager.value = true;
-        } else if(localStorage.getItem('authority') === 'master') {
+        } else if(store.state.authority === 'master') {
             isLogined.value = true;
             isMaster.value = true;
         } else {
@@ -86,7 +86,7 @@ export default {
                     },
                     {
                         headers: {
-                            Authorization: localStorage.getItem('access_token')
+                            Authorization: store.state.authority
                         }
                     })
                         .then((res) => {
@@ -119,7 +119,7 @@ export default {
         }
 
         const logout = async () => {
-            localStorage.clear();
+            store.dispatch('initToken');
             isLogined.value = false;
             await router.push({
                 name: 'Home'
@@ -131,7 +131,6 @@ export default {
             showSearchModal.value = false;
             showClose.value = false;
             document.getElementById('searchInput').blur();
-            store.dispatch('updatePage', 1);
             store.dispatch('updateType', 'total');
             store.dispatch('updateDate', null);
             store.dispatch('updateTime', null);
