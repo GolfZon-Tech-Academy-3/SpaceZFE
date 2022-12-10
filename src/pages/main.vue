@@ -180,7 +180,7 @@ export default {
       await axios
         .get("company/main", {
           headers: {
-            Authorization: localStorage.getItem("access_token"),
+            Authorization: store.state.accessToken,
           },
         })
         .then((res) => {
@@ -251,7 +251,7 @@ export default {
         try {
             await axios.post(`company/like/${companyId}`, {
                 headers: {
-                    Authorization: localStorage.getItem('access_token')
+                    Authorization: store.state.accessToken
                 }
             }).then(() => {
                 if(e.target.style["fontVariationSettings"] === "\"FILL\" 0") {//하트가 비어있을때

@@ -59,18 +59,20 @@
 import { ref } from 'vue';
 import axios from '@/axios';
 import MenuBar from './menuBar.vue';
+import { useStore } from 'vuex';
 export default {
     components: {
         MenuBar,
     },
     setup() {
+        const store = useStore();
         const masters = ref([]);
         const candidates = ref([]);
 
         const getMasters = async () => {
             await axios.get(`/master/list`, {
                 headers: {
-                    Authorization: localStorage.getItem('access_token'),
+                    Authorization: store.state.accessToken,
                 }
             }).then((res) => {
                 masters.value = res.data;
@@ -84,7 +86,7 @@ export default {
                 try {
                     await axios.put(`/master/approve/${id}`, {
                         headers: {
-                            Authorization: localStorage.getItem('access_token'),
+                            Authorization: store.state.accessToken,
                         }
                     })
                     alert('변경되었습니다');
@@ -100,7 +102,7 @@ export default {
                 try {
                     await axios.put(`/master/disapprove/${id}`, {
                         headers: {
-                            Authorization: localStorage.getItem('access_token'),
+                            Authorization: store.state.accessToken,
                         }
                     })
                     alert('변경되었습니다');
@@ -114,7 +116,7 @@ export default {
         const changeKeyword = async (e) => {
             await axios.get(`/master/member/list?searchWord=${e.target.value}`, {
                 headers: {
-                    Authorization: localStorage.getItem('access_token'),
+                    Authorization: store.state.accessToken,
                 }
             }).then((res) => {
                 console.log(res.data);
@@ -136,7 +138,7 @@ export default {
 
 <style scoped>
 .content {
-    width: 85%;
+    width: calc(100% - 200px);
     height:100vh;
     overflow:scroll;
     overflow-x: hidden;

@@ -98,8 +98,10 @@
 <script>
 import { ref, watch, getCurrentInstance } from 'vue';
 import axios from '@/axios';
+import { useStore } from 'vuex';
 export default {
     setup() {
+        const store = useStore();
         const { emit } = getCurrentInstance();
         const spaceName = ref('');
         const facilities = ref([]);
@@ -238,11 +240,11 @@ export default {
                 imgs.value.forEach(function(img) {
                     form.append('files', img);
                 });
-                form.append('companyId', localStorage.getItem('company_id'));
+                form.append('companyId', store.state.companyId);
                 try {
                     await axios.post('/space/post', form, {
                         headers: {
-                            Authorization: localStorage.getItem('access_token'),
+                            Authorization: store.state.authority,
                             'Content-Type': 'multipart/form-data',
                         }
                     })

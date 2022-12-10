@@ -1,17 +1,22 @@
 <template>
     <div>
         <div class="wrapper">
-            <div :class="[link === '/backoffice/reservationstatus' ? 'menuSelected' : 'menu']" @click="moveToReservationStatus">
+            <div :class="[link === '/backoffice/managecompany' ? 'menuSelected' : 'menu']" @click="moveTo('ManageCompany')">
+                <div style="text-decoration:none; color:white">
+                    장소 정보/수정
+                </div>
+            </div>
+            <div :class="[link === '/backoffice/reservationstatus' ? 'menuSelected' : 'menu']" @click="moveTo('ReservationStatus')">
                 <div style="text-decoration:none; color:white">
                     예약 현황
                 </div>
             </div>
-            <div :class="[link === '/backoffice/manageplace' ? 'menuSelected' : 'menu']" @click="moveToManagePlace">
+            <div :class="[link === '/backoffice/manageplace' ? 'menuSelected' : 'menu']" @click="moveTo('ManagePlace')">
                 <div style="text-decoration:none; color:white">
                     공간 정보/수정
                 </div>
             </div>
-            <div :class="[link === '/backoffice/qna' ? 'menuSelected' : 'menu']" @click="moveToQna">
+            <div :class="[link === '/backoffice/qna' ? 'menuSelected' : 'menu']" @click="moveTo('Qna')">
                 <div style="text-decoration:none; color:white">
                     문의
                 </div>
@@ -28,14 +33,14 @@ export default {
     setup() {
         const router = useRouter();
         const link =  window.location.pathname;
-        const moveToReservationStatus = () => {router.push({name:'ReservationStatus'})}
-        const moveToManagePlace = () => {router.push({name: 'ManagePlace'})}
-        const moveToQna = () => {router.push({name: 'Qna'})}
+        const moveTo = (link) => {
+            router.push({
+                name: link
+            })
+        }
 
         return {
-            moveToReservationStatus,
-            moveToManagePlace,
-            moveToQna,
+            moveTo,
             link
         }
     }
@@ -44,18 +49,15 @@ export default {
 
 <style scoped>
 .wrapper {
-    min-width: 200px;
-    width: 15%;
+    width: 200px;
     height: 100vh;
     background-color: #041461;
     text-align: center;
     position: fixed;
 }
 .fake {
-    min-width: 200px;
-    width: 15%;
+    width: 200px;
     height: 100vh;
-    background-color: #041461;
     text-align: center;
 }
 .menu {

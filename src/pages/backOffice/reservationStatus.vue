@@ -60,11 +60,13 @@
 import { ref } from 'vue';
 import MenuBar from './menuBar.vue';
 import axios from '@/axios';
+import { useStore } from 'vuex';
 export default {
     components: {
         MenuBar,
     },
     setup() {
+        const store = useStore();
         const reservations = ref([]);
         const todayResv = ref(0);
         const todayCancel = ref(0);
@@ -72,9 +74,9 @@ export default {
         const endDate = ref('');
         const money = ref('');
         const getTodayResv = async () => {
-            await axios.get(`/back-office/reservation/count/${localStorage.getItem('company_id')}`, {
+            await axios.get(`/back-office/reservation/count/${store.state.companyId}`, {
                 headers: {
-                    Authorization: localStorage.getItem('access_token'),
+                    Authorization: store.state.accessToken,
                 }
             })
                 .then((res) => {
@@ -82,9 +84,9 @@ export default {
                 })
         }
         const getTodayCancel = async () => {
-            await axios.get(`/back-office/cancel/count/${localStorage.getItem('company_id')}`, {
+            await axios.get(`/back-office/cancel/count/${store.state.companyId}`, {
                 headers: {
-                    Authorization: localStorage.getItem('access_token'),
+                    Authorization: store.state.accessToken,
                 }
             })
                 .then((res) => {
@@ -96,9 +98,9 @@ export default {
         getTodayCancel();
 
         const getResvs = async () => {
-            await axios.get(`/back-office/reservation/total/${localStorage.getItem('company_id')}`, {
+            await axios.get(`/back-office/reservation/total/${store.state.companyId}`, {
                 headers: {
-                    Authorization: localStorage.getItem('access_token'),
+                    Authorization: store.state.accessToken,
                 }
             })
                 .then((res) => {
@@ -114,7 +116,7 @@ export default {
                 if(confirm("예약을 취소하시겠습니까?")) {
                     await axios.put(`/reservation/office-cancel/${id}`, {
                         headers: {
-                            Authorization: localStorage.getItem('access_token'),
+                            Authorization: store.state.accessToken,
                         }
                     })
                         .then(() => {
@@ -125,7 +127,7 @@ export default {
                 if(confirm("예약을 취소하시겠습니까?")) {
                     await axios.put(`/reservation/desk-cancel/${id}`, {
                         headers: {
-                            Authorization: localStorage.getItem('access_token'),
+                            Authorization: store.state.accessToken,
                         }
                     })
                         .then(() => {
@@ -139,7 +141,7 @@ export default {
             if(confirm("이용 완료 처리하시겠습니까?")) {
                     await axios.put(`/back-office/reservation//done/${id}`, {
                         headers: {
-                            Authorization: localStorage.getItem('access_token'),
+                            Authorization: store.state.accessToken,
                         }
                     })
                         .then(() => {
@@ -156,11 +158,11 @@ export default {
                 return;
             }
             if(startDate.value != '' && endDate.value != '') {
-                await axios.post(`/back-office/total-incomes/${localStorage.getItem('company_id')}`, {
+                await axios.post(`/back-office/total-incomes/${store.state.companyId}`, {
                     startDate : startDate.value, endDate : endDate.value},
                     {
                         headers: {
-                            Authorization: localStorage.getItem('access_token'),
+                            Authorization: store.state.accessToken,
                         }
                     }).then((res) => {
                         console.log(res.data);
@@ -211,7 +213,7 @@ export default {
     align-items : center;
 }
 .content {
-    width: 85%;
+    width: calc(100% - 200px);
     height:100vh;
     overflow:scroll;
     overflow-x: hidden;

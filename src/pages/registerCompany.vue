@@ -27,8 +27,10 @@
 import axios from '@/axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 export default {
     setup() {
+        const store = useStore();
         const placeName = ref('');
         var file = null;
         const address = ref('');
@@ -66,9 +68,9 @@ export default {
         }
 
         const submit = async () => {
-            if(localStorage.getItem('authority') == null) {
+            if(store.state.authority == null) {
                 alert('로그인을 먼저 진행해주세요');
-            } else if(localStorage.getItem('authority') === 'member') {
+            } else if(store.state.authority === 'member') {
                 if(placeName.value.length < 2) {
                     alert('업체 이름은 두 자리 이상이어야합니다');
                 } else if(document.getElementById('file').files.length === 0) {
@@ -93,7 +95,7 @@ export default {
                     try {
                         await axios.post('company/post', form, {
                             headers: {
-                                Authorization: localStorage.getItem('access_token'),
+                                Authorization: store.state.accessToken,
                                 'Content-Type': 'multipart/form-data',
                             }
                         })

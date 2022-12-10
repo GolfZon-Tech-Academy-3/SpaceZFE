@@ -43,8 +43,10 @@
 import { ref } from 'vue';
 import axios from '@/axios';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 export default {
   setup() {
+    const store = useStore();
     const router = useRouter();
     const email = ref('');
     const emailOK = ref(false);
@@ -113,9 +115,7 @@ export default {
     }
 
     const signUp = async () => {
-      if(localStorage.getItem('authority') != null) {
-        alert('로그인 상태에서 회원가입할 수 없습니다');
-      } else if(!emailOK.value) {
+      if(!emailOK.value) {
         alert('인증되지 않은 이메일입니다');
       } else if(!certificationOK.value) {
         alert('인증번호 인증을 해주세요');

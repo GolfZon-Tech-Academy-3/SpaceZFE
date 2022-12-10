@@ -65,23 +65,24 @@ import axios from '@/axios';
 import MenuBar from './menuBar.vue';
 import Toast from '@/components/Toast.vue'
 import { useToast } from '@/composables/toast';
+import { useStore } from 'vuex';
 export default {
     components: {
         MenuBar,
         Toast,
     },
     setup() {
+        const store = useStore();
         const selected = ref('all');
         const result = ref([]);
         const {
             toastMessage, showToast, triggerToast,
         } = useToast();
-        console.log(localStorage.getItem('authority'));
 
         const getCompanys = async (type) => {
             await axios.get(`/company/manager/list`, {
                 headers: {
-                    Authorizaion: localStorage.getItem('access_token'),
+                    Authorizaion: store.state.accessToken,
                 }
             })
                 .then((res) => {
@@ -141,7 +142,7 @@ export default {
                 try {
                     await axios.put(`/company/approve/${id}`, {
                         headers: {
-                            Authorization: localStorage.getItem('access_token')
+                            Authorization: store.state.accessToken
                         }
                     })
                         .then(() => {
@@ -158,7 +159,7 @@ export default {
                 try {
                     await axios.put(`/company/disapprove/${id}`, {
                         headers: {
-                            Authorization: localStorage.getItem('access_token')
+                            Authorization: store.state.accessToken
                         }
                     })
                         .then(() => {
@@ -190,7 +191,7 @@ export default {
 
 <style scoped>
 .content {
-    width: 85%;
+    width: calc(100% - 200px);
     height:100vh;
 }
 .scrolltable {

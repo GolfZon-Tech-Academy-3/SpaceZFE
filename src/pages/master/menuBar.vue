@@ -48,18 +48,15 @@ export default {
 
 <style scoped>
 .wrapper {
-    min-width: 200px;
-    width: 15%;
+    width: 200px;
     height: 100vh;
     background-color: #6F5EBE;
     text-align: center;
     position: fixed;
 }
 .fake {
-    min-width: 200px;
-    width: 15%;
+    width: 200px;
     height: 100vh;
-    background-color: #6F5EBE;
     text-align: center;
 }
 .menu {

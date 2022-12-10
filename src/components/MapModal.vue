@@ -11,8 +11,10 @@
 <script>
 import { ref, getCurrentInstance, onMounted, onUnmounted } from 'vue';
 import axios from '@/axios';
+import { useStore } from 'vuex';
 export default {
   setup() {
+    const store = useStore();
     const { emit } = getCurrentInstance();
     const places = ref([]);
     const map = ref(null);
@@ -61,7 +63,7 @@ export default {
     const searchSubmit = async () => {
       await axios.get('company/space/list', {
         headers: {
-          Authorization: localStorage.getItem('access_token'),
+          Authorization: store.state.authority,
         }
       }).then((res) => {
         places.value = res.data;
