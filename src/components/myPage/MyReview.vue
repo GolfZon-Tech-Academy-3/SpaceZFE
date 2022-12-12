@@ -41,6 +41,7 @@
 <script>
 import { ref } from "vue";
 import axios from "axios";
+import { useRouter } from "vue-router";
 export default {
   props: {
     reviewer: {
@@ -49,6 +50,7 @@ export default {
     },
   },
   setup(props, context) {
+    const router = useRouter();
     const write = ref(false);
     const reviewId = ref(props.reviewer);
 
@@ -81,6 +83,7 @@ export default {
           }
         }
       } else {
+        router.go();
       }
     };
 

@@ -70,8 +70,11 @@
                         v-if="resStatuses[num - 1].status === '004'"
                   >이용 완료</span>
               </p>
-              <p>
+              <p v-if="resStatuses[num - 1].type ==='오피스'">
                 {{ resStatuses[num - 1].startDate.slice(0,10) }} ~ {{ resStatuses[num - 1].endDate.slice(0,10) }}
+              </p>
+              <p v-if="resStatuses[num - 1].type !=='오피스'">
+                {{ resStatuses[num - 1].startDate }} ~ {{ resStatuses[num - 1].endDate }}
               </p>
               <p>
                 <p><span class="info">예약일</span> {{resStatuses[num - 1].reserveTime.slice(0,10)}}</p>
@@ -118,7 +121,7 @@
                   >이용 완료</span>
                 <span
                     class="payStatusBtn"
-                    v-if="resDone[num - 1].status === '002'"
+                    v-if="resDone[num - 1].status === '002'|| resDone[num - 1].status === '003'"
                     style="background-color: white;
                         color: red;
                         border: 1px solid red;"
@@ -144,30 +147,31 @@
                     <p style="font-size:1.3rem">{{resDone[num - 1].companyId}}</p>
                     <p style="margin-left: 3%; font-size:0.7rem;color:#838383">{{resDone[num-1].location}}</p>
                     <p style="margin-left: 3%; font-size:1rem;color:#838383">{{resDone[num-1].details}}</p>
-                    <p>
-                      <button v-show="!resDone[num - 1].review" 
-                      :id="resDone[num - 1].reviewed"  
-                      class="cancelBtn" 
-                      @click="writeReview(resDone[num-1].reservationId)">
-                      리뷰작성
-                    </button>
-                  </p>
-                    <p>
-                      <button 
-                      v-show="resDone[num - 1].review" 
-                      v-if="!resDone[num-1].reviewToggle"
-                      class="showReviewlBtn" 
-                      @click="reviewToggle(resDone[num-1].reservationId)">
-                      리뷰 보기
-                    </button>
-                      <button 
-                      v-show="resDone[num - 1].review" 
-                      v-if="resDone[num-1].reviewToggle"
-                      class="showReviewlBtn" 
-                      @click="reviewToggle(resDone[num-1].reservationId)">
-                      리뷰 접기
-                    </button>
+                      <p v-show="resDone[num - 1].status !== '002' && resDone[num - 1].status !== '003'">
+                        <button v-show="!resDone[num - 1].review" 
+                        :id="resDone[num - 1].reviewed"  
+                        class="cancelBtn" 
+                        
+                        @click="writeReview(resDone[num-1].reservationId)">
+                        리뷰작성
+                      </button>
                     </p>
+                      <p v-show="resDone[num - 1].status !== '002' && resDone[num - 1].status !== '003'">
+                        <button 
+                        v-show="resDone[num - 1].review" 
+                        v-if="!resDone[num-1].reviewToggle"
+                        class="showReviewlBtn" 
+                        @click="reviewToggle(resDone[num-1].reservationId)">
+                        리뷰 보기
+                      </button>
+                        <button 
+                        v-show="resDone[num - 1].review" 
+                        v-if="resDone[num-1].reviewToggle"
+                        class="showReviewlBtn" 
+                        @click="reviewToggle(resDone[num-1].reservationId)">
+                        리뷰 접기
+                      </button>
+                      </p>
                       <ReviewWrite v-if="reviewShow" @close="closeModal" :writePack="writePack" :edit="editOrDel"/>
                 </div>
             </td>
@@ -285,11 +289,16 @@ export default {
 
     //리뷰 작성 함수
     const writeReview=  (e)=>{
-        reviewShow.value= !reviewShow.value
+        
         let i=e
         find = resDone.value.find(e=>e.reservationId===i)
-        writePack.value.companyId = find.companyId 
-        writePack.value.spaceId =  find.spaceId
+        if(find.status === '002'||'003'){
+          alert('예약을 취소하시면 리뷰를 작성할 수 없습니다')
+        }else{
+          writePack.value.companyId = find.companyId 
+          writePack.value.spaceId =  find.spaceId
+          reviewShow.value= !reviewShow.value
+        }
     }
 
     //모달 닫을 함수

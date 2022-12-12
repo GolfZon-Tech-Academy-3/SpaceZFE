@@ -6,7 +6,7 @@
     </template>
     <template v-slot:body>
       <div class="modal-body">
-        <p style="font-size: 1.4rem; margin-bottom: 1%; margin-left: 3%">
+        <p style="font-size: 2vh; margin-bottom: 1%; margin-left: 3%">
           기본정보
         </p>
         <ul class="basicInfo">
@@ -28,7 +28,7 @@
         </ul>
         <hr style="opacity: 0.5" />
 
-        <p style="font-size: 1.4rem; margin-bottom: 1%; margin-left: 3%">
+        <p style="font-size: 2vh; margin-bottom: 1%; margin-left: 3%">
           편의시설
         </p>
         <ul class="basicInfo">
@@ -37,7 +37,7 @@
           </li>
         </ul>
         <hr style="opacity: 0.5" />
-        <p style="font-size: 1.4rem; margin-bottom: 1%; margin-left: 3%">
+        <p style="font-size: 2vh; margin-bottom: 1%; margin-left: 3%">
           결제정보
         </p>
         <ul class="basicInfo">
@@ -52,7 +52,6 @@
             금액을 결제 가능.
           </li>
         </ul>
-        <hr style="opacity: 0.5" />
       </div>
     </template>
     <template v-slot:footer> </template>

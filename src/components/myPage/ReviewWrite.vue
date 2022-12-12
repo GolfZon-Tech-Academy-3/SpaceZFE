@@ -103,58 +103,74 @@ export default {
 
     //리뷰 쏘기
     const submit = async () => {
-      try {
-        await axios
-          .post(
-            "review/post",
-            {
-              spaceId: ids.value.spaceId,
-              companyId: ids.value.companyId,
-              content: revContent.value,
-              rating: score.value - 1,
-            },
-            {
-              headers: { Authorization: localStorage.getItem("access_token") },
-            }
-          )
-          .then((res) => {
-            if (res.status == 200) {
-              alert("리뷰작성완료");
-              onClose();
-              router.go();
-            }
-          });
-      } catch (error) {
-        console.log(error);
-        // alert("예상치 못한 오류가 발생했습니다");
+      if (revContent.value.length < 5) {
+        alert("리뷰는 최소 5자 이상 써주세요!");
+        revContent.value = "";
+      } else {
+        try {
+          await axios
+            .post(
+              "review/post",
+              {
+                spaceId: ids.value.spaceId,
+                companyId: ids.value.companyId,
+                content: revContent.value,
+                rating: score.value - 1,
+              },
+              {
+                headers: {
+                  Authorization: localStorage.getItem("access_token"),
+                },
+              }
+            )
+            .then((res) => {
+              if (res.status == 200) {
+                alert("리뷰작성완료");
+                onClose();
+                router.go();
+              }
+            });
+        } catch (error) {
+          console.log(error);
+          alert("예상치 못한 오류가 발생했습니다");
+          router.go();
+        }
       }
     };
 
     //리뷰수정put
     const put = async () => {
-      console.log(1);
-      try {
-        await axios
-          .put(
-            "review/update",
-            {
-              reviewId: edit.value.id,
-              content: revContent.value,
-              rating: score.value - 1,
-            },
-            {
-              headers: { Authorization: localStorage.getItem("access_token") },
-            }
-          )
-          .then((res) => {
-            if (res.status == 200) {
-              alert("리뷰수정완료");
-              onClose();
-              router.go();
-            }
-          });
-      } catch (error) {
-        alert("예상치 못한 오류가 발생했습니다");
+      if (revContent.value === "") {
+        alert("리뷰를 수정하고 수정버튼을 눌러주세요!");
+        revContent.value = "";
+      } else {
+        try {
+          await axios
+            .put(
+              "review/update",
+              {
+                reviewId: edit.value.id,
+                content: revContent.value,
+                rating: score.value - 1,
+              },
+              {
+                headers: {
+                  Authorization: localStorage.getItem("access_token"),
+                },
+              }
+            )
+            .then((res) => {
+              if (res.status == 200) {
+                alert("리뷰수정완료");
+                onClose();
+                router.go();
+              }
+            });
+        } catch (error) {
+          alert("예상치 못한 오류가 발생했습니다");
+          onClose();
+          router.go();
+        }
       }
     };
 
