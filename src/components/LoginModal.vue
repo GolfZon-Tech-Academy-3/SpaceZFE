@@ -64,7 +64,9 @@ export default {
       } else {
         try {
           await axios
-            .post("member/login", { email: email.value, password: pw.value })
+            .post("member/login", { email: email.value, password: pw.value }, {
+              withCredentials: true,
+            })
             .then((res) => {
               if (res.data === "") {
                 store.dispatch('setMemberId', parseJwt(res.headers.authorization).MEMBER_ID);
