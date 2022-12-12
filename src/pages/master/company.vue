@@ -83,7 +83,7 @@ export default {
         const getCompanys = async (type) => {
             await axios.get(`${proxy}/company/manager/list`, {
                 headers: {
-                    Authorizaion: store.state.accessToken,
+                    Authorization: store.state.accessToken,
                 }
             })
                 .then((res) => {
