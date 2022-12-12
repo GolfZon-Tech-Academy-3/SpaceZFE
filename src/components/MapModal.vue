@@ -63,7 +63,7 @@ export default {
     const searchSubmit = async () => {
       await axios.get('company/space/list', {
         headers: {
-          Authorization: store.state.authority,
+          Authorization: store.state.accessToken,
         }
       }).then((res) => {
         places.value = res.data;

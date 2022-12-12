@@ -86,7 +86,7 @@ export default {
                     },
                     {
                         headers: {
-                            Authorization: store.state.authority
+                            Authorization: store.state.accessToken
                         }
                     })
                         .then((res) => {
