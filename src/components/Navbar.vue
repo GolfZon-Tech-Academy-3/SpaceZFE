@@ -11,7 +11,7 @@
             <div v-if="isMaster" style="cursor: pointer;margin: 0 1em;" @click="moveTo('MasterCompany')">
                 master
             </div>
-            <div v-if="isManager" style="cursor: pointer;margin: 0 1em;" @click="moveTo('ReservationStatus')">
+            <div v-if="isManager" style="cursor: pointer;margin: 0 1em;" @click="moveTo('ManageCompany')">
                 manager
             </div>
             <div class="element" style="cursor: pointer;margin: 0 1em;" v-if="!isLogined" @click= "openLoginModal" >
