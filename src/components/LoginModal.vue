@@ -64,7 +64,7 @@ export default {
       } else {
         try {
           await axios
-            .post("member/login", { email: email.value, password: pw.value }, {
+            .post("/proxy/member/login", { email: email.value, password: pw.value }, {
               withCredentials: true,
             })
             .then((res) => {
