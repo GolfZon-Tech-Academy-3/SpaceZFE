@@ -3,20 +3,8 @@
     <template v-slot:title> SPACEZ </template>
     <template v-slot:body>
       <div class="loginform">
-        <input
-          class="email"
-          v-model="email"
-          type="email"
-          placeholder="이메일"
-          @keyup.enter="login"
-        />
-        <input
-          class="password"
-          v-model="pw"
-          type="password"
-          placeholder="비밀번호"
-          @keyup.enter="login"
-        />
+        <input class="email" v-model="email" type="email" placeholder="이메일" @keyup.enter="login" />
+        <input class="password" v-model="pw" type="password" placeholder="비밀번호" @keyup.enter="login" />
         <button type="button" class="login" @click="login">로그인</button>
       </div>
     </template>
@@ -37,12 +25,15 @@
 import Modal from "@/components/Modal.vue";
 import { ref, getCurrentInstance } from "vue";
 import axios from "@/axios";
+import { useStore } from 'vuex';
 export default {
   components: {
     Modal,
   },
   setup() {
+    const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
     const { emit } = getCurrentInstance();
+    const store = useStore();
     const email = ref("");
     const pw = ref("");
 
@@ -74,26 +65,14 @@ export default {
       } else {
         try {
           await axios
-            .post("member/login", { email: email.value, password: pw.value })
+            .post(`${proxy}/member/login`, { email: email.value, password: pw.value })
             .then((res) => {
               if (res.data === "") {
-                localStorage.setItem(
-                  "authority",
-                  parseJwt(res.headers.authorization).AUTHORITY
-                );
-                localStorage.setItem(
-                  "profile_image",
-                  parseJwt(res.headers.authorization).IMAGE_NAME
-                );
-                localStorage.setItem(
-                  "company_id",
-                  parseJwt(res.headers.authorization).COMPANY_ID
-                );
-                localStorage.setItem(
-                  "memberId",
-                  parseJwt(res.headers.authorization).MEMBER_ID
-                );
-                localStorage.setItem("access_token", res.headers.authorization);
+                store.dispatch('setMemberId', parseJwt(res.headers.authorization).MEMBER_ID);
+                store.dispatch('setAuthority', parseJwt(res.headers.authorization).AUTHORITY);
+                store.dispatch('setProfile', parseJwt(res.headers.authorization).IMAGE_NAME);
+                store.dispatch('setCompanyId', parseJwt(res.headers.authorization).COMPANY_ID);
+                store.dispatch('setAccessToken', res.headers.authorization);
                 onClose();
                 window.location.reload(true);
               }
@@ -138,9 +117,6 @@ export default {
   color: white;
   padding: 1em;
   border-radius: 1em;
-}
-.login:hover {
-  background-color: rgb(63, 149, 184);
 }
 .submit {
   color: grey;

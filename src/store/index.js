@@ -3,31 +3,31 @@ import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
   state: {
-    currentPage: 1,
     searchType: "total",
     searchDate: "",
-    searchTime: "",
+    searchTime: "none",
     searchWord: "",
-    // memberId: "",
-    // authority: "",
-    // token: "",
+    memberId: null,
+    companyId: null,
+    authority: null,
+    profile: null,
+    accessToken: null,
   },
   mutations: {
-    // GET_MEMBERID(state, payload) {
-    //   state.memberId = payload;
-    // },
-    // GET_AUTHORITY(state, payload) {
-    //   state.authority = payload;
-    // },
-    // LOGOUT(state) {
-    //   state.memberId = "";
-    //   state.authority = "";
-    // },
-    // GET_TOKEN(state, payload) {
-    //   state.token = payload;
-    // },
-    UPDATE_CURRENT_PAGE(state, payload) {
-      state.currentPage = payload;
+    SET_MEMBER_ID(state, payload) {
+      state.memberId = payload;
+    },
+    SET_COMPANY_ID(state, payload) {
+      state.companyId = payload;
+    },
+    SET_AUTHORITY(state, payload) {
+      state.authority = payload;
+    },
+    SET_PROFILE(state, payload) {
+      state.profile = payload;
+    },
+    SET_ACCESS_TOKEN(state, payload) {
+      state.accessToken = payload;
     },
     UPDATE_SEARCH_TYPE(state, payload) {
       state.searchType = payload;
@@ -43,8 +43,20 @@ export default createStore({
     },
   },
   actions: {
-    updatePage({ commit }, newPage) {
-      commit("UPDATE_CURRENT_PAGE", newPage);
+    setMemberId({ commit }, memberId) {
+      commit("SET_MEMBER_ID", memberId);
+    },
+    setCompanyId({ commit }, companyId) {
+      commit("SET_COMPANY_ID", companyId);
+    },
+    setAuthority({ commit }, authority) {
+      commit("SET_AUTHORITY", authority);
+    },
+    setProfile({ commit }, profile) {
+      commit("SET_PROFILE", profile);
+    },
+    setAccessToken({ commit }, accessToken) {
+      commit("SET_ACCESS_TOKEN", accessToken);
     },
     updateType({ commit }, newType) {
       commit("UPDATE_SEARCH_TYPE", newType);
@@ -57,6 +69,13 @@ export default createStore({
     },
     updateWord({ commit }, newWord) {
       commit("UPDATE_SEARCH_WORD", newWord);
+    },
+    initToken({ commit }) {
+      commit("SET_MEMBER_ID", null);
+      commit("SET_COMPANY_ID", null);
+      commit("SET_AUTHORITY", null);
+      commit("SET_PROFILE", null);
+      commit("SET_ACCESS_TOKEN", null);
     },
   },
   plugins: [createPersistedState()],

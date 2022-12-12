@@ -59,18 +59,21 @@
 import { ref } from 'vue';
 import axios from '@/axios';
 import MenuBar from './menuBar.vue';
+import { useStore } from 'vuex';
 export default {
     components: {
         MenuBar,
     },
     setup() {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
+        const store = useStore();
         const masters = ref([]);
         const candidates = ref([]);
 
         const getMasters = async () => {
-            await axios.get(`/master/list`, {
+            await axios.get(`${proxy}/master/list`, {
                 headers: {
-                    Authorization: localStorage.getItem('access_token'),
+                    Authorization: store.state.accessToken,
                 }
             }).then((res) => {
                 masters.value = res.data;
@@ -82,9 +85,9 @@ export default {
         const approve = async (id) => {
             if(confirm('멤버 회원을 마스터 회원으로 변경하시겠습니까?')) {
                 try {
-                    await axios.put(`/master/approve/${id}`, {
+                    await axios.put(`${proxy}/master/approve/${id}`, {
                         headers: {
-                            Authorization: localStorage.getItem('access_token'),
+                            Authorization: store.state.accessToken,
                         }
                     })
                     alert('변경되었습니다');
@@ -98,9 +101,9 @@ export default {
         const disapprove = async (id) => {
             if(confirm('마스터 회원을 멤버 회원으로 변경하시겠습니까?')) {
                 try {
-                    await axios.put(`/master/disapprove/${id}`, {
+                    await axios.put(`${proxy}/master/disapprove/${id}`, {
                         headers: {
-                            Authorization: localStorage.getItem('access_token'),
+                            Authorization: store.state.accessToken,
                         }
                     })
                     alert('변경되었습니다');
@@ -112,9 +115,9 @@ export default {
         }
 
         const changeKeyword = async (e) => {
-            await axios.get(`/master/member/list?searchWord=${e.target.value}`, {
+            await axios.get(`${proxy}/master/member/list?searchWord=${e.target.value}`, {
                 headers: {
-                    Authorization: localStorage.getItem('access_token'),
+                    Authorization: store.state.accessToken,
                 }
             }).then((res) => {
                 console.log(res.data);
@@ -136,7 +139,7 @@ export default {
 
 <style scoped>
 .content {
-    width: 85%;
+    width: calc(100% - 200px);
     height:100vh;
     overflow:scroll;
     overflow-x: hidden;

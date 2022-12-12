@@ -1,123 +1,172 @@
 <template>
     <div>
-        <div class="title">
-            <div style="font-weight:bold;color:#F65F09;font-size: 1em;padding-top:3%;">
-                Find Places
+        <div style="width: 100%;background-color: white;">
+            <div id="title" class="title">
+                <div style="font-weight:bold;color:#F65F09;font-size: 1em;">
+                    Find Places
+                </div>
+                <div style="font-size:2em;font-weight: bold;">
+                    찾아 보기
+                </div>
             </div>
-            <div style="font-size:2em;font-weight: bold;">
-                찾아 보기
-            </div>
-        </div>
-        
-        <div class="typeSelection">
-            <div :class="[ searchType === 'total' ? 'yes' : 'no']" style="margin-left: 1em;" @click="selectAll(1)">
-                전체
-            </div>
-            <div :class="[ searchType === 'office' ? 'yes' : 'no']" @click="selectOffice(1)">
-                오피스
-            </div>
-            <div :class="[ searchType === 'desk' ? 'yes' : 'no']" @click="selectDesk(1)">
-                데스크
-            </div>
-            <div :class="[ searchType === 'meeting-room' ? 'yes' : 'no']" @click="selectMeeting(1)">
-                회의실
-            </div>
-            <div class="mapBtn" @click="controlMapModal">지도</div>
-        </div>
+            
+            <div id="fixed">
+                <div class="typeSelection">
+                    <div :class="[ searchType === 'total' ? 'yes' : 'no']" style="margin-left: 1em;" @click="selectAll(1)">
+                        전체
+                    </div>
+                    <div :class="[ searchType === 'office' ? 'yes' : 'no']" @click="selectOffice(1)">
+                        오피스
+                    </div>
+                    <div :class="[ searchType === 'desk' ? 'yes' : 'no']" @click="selectDesk(1)">
+                        데스크
+                    </div>
+                    <div :class="[ searchType === 'meeting-room' ? 'yes' : 'no']" @click="selectMeeting(1)">
+                        회의실
+                    </div>
+                    <div class="mapBtn" @click="controlMapModal">지도</div>
 
-        <div class="conditionSelection">
-            <span style="display:inline-block;width: 15%; height: 100%;">
-                <div style="color: #9E9E9E; font-size: 1em;">날짜</div>
-                <input id="dateSelector" type="date" @change="changeDate($event)" :value="searchDate" :min="today" />
-            </span>
-            <span style="display:inline-block;width: 13%; height: 100%;margin-left:1%;">
-                <div style="color: #9E9E9E; font-size: 1em;">시간</div>
-                <select id="timeSelector" @change="changeTime($event)" :value="searchTime">
-                    <option value="null" selected>선택안함</option>
-                    <option v-for="val in 23" :key="val">{{val}} 시</option>
-                </select>
-            </span>
-            <span style="display:inline-block;width: 20%; height: 100%;margin-left:0%;">
-                <input class="search" type="text" placeholder="검색" @change="changeWord($event)" @keyup.enter="searchWithCondition" :value="searchWord">
-            </span>
-            <span style="width: 30%; height: 100%;">
-                <button class="searchButton" @click="resetCondition">초기화</button>
-            </span>
-            <span style="width: 30%; height: 100%;">
-                <button class="searchButton" @click="searchWithCondition">적용</button>
-            </span>
+                    <span style="display:inline-block;width: 130px; height: 100%;">
+                        <div style="color: #9E9E9E; font-size: 1em;">날짜</div>
+                        <input id="dateSelector" type="date" @change="changeDate($event)" :value="searchDate" :min="today" />
+                    </span>
+                    <span style="display:inline-block;width: 100px; height: 100%;margin-left:1%;">
+                        <div style="color: #9E9E9E; font-size: 1em;">시간</div>
+                        <select id="timeSelector" @change="changeTime($event)" :value="searchTime">
+                            <option value="none" selected>선택안함</option>
+                            <option v-for="val in 23" :key="val">{{val}} 시</option>
+                        </select>
+                    </span>
+                    <span style="display:inline-block;width: 200px; height: 50px;margin-left:0%;">
+                        <input class="search" type="text" placeholder="검색" @change="changeWord($event)" @keyup.enter="searchWithCondition" :value="searchWord">
+                    </span>
+                    <span style="width: 30%; height: 100%;">
+                        <button class="searchButton" @click="resetCondition">초기화</button>
+                    </span>
+                    <span style="width: 30%; height: 100%;">
+                        <button class="searchButton" @click="searchWithCondition">적용</button>
+                    </span>
+                </div>
+            </div>
+
+            <div id="fake" />
+            
         </div>
 
         <div v-if="noResult" style="margin:3% auto; width : 100%;text-align:center;font-size:2em;">
             검색결과 없음
         </div>
-        <div v-else :class="{'grid1': isOne, 'grid2':isTwo, 'grid3':isThree}">
-            <div v-for="place in resultPlace" :key="place.companyId">
+        <div v-else class="grid">
+            <div v-for="place in resultPlace" :key="place.companyId" @scroll="handleScroll">
                 <div style="height: 50%;padding: 1em 1em 0 1em;">
-                    <img :src="place.firstImage" style="width:100%;height:100%;object-fit:fill;border-radius: 1em;cursor: pointer;" @click="moveToPlaceDetail(place.companyId)"/>
+                    <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)"/>
                 </div>
-                <div style="height: 10%;padding: 0 2em;margin-top:1em;color:#9E9E9E">
+                <div style="height: 10%;padding: 0 2em;margin-top:1em;color:#9E9E9E;white-space: nowrap;">
                     <span>{{place.location}}</span>
                     <span v-for="type in place.types" :key="type"> · {{type}}</span>
-                    <img class="favorite_red" @click="addFavorite(place.companyId)" v-if="place.companyLike" src="../assets/heart_red.png" />
-                    <img class="favorite" @click="addFavorite(place.companyId)" v-else src="../assets/heart.png" />
+
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;" @click="addFavorite($event, place.companyId)" v-if="place.companyLike">
+                        favorite
+                    </span>
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;" @click="addFavorite($event, place.companyId)" v-else>
+                        favorite
+                    </span>
                 </div>
-                <div style="height: 15%; padding: 0 1em;font-size: 2em; cursor:pointer;" @click="moveToPlaceDetail(place.companyId)">
+                <div style="height: 15%; padding: 0 1em;font-size: 2em; cursor:pointer;white-space: nowrap;" @click="moveToPlaceDetail(place.companyId)">
                     {{place.companyName}}
                 </div>
-                <div style="width:80%; height:7%; margin:0 auto;">
+                <div style="width:80%; height:7%; margin:0 auto;white-space: nowrap;">
                     <span>{{place.lowPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} 원 </span>
-                    <span style="color:#F6CA4E;">★</span>
-                    <span>{{place.avgReview}}</span>
-                    <span style="color: #9E9E9E;margin-left:1em;">리뷰 {{place.reviewSize}}</span>
+                    <span v-if="(place.reviewSize !== 0)" style="color: #f6ca4e">★</span>
+                    <span v-if="(place.reviewSize !== 0)">{{ place.avgReview }}</span>
+                    <span v-else>평가없음</span>
+                    <span style="color: #9e9e9e; margin-left: 1em">
+                        리뷰 {{ place.reviewSize }}
+                    </span>
                 </div>
             </div>
         </div>
 
-        <div v-if="!noResult" class="pagination">
-            <div v-if="currentPage != 1" class="nav-btn" @click="decreasePage">이전</div>
-            <div v-for="page in pageNum" :key="page" :class="{'curPage' : (page === currentPage), 'notCurPage' : (page !== currentPage)}"
-                @click="updatePage(page)">
-                {{page}}
-            </div>  
-            <div v-if="currentPage != pageNum" class="nav-btn" @click="increasePage">다음</div>
-        </div>
         <SearchMapModal @close="controlMapModal" v-if="showMapModal" :placeInfo="resultPlace" />
+        <Toast v-if="showToast" :message="toastMessage" />
+        <div id="loading" v-show="loading" />
     </div>
 </template>
 
 <script>
-import { ref, computed  } from 'vue';
+import { ref, computed, onMounted, onUnmounted  } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import axios from '@/axios';
 import SearchMapModal from '@/components/SearchMapModal.vue';
+import Toast from '@/components/Toast.vue'
+import { useToast } from '@/composables/toast';
 export default {
     components: {
         SearchMapModal,
+        Toast,
     },
     setup() {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
         const router = useRouter();
         const store = useStore();
         const searchType = computed(() => store.state.searchType);
         const searchDate = computed(() => store.state.searchDate);
         const searchTime = computed(() => store.state.searchTime);
         const searchWord = computed(() => store.state.searchWord);
-        const resultCurrentNum = ref(0);
         const resultPlace = ref([]);
-        const isOne = ref(false);
-        const isTwo = ref(false);
-        const isThree = ref(false);
         const noResult = ref(false);
         const resultAllNum = ref(0);
         const pageNum = ref(0);
-        const currentPage = computed(() => store.state.currentPage);
+        const currentPage = ref(1);
         const showMapModal = ref(false);
+        const loading = ref(false);
+        const stopLoading = ref(false);
 
-        const search = async () => {
+        const {
+            toastMessage, showToast, triggerToast,
+        } = useToast();
+
+        onMounted(() => {
+            setTimeout(() => {
+                document.addEventListener('scroll', scrollEvent);
+            }, 100);
+        })
+
+        onUnmounted(() => {
+            document.removeEventListener('scroll', scrollEvent);
+        })
+
+        const scrollEvent = () => {
+            document.documentElement.scrollTop;
+            let scrollTop = document.querySelector('html').scrollTop;
+            let clientHeight = document.querySelector('html').clientHeight;
+            let scrollHeight = document.querySelector('html').scrollHeight;
+            if(scrollTop > 165) {
+                document.getElementById('fixed').style = 'position: fixed;top: 3.75em;left:0;width: 100%;background-color: white;box-shadow: 0 0 5px 0 gray';
+                document.getElementById('title').style = 'display: none;';
+                document.getElementById('fake').style = 'width: 100%;height: 250px;';
+            } else {
+                document.getElementById('fixed').style = '';
+                document.getElementById('title').style = '';
+                document.getElementById('fake').style = '';
+            }
+            if(scrollTop + clientHeight === scrollHeight) {
+                if(!stopLoading.value) {
+                    loading.value = true;
+                    setTimeout(() => {
+                        loading.value = false;
+                        currentPage.value += 1;
+                        search(currentPage.value);
+                    }, 1000);
+                }
+            }
+        }
+
+        const search = async (page) => {
             if(searchTime.value != null) { //검색 시간이 존재할때
                 if(searchTime.value.length === 3) {
-                    await axios.post(`company/${searchType.value}?page=${currentPage.value}`,
+                    await axios.post(`${proxy}/company/${searchType.value}?page=${page}`,
                     {
                         date: searchDate.value,
                         time: searchTime.value[0] + ':00',
@@ -125,26 +174,22 @@ export default {
                     },
                     {
                         headers: {
-                            Authorization: localStorage.getItem('access_token')
+                            Authorization: store.state.accessToken
                         }
                     })
                         .then((res) => {
                             resultAllNum.value = res.data.totalSize;
                             pageNum.value = res.data.totalPage;
-                            resultCurrentNum.value = res.data.company.length;
-                            if(resultCurrentNum.value === 0) {
-                                noResult.value = true;
+                            if(res.data.company.length === 0) {
+                                triggerToast('더 로드할 장소가 없습니다');
+                                stopLoading.value = true;
                             }
-                            if((resultCurrentNum.value - 1) / 3 < 1) {
-                                isOne.value = true;
-                            } else if((resultCurrentNum.value - 1) / 3 < 2) {
-                                isTwo.value = true;
-                            } else {
-                                isThree.value = true;
-                            }
+                            res.data.company.forEach(place => {
+                                resultPlace.value.push(place);
+                            });
                         })
                 } else {
-                    await axios.post(`company/${searchType.value}?page=${currentPage.value}`,
+                    await axios.post(`${proxy}/company/${searchType.value}?page=${page}`,
                         {
                             date: searchDate.value,
                             time: searchTime.value[0] + searchTime.value[1] + ':00',
@@ -152,28 +197,23 @@ export default {
                         },
                         {
                             headers: {
-                                Authorization: localStorage.getItem('access_token')
+                                Authorization: store.state.accessToken
                             }
                         })
                             .then((res) => {
                                 resultAllNum.value = res.data.totalSize;
                                 pageNum.value = res.data.totalPage;
-                                resultCurrentNum.value = res.data.company.length;
-                                resultPlace.value = res.data.company;
-                                if(resultCurrentNum.value === 0) {
-                                    noResult.value = true;
+                                if(res.data.company.length === 0) {
+                                    triggerToast('더 로드할 장소가 없습니다');
+                                    stopLoading.value = true;
                                 }
-                                if((resultCurrentNum.value - 1) / 3 < 1) {
-                                    isOne.value = true;
-                                } else if((resultCurrentNum.value - 1) / 3 < 2) {
-                                    isTwo.value = true;
-                                } else {
-                                    isThree.value = true;
-                                }
+                                res.data.company.forEach(place => {
+                                    resultPlace.value.push(place);
+                                });
                             })
                 }
             } else { //검색 시간이 존재하지 않을 때
-                await axios.post(`company/${searchType.value}?page=${currentPage.value}`,
+                await axios.post(`${proxy}/company/${searchType.value}?page=${page}`,
                     {
                         date: searchDate.value,
                         time: searchTime.value,
@@ -181,29 +221,25 @@ export default {
                     },
                     {
                         headers: {
-                            Authorization: localStorage.getItem('access_token')
+                            Authorization: store.state.accessToken
                         }
                     })
                         .then((res) => {
+                            console.log(res.data);
                             resultAllNum.value = res.data.totalSize;
                             pageNum.value = res.data.totalPage;
-                            resultCurrentNum.value = res.data.company.length;
-                            resultPlace.value = res.data.company;
-                            if(resultCurrentNum.value === 0) {
-                                noResult.value = true;
+                            if(res.data.company.length === 0) {
+                                triggerToast('더 로드할 장소가 없습니다');
+                                stopLoading.value = true;
                             }
-                            if((resultCurrentNum.value - 1) / 3 < 1) {
-                                isOne.value = true;
-                            } else if((resultCurrentNum.value - 1) / 3 < 2) {
-                                isTwo.value = true;
-                            } else {
-                                isThree.value = true;
-                            }
+                            res.data.company.forEach(place => {
+                                resultPlace.value.push(place);
+                            });
                         })
             }
         }
 
-        search();
+        search(1);
 
         const changeDate = (event) => {
             if(event.target.value === '') {
@@ -242,25 +278,25 @@ export default {
 
         const selectAll = () => {
             store.dispatch('updateType', 'total');
-            store.dispatch('updatePage', 1);
-            search();
+            currentPage.value = 1;
+            window.location.reload();
         }
 
         const selectOffice = () => {
             store.dispatch('updateType', 'office');
-            store.dispatch('updatePage', 1);
+            currentPage.value = 1;
             window.location.reload();
         }
 
         const selectDesk = () => {
             store.dispatch('updateType', 'desk');
-            store.dispatch('updatePage', 1);
+            currentPage.value = 1;
             window.location.reload();
         }
 
         const selectMeeting = () => {
             store.dispatch('updateType', 'meeting-room');
-            store.dispatch('updatePage', 1);
+            currentPage.value = 1;
             window.location.reload();
         }
 
@@ -269,22 +305,7 @@ export default {
                 alert('날짜와 시간을 모두 선택해주세요');
                 return;
             }
-            store.dispatch('updatePage', 1);
-            window.location.reload();
-        }
-
-        const updatePage = (page) => {
-            store.dispatch('updatePage', page);
-            window.location.reload();
-        }
-
-        const increasePage = () => {
-            store.dispatch('updatePage', currentPage.value + 1);
-            window.location.reload();
-        }
-
-        const decreasePage = () => {
-            store.dispatch('updatePage', currentPage.value - 1);
+            currentPage.value = 1;
             window.location.reload();
         }
 
@@ -294,15 +315,24 @@ export default {
             store.dispatch('updateWord', '');
         }
 
-        const addFavorite = async (companyId) => {
-            await axios.post(`company/like/${companyId}`, {
-                headers: {
-                    Authorization: localStorage.getItem('access_token')
-                }
-            })
-                .then(() => {
-                    window.location.reload();
+        const addFavorite = async (e, companyId) => {
+            try {
+                await axios.get(`${proxy}/company/like/${companyId}`, {
+                    headers: {
+                        Authorization: store.state.accessToken
+                    }
+                }).then(() => {
+                    if(e.target.style["fontVariationSettings"] === "\"FILL\" 0") {//하트가 비어있을때
+                        console.log('empty');
+                        e.target.style["fontVariationSettings"] = "\"FILL\" 1";
+                    } else {//하트가 채워졌을 때
+                        console.log('fill');
+                        e.target.style["fontVariationSettings"] = "\"FILL\" 0";
+                    }
                 })
+            } catch (error) {
+                alert('오류가 발생했습니다');
+            }
         }
 
         const moveToPlaceDetail = (companyId) => {
@@ -315,6 +345,9 @@ export default {
         }
 
         const controlMapModal = () => {
+            if(showMapModal.value === false) {
+                triggerToast('지도를 닫으려면 회색 영역을 더블클릭');
+            }
             showMapModal.value = !showMapModal.value;
         }
 
@@ -323,11 +356,7 @@ export default {
             selectOffice,
             selectDesk,
             selectMeeting,
-            resultCurrentNum,
             noResult,
-            isOne,
-            isTwo,
-            isThree,
             searchWithCondition,
             search,
             resultAllNum,
@@ -341,15 +370,18 @@ export default {
             changeDate,
             changeTime,
             changeWord,
-            updatePage,
-            increasePage,
-            decreasePage,
             resetCondition,
             resultPlace,
             addFavorite,
             moveToPlaceDetail,
             controlMapModal,
             showMapModal,
+            scrollEvent,
+            toastMessage,
+            showToast,
+            triggerToast,
+            loading,
+            stopLoading,
         }
     }
 }
@@ -358,14 +390,14 @@ export default {
 <style scoped>
 .title {
     width: 100%;
-    height: 20vh;
     text-align: center;
+    padding: 3em 0;
 }
 .typeSelection {
-    width: 80%;
-    height: 5vh;
+    width: 1000px;
+    height: 70px;
+    padding: 1em 0;
     margin: 0 auto;
-    border-bottom:1px #EDEDED solid;
     align-items: center;
 }
 .yes {
@@ -380,19 +412,11 @@ export default {
     margin: 0 1%;
     cursor:pointer;
 }
-.conditionSelection {
-    position: relative;
-    width: 80%;
-    height: 7vh;
-    margin: 0 auto;
-    padding-top: 2%;
-}
 #dateSelector {
     color:#9E9E9E;
     border: 1px #9E9E9E solid;
-    padding: 0.7% 0.7%;
+    padding: 0.5em;
     border-radius: 2em;
-    font-family: Inter;
 }
 #dateSelector:focus {
     outline: none;
@@ -426,32 +450,12 @@ export default {
   cursor: pointer;
   margin-right: 1em;
 }
-.searchButton:hover {
-    background-color: skyblue;
-}
-.grid1 {
+.grid {
     display: grid;
-    width: 80%;
-    height: 50vh;
-    margin: 3% auto;
+    width: 1000px;
+    margin: 2em auto;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-auto-rows: 50vh;
-}
-.grid2 {
-    display: grid;
-    width: 80%;
-    height: 100vh;
-    margin: 3% auto;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-auto-rows: 50vh;
-}
-.grid3 {
-    display: grid;
-    width: 80%;
-    height: 150vh;
-    margin: 3% auto;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-auto-rows: 50vh;
+    grid-auto-rows: 410px;
 }
 .pagination {
     width: 100%;
@@ -460,7 +464,7 @@ export default {
     justify-content: center;
     align-items : center;
     text-align: center;
-    margin: 5% 0;
+    margin: 2em 0;
 }
 .curPage {
     width: 5vh;
@@ -476,44 +480,6 @@ export default {
     border-radius: 50%;
     margin: 0 1%;
 }
-.notCurPage {
-    width: 5vh;
-    height:5vh;
-    position: relative;
-    color: white;
-    font-weight:bolder;
-    background-color: skyblue;
-    cursor: pointer;
-    display : flex;
-    justify-content: center;
-    align-items : center;
-    border-radius: 50%;
-    margin: 0 1%;
-}
-.notCurPage:hover {
-    background-color: blue;
-}
-.nav-btn {
-    background-color: #041461;
-    color:white;
-    padding: 0.7em;
-    border-radius: 1em;
-    cursor: pointer;
-}
-.nav-btn:hover {
-    background-color: skyblue;
-}
-.favorite {
-    float:right;
-    cursor:pointer;
-    width: 9%;
-    margin: 2% 2% 0 0;
-}
-.favorite_red {
-    float:right;
-    cursor:pointer;
-    width: 12%;
-}
 .mapBtn {
     display: inline;
     border: 1px #041461 solid;
@@ -521,10 +487,53 @@ export default {
     padding: 0.5em 1em;
     border-radius: 1em;
     cursor: pointer;
+    margin-right: 1em;
 }
 .mapBtn:hover {
     border: 1px #041461 solid;
     color: white;
     background-color: #041461;
+}
+.material-symbols-outlined {
+    color: red;
+    float: right;
+    cursor: pointer;
+    font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
+}
+.img {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius: 1em;
+    cursor: pointer;
+    box-shadow: 0 0 5px 0 gray;
+}
+.img:hover {
+    width: 90%;
+    height: 90%;
+    margin: 5%;
+}
+#loading {
+    position: fixed;
+    top: calc(50% - 25px);
+    left: calc(50% - 25px);
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: black;
+    animation: spin 1s ease-in-out infinite;
+    -webkit-animation: spin 1s ease-in-out infinite;
+    z-index: 1000;
+}
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
 }
 </style>

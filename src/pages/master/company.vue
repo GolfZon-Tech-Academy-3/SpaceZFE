@@ -55,6 +55,7 @@
                 </table>
             </div>
         </div>
+        <Toast v-if="showToast" :message="toastMessage" />
     </div>
 </template>
 
@@ -62,19 +63,27 @@
 import { ref } from 'vue';
 import axios from '@/axios';
 import MenuBar from './menuBar.vue';
+import Toast from '@/components/Toast.vue'
+import { useToast } from '@/composables/toast';
+import { useStore } from 'vuex';
 export default {
     components: {
         MenuBar,
+        Toast,
     },
     setup() {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
+        const store = useStore();
         const selected = ref('all');
         const result = ref([]);
-        console.log(localStorage.getItem('authority'));
+        const {
+            toastMessage, showToast, triggerToast,
+        } = useToast();
 
         const getCompanys = async (type) => {
-            await axios.get(`/company/manager/list`, {
+            await axios.get(`${proxy}/company/manager/list`, {
                 headers: {
-                    Authorizaion: localStorage.getItem('access_token'),
+                    Authorization: store.state.accessToken,
                 }
             })
                 .then((res) => {
@@ -132,14 +141,13 @@ export default {
         const approve = async (id) => {
             if(confirm('매니저로 승인하시겠습니까?')) {
                 try {
-                    await axios.put(`/company/approve/${id}`, {
+                    await axios.put(`${proxy}/company/approve/${id}`, {
                         headers: {
-                            Authorization: localStorage.getItem('access_token')
+                            Authorization: store.state.accessToken
                         }
                     })
                         .then(() => {
-                            alert('승인되었습니다');
-                            window.location.reload();
+                            triggerToast('승인되었습니다. 새로고침 시 변경 상태가 나타납니다')
                         })
                 } catch (error) {
                     alert('승인에 실패했습니다');
@@ -150,14 +158,13 @@ export default {
         const decline = async (id) => {
             if(confirm('매니저 승인을 거절하시겠습니까?')) {
                 try {
-                    await axios.put(`/company/disapprove/${id}`, {
+                    await axios.put(`${proxy}/company/disapprove/${id}`, {
                         headers: {
-                            Authorization: localStorage.getItem('access_token')
+                            Authorization: store.state.accessToken
                         }
                     })
                         .then(() => {
-                            alert('거절되었습니다');
-                            window.location.reload();
+                            triggerToast('거절되었습니다. 새로고침 시 변경 상태가 나타납니다');
                         })
                 } catch (error) {
                     alert('거절에 실패했습니다');
@@ -175,6 +182,9 @@ export default {
             result,
             approve,
             decline,
+            toastMessage,
+            showToast,
+            triggerToast,
         }
     }
 }
@@ -182,7 +192,7 @@ export default {
 
 <style scoped>
 .content {
-    width: 85%;
+    width: calc(100% - 200px);
     height:100vh;
 }
 .scrolltable {
@@ -190,7 +200,7 @@ export default {
     max-height: 80%;
     display:block;
     overflow: scroll;
-    overflow-x: hidden;
+    overflow-x: auto;
     overflow-y: auto;
 }
 .sorter {
@@ -228,7 +238,7 @@ export default {
     color: white;
 }
 table {
-    width: 80%;
+    width: 90%;
     height: 80%;
     margin: 3em auto;
     overflow: auto;
@@ -250,6 +260,7 @@ tr {
 td {
     text-align: center;
     padding: 0.5em 0;
+    white-space: nowrap;
 }
 tbody {
     height: 95%;

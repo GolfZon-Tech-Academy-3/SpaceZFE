@@ -33,21 +33,24 @@ import { ref } from 'vue';
 import axios from '@/axios';
 import MenuBar from './menuBar.vue';
 import QnaModal from '@/components/QnaModal.vue';
+import { useStore } from 'vuex';
 export default {
     components: {
         MenuBar,
         QnaModal,
     },
     setup() {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
+        const store = useStore();
         const showQnaModal = ref(false);
         const qnas = ref([]);
         const qna = ref({});
 
         const getQnas = async () => {
-            const companyId = localStorage.getItem('company_id');
-            await axios.get(`/back-office/inquiry/total/${companyId}`, {
+            const companyId = store.state.companyId;
+            await axios.get(`${proxy}/back-office/inquiry/total/${companyId}`, {
                 headers: {
-                    Authorization: localStorage.getItem('access_token')
+                    Authorization: store.state.accessToken
                 }
             })
                 .then(
@@ -95,7 +98,7 @@ export default {
     display:block;
 }
 .content {
-    width: 85%;
+    width: calc(100% - 200px);
     height:100vh;
 }
 table {
@@ -132,8 +135,5 @@ tbody {
     color: white;
     cursor: pointer;
     border-radius: 0.5em;
-}
-.btn:hover {
-    background-color: skyblue;
 }
 </style>

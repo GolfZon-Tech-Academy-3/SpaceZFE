@@ -1,29 +1,37 @@
 <template>
-  <div class="wrapper">
-    <h1 class="title">시작해보세요 사무 공간 임대</h1>
-    <p>1인 데스크부터 20인 대형 사무실까지</p>
-    <p>모두를 위한 임대 서비스</p>
-    <img class="startLogo" src="../assets/startLogo.png" />
     <div>
-        <button class="button" @click="start">시작하기</button>
+        <div class="wrapper">
+            <h1 class="title">시작해보세요 사무 공간 임대</h1>
+            <p>1인 데스크부터 20인 대형 사무실까지</p>
+            <p>모두를 위한 임대 서비스</p>
+            <img class="startLogo" src="../assets/startLogo.png" />
+            <div style="font-family: Archivo;cursor: pointer;color: #041461;font-size: 2em;">
+                SPACEZ
+            </div>
+            <div>
+                <button class="button" @click="start">시작하기</button>
+            </div>
+        </div>
+        <LoginModal v-if="showLoginModal" @close="closeModal" />
     </div>
-  </div>
-  <LoginModal v-if="showLoginModal" @close="closeModal" />
+  
 </template>
 
 <script>
-import { getCurrentInstance, ref } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import LoginModal from '@/components/LoginModal.vue';
+import { useStore } from 'vuex';
 export default {
     components: {
         LoginModal,
     },
     setup() {
+        const store = useStore();
         const showLoginModal = ref(false);
         const router = useRouter();
         const start = () => {
-            if (localStorage.getItem("authority") != null) {
+            if (store.state.authority != null) {
                 router.push({
                     name: "Main",
                 });
@@ -32,7 +40,6 @@ export default {
             }
         }
 
-        const { emit } = getCurrentInstance();
         const closeModal = () => {
             showLoginModal.value = false;
         }
@@ -49,14 +56,13 @@ export default {
 <style scoped>
 .wrapper {
     width: 100%;
-    height: 80vh;
     text-align:center;
 }
 .startLogo {
-    width: 15em;
+    width: 150px;
 }
 .title {
-    margin-top: 20vh;
+    margin-top: 5em;
 }
 .button {
     border: none;
@@ -64,6 +70,7 @@ export default {
     font-weight: bold;
     cursor: pointer;
     font-size: 2em;
+    margin: 1em;
 }
 .button:hover {
     color: grey;

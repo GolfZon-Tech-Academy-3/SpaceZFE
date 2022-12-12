@@ -1,16 +1,9 @@
 <template>
-  <div class="modal-wrapper">
-    <div class="modal-dialog">
+  <div class="modal-wrapper" @click="onClose">
+    <div class="modal-dialog" @click.stop>
       <div class="modal-content">
-        <div class="close-button">
-          <button type="button" class="close">
-            <span @click="onClose">&times;</span>
-          </button>
-        </div>
         <div class="modal-header">
-          <div class="modal-title">
-            <slot name="title"></slot>
-          </div>
+          <slot name="title"></slot>
         </div>
         <div class="modal-body">
           <slot name="body"></slot>
@@ -51,25 +44,19 @@ export default {
   z-index: 100;
 }
 .modal-dialog {
-  width: 25%;
-  min-width: 300px;
-  height: 70%;
-  min-height: 500px;
+  width: 350px;
+  height: 600px;
   display: flex;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
-.close-button {
-  width: 100%;
-  height:10%;
-}
 .modal-content {
   width: 100%;
   text-align: center;
   background-color: white;
-  border-radius: 2rem;
+  border-radius: 2em;
 }
 .modal-header {
   font-family: Archivo;
@@ -77,6 +64,7 @@ export default {
   width: 100%;
   height: 15%;
   font-size: 2em;
+  margin-top: 1.5em;
 }
 .modal-body {
   width: 100%;
@@ -89,12 +77,9 @@ export default {
 .close {
   background-color: transparent;
   border: none;
-  font-size:2em;
+  font-size:1.5em;
   float:right;
   margin: 0.2em;
   cursor: pointer;
-}
-.close:hover {
-  color: grey;
 }
 </style>

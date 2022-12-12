@@ -16,7 +16,9 @@
             <textarea class="textarea" placeholder="장소 소개를 입력해주세요" maxlength="250" v-model="placeIntro" />
             <div class="item">이용 규칙</div>
             <textarea class="textarea" placeholder="장소 이용 규칙을 입력해주세요" maxlength="250" v-model="rule" />
-            <button class="submit" @click="submit">신청</button>
+            <div style="text-align: center;">
+                <button class="submit" @click="submit">신청</button>
+            </div>
         </div>
     </div>
 </template>
@@ -25,8 +27,11 @@
 import axios from '@/axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 export default {
     setup() {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
+        const store = useStore();
         const placeName = ref('');
         var file = null;
         const address = ref('');
@@ -64,9 +69,9 @@ export default {
         }
 
         const submit = async () => {
-            if(localStorage.getItem('authority') == null) {
+            if(store.state.authority == null) {
                 alert('로그인을 먼저 진행해주세요');
-            } else if(localStorage.getItem('authority') === 'member') {
+            } else if(store.state.authority === 'member') {
                 if(placeName.value.length < 2) {
                     alert('업체 이름은 두 자리 이상이어야합니다');
                 } else if(document.getElementById('file').files.length === 0) {
@@ -89,9 +94,9 @@ export default {
                     form.append('summary', placeSummary.value);
                     form.append('multipartFile', file);
                     try {
-                        await axios.post('company/post', form, {
+                        await axios.post(`${proxy}/company/post`, form, {
                             headers: {
-                                Authorization: localStorage.getItem('access_token'),
+                                Authorization: store.state.accessToken,
                                 'Content-Type': 'multipart/form-data',
                             }
                         })
@@ -131,7 +136,7 @@ export default {
 
 <style scoped>
 .wrapper {
-    width: 40%;
+    width: 500px;
     height: 100%;
     margin: 0 auto;
 }
@@ -148,9 +153,6 @@ export default {
     border-radius: 1em;
     cursor: pointer;
 }
-.file::file-selector-button:hover {
-    background-color:skyblue;
-}
 .btn {
     padding: 1em;
     background-color: #041461;
@@ -160,9 +162,6 @@ export default {
     border-radius: 1em;
     margin-left: 1em;
     cursor: pointer;
-}
-.btn:hover {
-    background-color: skyblue;
 }
 .input {
     width: 60%;
@@ -175,25 +174,21 @@ export default {
     border-bottom: 1px solid black;
 }
 .textarea {
-    width: 100%;
+    width: 485px;
     height: 90px;
-    font-family: Inter;
     resize: none;
     padding: 0.5em;
+    border-radius: 1em;
 }
 .submit {
     padding: 1em 3em;
+    width: 90%;
     background-color: #041461;
     color: white;
     font-weight: bold;
     border: none;
     border-radius: 1em;
-    margin-top: 2em;
-    margin-left: 1em;
+    margin: 2em 0;
     cursor: pointer;
-    float: right;
-}
-.submit:hover {
-    background-color: skyblue;
 }
 </style>

@@ -173,7 +173,7 @@
         <div class="locClicked" v-if="locClicked">
           {{ details.info }}
           <section style="text-align: left">
-            <p class="locClicked"><b style="color: red">&#63;</b>장소 위치</p>
+            <p class="locClicked"><b style="color: red"></b>장소 위치</p>
             <KaKaoMap class="map" :options="mapOption" />
           </section>
         </div>

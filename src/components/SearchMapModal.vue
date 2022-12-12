@@ -1,5 +1,5 @@
 <template>
-    <div class="modal-wrapper" @click="close">
+    <div class="modal-wrapper" @dblclick="close">
         <div class="modal-dialog" @click.stop>
           <div id="kakaoMap">
           </div>
@@ -44,8 +44,6 @@ export default {
     }
 
     const searchSubmit = () => {
-      console.log(places.value);
-
       for(var i = 0; i < places.value.length; i++) {
             let companyName = places.value[i].companyName;
             let companyId = places.value[i].companyId;
@@ -118,6 +116,7 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 1000;
 }
 #kakaoMap {
   width: 100%;

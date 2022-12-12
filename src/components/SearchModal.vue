@@ -1,5 +1,6 @@
 <template>
     <div class="wrapper" @click="closeModal">
+        <div style="width: 100%; height: 3.75em;" />
         <div class="results">
             <div v-for="res in result" :key="res.companyId" class="result" @click="moveToPlaceDetail(res.companyId)">
                 <div style="float:left">{{res.companyName}}</div>
@@ -55,15 +56,15 @@ export default {
 @media (min-width: 950px) {
     .results {
         position: relative;
-        width: 40%;
+        width: 30%;
         height: auto;
         max-height: 90vh;
         background-color: white;
         z-index: 100;
-        left: 28%;
         overflow:scroll;
         overflow-x:hidden;
         overflow-y:auto;
+        margin: 0 auto;
     }
 }
 @media (max-width: 950px) {
@@ -75,8 +76,5 @@ export default {
     height: 1em;
     padding:1em;
     cursor:pointer;
-}
-.result:hover {
-    background-color: #EDEDED;
 }
 </style>

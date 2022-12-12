@@ -1,29 +1,28 @@
 <template>
-    <div class="wrapper">
-        <div :class="[link === '/backoffice/dashboard' ? 'menuSelected' : 'menu']" @click="moveToDashboard">
-            <div style="text-decoration:none; color:white">
-                대시보드
+    <div>
+        <div class="wrapper">
+            <div :class="[link === '/backoffice/managecompany' ? 'menuSelected' : 'menu']" @click="moveTo('ManageCompany')">
+                <div style="text-decoration:none; color:white">
+                    장소 정보/수정
+                </div>
+            </div>
+            <div :class="[link === '/backoffice/reservationstatus' ? 'menuSelected' : 'menu']" @click="moveTo('ReservationStatus')">
+                <div style="text-decoration:none; color:white">
+                    예약 현황
+                </div>
+            </div>
+            <div :class="[link === '/backoffice/manageplace' ? 'menuSelected' : 'menu']" @click="moveTo('ManagePlace')">
+                <div style="text-decoration:none; color:white">
+                    공간 정보/수정
+                </div>
+            </div>
+            <div :class="[link === '/backoffice/qna' ? 'menuSelected' : 'menu']" @click="moveTo('Qna')">
+                <div style="text-decoration:none; color:white">
+                    문의
+                </div>
             </div>
         </div>
-        <div :class="[link === '/backoffice/reservationstatus' ? 'menuSelected' : 'menu']" @click="moveToReservationStatus">
-            <div style="text-decoration:none; color:white">
-                예약 현황
-            </div>
-        </div>
-        <div :class="[link === '/backoffice/manageplace' ? 'menuSelected' : 'menu']" @click="moveToManagePlace">
-            <div style="text-decoration:none; color:white">
-                공간 정보/수정
-            </div>
-        </div>
-        <div :class="[link === '/backoffice/payment' ? 'menuSelected' : 'menu']" @click="moveToPayment">
-            <div style="text-decoration:none; color:white">
-                결제
-            </div>
-        </div>
-        <div :class="[link === '/backoffice/qna' ? 'menuSelected' : 'menu']" @click="moveToQna">
-            <div style="text-decoration:none; color:white">
-                문의
-            </div>
+        <div class="fake">
         </div>
     </div>
 </template>
@@ -34,19 +33,14 @@ export default {
     setup() {
         const router = useRouter();
         const link =  window.location.pathname;
-
-        const moveToDashboard = () => {router.push({name:'Dashboard'})}
-        const moveToReservationStatus = () => {router.push({name:'ReservationStatus'})}
-        const moveToManagePlace = () => {router.push({name: 'ManagePlace'})}
-        const moveToPayment = () => {router.push({name: 'Payment'})}
-        const moveToQna = () => {router.push({name: 'Qna'})}
+        const moveTo = (link) => {
+            router.push({
+                name: link
+            })
+        }
 
         return {
-            moveToDashboard,
-            moveToReservationStatus,
-            moveToManagePlace,
-            moveToPayment,
-            moveToQna,
+            moveTo,
             link
         }
     }
@@ -55,10 +49,15 @@ export default {
 
 <style scoped>
 .wrapper {
-    min-width: 200px;
-    width: 15%;
+    width: 200px;
     height: 100vh;
     background-color: #041461;
+    text-align: center;
+    position: fixed;
+}
+.fake {
+    width: 200px;
+    height: 100vh;
     text-align: center;
 }
 .menu {

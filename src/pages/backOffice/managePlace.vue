@@ -1,5 +1,5 @@
 <template>
-    <div style="display:flex">
+    <div style="display:flex;">
         <MenuBar />
         <div class="content">
             <div class="scrolltable">
@@ -25,8 +25,7 @@
             
             <div style="width: 70%;height: 20%;margin: 0 auto;">
                 <button class="submit" @click="openRegister">등록하기</button>
-            </div>
-            
+            </div> 
         </div>
 
         <SpaceRegisterModal v-if="showRegisterSpace" @close="closeRegister" />
@@ -40,6 +39,7 @@ import axios from '@/axios';
 import MenuBar from './menuBar.vue';
 import SpaceRegisterModal from '@/components/SpaceRegisterModal.vue';
 import SpaceModifyModal from '@/components/SpaceModifyModal.vue';
+import { useStore } from 'vuex';
 export default {
     components: {
         MenuBar,
@@ -47,16 +47,18 @@ export default {
         SpaceModifyModal,
     },
     setup() {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
+        const store = useStore();
         const showRegisterSpace = ref(false);
         const showModifySpace = ref(false);
         const spaces = ref([]);
         var space = ref({});
 
         const getSpaces = async () => {
-            const companyId = localStorage.getItem('company_id');
-            await axios.get(`/space/list/${companyId}`, {
+            const companyId = store.state.companyId;
+            await axios.get(`${proxy}/space/list/${companyId}`, {
                 headers: {
-                    Authorization: localStorage.getItem('access_token')
+                    Authorization: store.state.accessToken
                 }
             })
                 .then(
@@ -101,21 +103,21 @@ export default {
 
 <style scoped>
 .scrolltable {
-    width: 100%;
-    max-height: 80%;
+    width: 80%;
+    max-height: 75%;
     display:block;
     overflow: scroll;
     overflow-x: hidden;
     overflow-y: auto;
+    margin: 3em auto;
 }
 .content {
-    width: 85%;
+    width: calc(100% - 200px);
     height:100vh;
 }
 table {
-    width: 80%;
+    width: 100%;
     height: 80%;
-    margin: 3em auto;
     overflow: auto;
     font-weight: bold;
     border-collapse: collapse;
@@ -147,20 +149,13 @@ tbody {
     cursor: pointer;
     border-radius: 0.5em;
 }
-.edit:hover {
-    background-color: skyblue;
-}
 .submit {
     float:right;
-    margin: 2em 0;
     padding: 0.5em 1em;
     border: none;
     background-color: #5AA8D9;
     color: white;
     cursor: pointer;
     border-radius: 0.5em;
-}
-.submit:hover {
-    background-color: black;
 }
 </style>

@@ -1,10 +1,8 @@
 <template>
   <div id="app">
     <Navbar />
-    <div class="router">
-      <router-view />
-    </div>
-    <Footer />
+    <div style="width: 100%; height: 3.75em;" />
+    <router-view />
   </div>  
   
 </template>
@@ -23,15 +21,23 @@ export default {
 
 <style>
 #app {
-  font-family: Inter;
+  font-family: 'Noto Sans KR', sans-serif;
   min-width: 1000px;
-  height: 100%;
-  min-height: 600px;
 }
 body {
   margin: 0px;
 }
-.router {
-  height: 100%;
+select {
+  font-family: 'Noto Sans KR', sans-serif;
+  color: #757575;
+}
+textarea {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+input {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+button {
+  font-family: 'Noto Sans KR', sans-serif;
 }
 </style>

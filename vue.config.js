@@ -1,5 +1,5 @@
-const { defineConfig } = require("@vue/cli-service");
-var fs = require("fs");
+const { defineConfig } = require('@vue/cli-service')
+var fs = require('fs');
 module.exports = defineConfig({
   transpileDependencies: true,
   lintOnSave: false,
@@ -10,5 +10,6 @@ module.exports = defineConfig({
     //   cert: fs.readFileSync('../ssl/domain.com.crt'),
     //   ca: fs.readFileSync('../ssl/rootca.crt'),
     // }
-  },
-});
+  }
+})
+

@@ -33,7 +33,7 @@
                     <div style="padding: 0 1em 0.5em 0">
                         Space 가격
                     </div>
-                    <input v-if="isOffice" style="padding: 0.5em" v-model="price" type="text" />
+                    <input v-if="isOffice" style="padding: 0.5em" v-model="officePrice" type="text" />
                     <span v-if="isOffice" style="font-size:0.8em; padding-left: 0.5em">원 / 일</span>
                     <label v-if="!isOffice">{{price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} 원 / 시간</label>
                 </div>
@@ -98,13 +98,17 @@
 <script>
 import { ref, watch, getCurrentInstance } from 'vue';
 import axios from '@/axios';
+import { useStore } from 'vuex';
 export default {
     setup() {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
+        const store = useStore();
         const { emit } = getCurrentInstance();
         const spaceName = ref('');
         const facilities = ref([]);
         const type = ref('');
-        const price = ref('');
+        const price = ref(0);
+        const officePrice = ref(0);
         const isOffice = ref(false);
         const startTime = ref('');
         const endTime = ref('');
@@ -225,6 +229,9 @@ export default {
                 const form = new FormData();
                 form.append('spaceName', spaceName.value);
                 form.append('facilities', facilities.value.join(","));
+                if(type.value === '오피스') {
+                    price.value = officePrice.value;
+                }
                 form.append('price', price.value);
                 form.append('type', type.value);
                 form.append('openTime', startTime.value);
@@ -234,11 +241,11 @@ export default {
                 imgs.value.forEach(function(img) {
                     form.append('files', img);
                 });
-                form.append('companyId', localStorage.getItem('company_id'));
+                form.append('companyId', store.state.companyId);
                 try {
-                    await axios.post('/space/post', form, {
+                    await axios.post(`${proxy}/space/post`, form, {
                         headers: {
-                            Authorization: localStorage.getItem('access_token'),
+                            Authorization: store.state.accessToken,
                             'Content-Type': 'multipart/form-data',
                         }
                     })
@@ -258,6 +265,7 @@ export default {
             spaceName,
             type,
             price,
+            officePrice,
             isOffice,
             facilities,
             startTime,
@@ -352,9 +360,6 @@ export default {
     border-radius: 0.5em;
     cursor: pointer;
 }
-.cancel:hover {
-    background-color: black;
-}
 .reg {
     background-color: #041461;
     color: white;
@@ -363,8 +368,5 @@ export default {
     border: none;
     border-radius: 0.5em;
     cursor: pointer;
-}
-.reg:hover {
-    background-color: skyblue;
 }
 </style>

@@ -1,14 +1,19 @@
 <template>
-    <div class="wrapper">
-        <div :class="[link === '/master/company' ? 'menuSelected' : 'menu']" @click="moveToCompany">
-            <div style="text-decoration:none; color:white">
-                업체 관리
+    <div>
+        <div class="wrapper">
+            <div :class="[link === '/master/company' ? 'menuSelected' : 'menu']" @click="moveToCompany">
+                <div style="text-decoration:none; color:white">
+                    업체 관리
+                </div>
+            </div>
+            <div :class="[link === '/master/account' ? 'menuSelected' : 'menu']" @click="moveToAccount">
+                <div style="text-decoration:none; color:white">
+                    계정 관리
+                </div>
             </div>
         </div>
-        <div :class="[link === '/master/account' ? 'menuSelected' : 'menu']" @click="moveToAccount">
-            <div style="text-decoration:none; color:white">
-                계정 관리
-            </div>
+        <div class="fake">
+
         </div>
     </div>
 </template>
@@ -43,10 +48,15 @@ export default {
 
 <style scoped>
 .wrapper {
-    min-width: 200px;
-    width: 15%;
+    width: 200px;
     height: 100vh;
     background-color: #6F5EBE;
+    text-align: center;
+    position: fixed;
+}
+.fake {
+    width: 200px;
+    height: 100vh;
     text-align: center;
 }
 .menu {

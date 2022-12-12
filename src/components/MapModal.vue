@@ -1,5 +1,5 @@
 <template>
-    <div class="modal-wrapper" @click="close">
+    <div class="modal-wrapper" @dblclick="close">
         <div class="modal-dialog" @click.stop>
           <div id="kakaoMap">
             <div id="loading" v-show="loading" />
@@ -11,8 +11,11 @@
 <script>
 import { ref, getCurrentInstance, onMounted, onUnmounted } from 'vue';
 import axios from '@/axios';
+import { useStore } from 'vuex';
 export default {
   setup() {
+    const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
+    const store = useStore();
     const { emit } = getCurrentInstance();
     const places = ref([]);
     const map = ref(null);
@@ -59,9 +62,9 @@ export default {
     };
 
     const searchSubmit = async () => {
-      await axios.get('company/space/list', {
+      await axios.get(`${proxy}/company/space/list`, {
         headers: {
-          Authorization: localStorage.getItem('access_token'),
+          Authorization: store.state.accessToken,
         }
       }).then((res) => {
         places.value = res.data;
