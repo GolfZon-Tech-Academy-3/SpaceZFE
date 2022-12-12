@@ -216,7 +216,6 @@
 </template>
 
 <script>
-// import Datepicker from "vue3-datepicker";
 import { useRoute, useRouter } from "vue-router";
 import { ref, reactive } from "vue";
 import axios from "@/axios";
@@ -382,9 +381,6 @@ export default {
 
     //정보제공 전체 동의 버튼
     const selectAll = () => {
-      // console.log(e.target);
-      // if (e.target.value == "on") {
-      // }
       allSelected.value = !allSelected.value;
       a.value = true;
       (b.value = true), (c.value = true), (d.value = true);
@@ -428,24 +424,17 @@ export default {
         return;
       }
       totalMileage.value -= mileage.value;
-      // totalCoast.value = (total.value - mileage.value)
-      //   .toString()
-      //   .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       total.value -= mileage.value;
       totalCoast.value = total.value
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
 
-    //비용 계산기
+    //비용 계산기(비 오피스)
     const showCoast1 = (e) => {
       console.log(e.target.value, startSelected.value, resedTime, resedFinTime);
       const breakFin = resInfos.value.breakClose.slice(0, 2);
 
-      // console.log(
-      //   parseInt(startSelected.value.slice(0, 2)) < resedTime &&
-      //     parseInt(e.target.value.slice(0, 2)) >= resedFinTime
-      // );
       if (
         parseInt(startSelected.value.slice(0, 2)) < resedTime &&
         parseInt(e.target.value.slice(0, 2)) >= resedFinTime
@@ -505,6 +494,7 @@ export default {
         .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
 
+    //오피스용 비용계산기
     const showCoast = () => {
       showTotalCoast.value = true;
       showingDeskEnd.value = !showingDeskEnd.value;
@@ -587,7 +577,6 @@ export default {
           router.go();
           return;
         }
-
 
         IMP.init("imp76177137");
         IMP.request_pay(
@@ -810,11 +799,8 @@ export default {
         //일이 10미만일때 앞에 0붙여줌
         if (dates[i] > 0 && dates[i] < 10) {
           dates[i] = `0${dates[i]}`;
-          // dates[i] = dates[i].replace(1, "");
-          // console.log(dates[i]);
         }
         startDates.value.push(`${currentYear}-${currentMonth}-${dates[i]}`);
-        // startDates.value[0] = "오늘";
       }
     };
     showingDates();
@@ -835,6 +821,7 @@ export default {
       }
     };
 
+    //예약된 시간들 빼고 시간들 보여줌
     const startDate2 = (e) => {
       showingStart.value = true;
       showingSTartDates.value = !showingSTartDates.value;
@@ -1097,7 +1084,6 @@ export default {
       } else if (pay.value === "토스.삼성 페이") {
         (payWays.pre = "uplus"), (payWays.nPre = "tosspayments");
       }
-      console.log(payWays);
     };
 
     return {
