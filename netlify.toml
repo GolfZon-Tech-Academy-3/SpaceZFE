@@ -1,5 +1,5 @@
 [[redirects]]
-  from = "https://spacezz.shop/proxy/*"
+  from = "/proxy/*"
   to = "https://spacez3.shop/:splat"
   status = 200
   force = true
