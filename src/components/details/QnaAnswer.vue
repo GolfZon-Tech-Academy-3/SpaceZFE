@@ -9,7 +9,8 @@
       <div class="offcanvas-header">
         <form class="answer">
           <p>호스트답변</p>
-          <p v-if="qnaAnswer.answers">{{ qnaAnswer.answers }}</p>
+          <!-- <p>{{ answer }}</p> -->
+          <p v-if="qnaAnswer.answers != null">{{ qnaAnswer.answers }}</p>
           <p v-if="qnaAnswer.answers == null">
             아직 답변이 작성되지 않았습니다
           </p>
@@ -23,6 +24,7 @@
 </template>
 
 <script>
+import { ref } from "vue";
 export default {
   props: {
     qnaAnswer: {
