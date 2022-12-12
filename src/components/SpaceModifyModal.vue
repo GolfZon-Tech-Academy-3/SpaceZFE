@@ -99,6 +99,7 @@ export default {
         }
     },
     setup(props, {emit}) {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
         const store = useStore();
         const spaceId = ref(0);
         const spaceName = ref('');
@@ -236,7 +237,7 @@ export default {
                     price.value = officePrice.value;
                 }
                 try {
-                    await axios.put(`/space/update?spaceId=${spaceId.value}`, {
+                    await axios.put(`${proxy}/space/update?spaceId=${spaceId.value}`, {
                         spaceName: spaceName.value,
                         facilities: facilities.value.join(","),
                         price: price.value,

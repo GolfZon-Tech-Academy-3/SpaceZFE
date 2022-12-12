@@ -47,6 +47,7 @@ export default {
         SpaceModifyModal,
     },
     setup() {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
         const store = useStore();
         const showRegisterSpace = ref(false);
         const showModifySpace = ref(false);
@@ -55,7 +56,7 @@ export default {
 
         const getSpaces = async () => {
             const companyId = store.state.companyId;
-            await axios.get(`/space/list/${companyId}`, {
+            await axios.get(`${proxy}/space/list/${companyId}`, {
                 headers: {
                     Authorization: store.state.accessToken
                 }

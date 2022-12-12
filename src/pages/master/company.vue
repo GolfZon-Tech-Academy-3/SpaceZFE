@@ -72,6 +72,7 @@ export default {
         Toast,
     },
     setup() {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
         const store = useStore();
         const selected = ref('all');
         const result = ref([]);
@@ -80,7 +81,7 @@ export default {
         } = useToast();
 
         const getCompanys = async (type) => {
-            await axios.get(`/company/manager/list`, {
+            await axios.get(`${proxy}/company/manager/list`, {
                 headers: {
                     Authorizaion: store.state.accessToken,
                 }
@@ -140,7 +141,7 @@ export default {
         const approve = async (id) => {
             if(confirm('매니저로 승인하시겠습니까?')) {
                 try {
-                    await axios.put(`/company/approve/${id}`, {
+                    await axios.put(`${proxy}/company/approve/${id}`, {
                         headers: {
                             Authorization: store.state.accessToken
                         }
@@ -157,7 +158,7 @@ export default {
         const decline = async (id) => {
             if(confirm('매니저 승인을 거절하시겠습니까?')) {
                 try {
-                    await axios.put(`/company/disapprove/${id}`, {
+                    await axios.put(`${proxy}/company/disapprove/${id}`, {
                         headers: {
                             Authorization: store.state.accessToken
                         }
