@@ -31,6 +31,7 @@ export default {
     Modal,
   },
   setup() {
+    const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
     const { emit } = getCurrentInstance();
     const store = useStore();
     const email = ref("");
@@ -64,9 +65,7 @@ export default {
       } else {
         try {
           await axios
-            .post("/proxy/member/login", { email: email.value, password: pw.value }, {
-              withCredentials: true,
-            })
+            .post(`${proxy}/member/login`, { email: email.value, password: pw.value })
             .then((res) => {
               if (res.data === "") {
                 store.dispatch('setMemberId', parseJwt(res.headers.authorization).MEMBER_ID);

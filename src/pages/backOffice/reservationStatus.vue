@@ -66,6 +66,7 @@ export default {
         MenuBar,
     },
     setup() {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
         const store = useStore();
         const reservations = ref([]);
         const todayResv = ref(0);
@@ -74,7 +75,7 @@ export default {
         const endDate = ref('');
         const money = ref('');
         const getTodayResv = async () => {
-            await axios.get(`/back-office/reservation/count/${store.state.companyId}`, {
+            await axios.get(`${proxy}/back-office/reservation/count/${store.state.companyId}`, {
                 headers: {
                     Authorization: store.state.accessToken,
                 }
@@ -84,7 +85,7 @@ export default {
                 })
         }
         const getTodayCancel = async () => {
-            await axios.get(`/back-office/cancel/count/${store.state.companyId}`, {
+            await axios.get(`${proxy}/back-office/cancel/count/${store.state.companyId}`, {
                 headers: {
                     Authorization: store.state.accessToken,
                 }
@@ -98,7 +99,7 @@ export default {
         getTodayCancel();
 
         const getResvs = async () => {
-            await axios.get(`/back-office/reservation/total/${store.state.companyId}`, {
+            await axios.get(`${proxy}/back-office/reservation/total/${store.state.companyId}`, {
                 headers: {
                     Authorization: store.state.accessToken,
                 }
@@ -114,7 +115,7 @@ export default {
         const cancelResv = async (type, id) => {
             if(type === '오피스') {
                 if(confirm("예약을 취소하시겠습니까?")) {
-                    await axios.put(`/reservation/office-cancel/${id}`, {
+                    await axios.put(`${proxy}/reservation/office-cancel/${id}`, {
                         headers: {
                             Authorization: store.state.accessToken,
                         }
@@ -125,7 +126,7 @@ export default {
                 }
             } else {
                 if(confirm("예약을 취소하시겠습니까?")) {
-                    await axios.put(`/reservation/desk-cancel/${id}`, {
+                    await axios.put(`${proxy}/reservation/desk-cancel/${id}`, {
                         headers: {
                             Authorization: store.state.accessToken,
                         }
@@ -139,7 +140,7 @@ export default {
 
         const completeResv = async (id) => {
             if(confirm("이용 완료 처리하시겠습니까?")) {
-                    await axios.put(`/back-office/reservation//done/${id}`, {
+                    await axios.put(`${proxy}/back-office/reservation//done/${id}`, {
                         headers: {
                             Authorization: store.state.accessToken,
                         }
@@ -158,7 +159,7 @@ export default {
                 return;
             }
             if(startDate.value != '' && endDate.value != '') {
-                await axios.post(`/back-office/total-incomes/${store.state.companyId}`, {
+                await axios.post(`${proxy}/back-office/total-incomes/${store.state.companyId}`, {
                     startDate : startDate.value, endDate : endDate.value},
                     {
                         headers: {

@@ -168,6 +168,7 @@ import { useStore } from "vuex";
 import axios from "@/axios";
 export default {
   setup() {
+    const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
     const store = useStore();
     const router = useRouter();
     const hotPlaces1 = ref([]);
@@ -178,7 +179,7 @@ export default {
 
     const main = async () => {
       await axios
-        .get("company/main", {
+        .get(`${proxy}/company/main`, {
           headers: {
             Authorization: store.state.accessToken,
           },
@@ -250,7 +251,7 @@ export default {
     const addFavorite = async (e, companyId) => {
       console.log(store.state.accessToken);
       try {
-          await axios.get(`company/like/${companyId}`, {
+          await axios.get(`${proxy}/company/like/${companyId}`, {
               headers: {
                   Authorization: 'BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2NzEwNzA3OTAsIklNQUdFX05BTUUiOiJodHRwczovL3NwYWNlejMuczMuYXAtbm9ydGhlYXN0LTIuYW1hem9uYXdzLmNvbS9pbWdfMDAwMi5wbmciLCJVU0VSX0VNQUlMIjoibWFuYWdlckBnbWFpbC5jb20iLCJpc3MiOiJzcGFjZXoiLCJNRU1CRVJfSUQiOjExLCJOSUNLX05BTUUiOiLrp6Tri4jsoIAiLCJDT01QQU5ZX0lEIjoyMzQsIkFVVEhPUklUWSI6Im1hbmFnZXIifQ.d01-HrVb1oU246Pu1VmVJSirg4WgITtHMUgI6289gI0',
               }

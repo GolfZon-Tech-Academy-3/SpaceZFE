@@ -107,6 +107,7 @@ export default {
         Toast,
     },
     setup() {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
         const router = useRouter();
         const store = useStore();
         const searchType = computed(() => store.state.searchType);
@@ -165,7 +166,7 @@ export default {
         const search = async (page) => {
             if(searchTime.value != null) { //검색 시간이 존재할때
                 if(searchTime.value.length === 3) {
-                    await axios.post(`company/${searchType.value}?page=${page}`,
+                    await axios.post(`${proxy}/company/${searchType.value}?page=${page}`,
                     {
                         date: searchDate.value,
                         time: searchTime.value[0] + ':00',
@@ -188,7 +189,7 @@ export default {
                             });
                         })
                 } else {
-                    await axios.post(`company/${searchType.value}?page=${page}`,
+                    await axios.post(`${proxy}/company/${searchType.value}?page=${page}`,
                         {
                             date: searchDate.value,
                             time: searchTime.value[0] + searchTime.value[1] + ':00',
@@ -212,7 +213,7 @@ export default {
                             })
                 }
             } else { //검색 시간이 존재하지 않을 때
-                await axios.post(`company/${searchType.value}?page=${page}`,
+                await axios.post(`${proxy}/company/${searchType.value}?page=${page}`,
                     {
                         date: searchDate.value,
                         time: searchTime.value,
@@ -316,7 +317,7 @@ export default {
 
         const addFavorite = async (e, companyId) => {
             try {
-                await axios.get(`company/like/${companyId}`, {
+                await axios.get(`${proxy}/company/like/${companyId}`, {
                     headers: {
                         Authorization: store.state.accessToken
                     }

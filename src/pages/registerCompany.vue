@@ -30,6 +30,7 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 export default {
     setup() {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
         const store = useStore();
         const placeName = ref('');
         var file = null;
@@ -93,7 +94,7 @@ export default {
                     form.append('summary', placeSummary.value);
                     form.append('multipartFile', file);
                     try {
-                        await axios.post('company/post', form, {
+                        await axios.post(`${proxy}/company/post`, form, {
                             headers: {
                                 Authorization: store.state.accessToken,
                                 'Content-Type': 'multipart/form-data',

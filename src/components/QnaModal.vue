@@ -30,6 +30,7 @@ export default {
         }
     },
     setup() {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
         const store = useStore();
         const { emit } = getCurrentInstance();
 
@@ -40,7 +41,7 @@ export default {
         const deleteAnswer = async (inquiryId) => {
             if(confirm("답변을 삭제하시겠습니까?")) {
                 try {
-                    await axios.put(`/inquiry/answer/delete/${inquiryId}`,
+                    await axios.put(`${proxy}/inquiry/answer/delete/${inquiryId}`,
                         {
                             headers: {
                                 Authorization: store.state.accessToken,
@@ -61,7 +62,7 @@ export default {
                     return
                 }
                 try {
-                    await axios.put(`/inquiry/answer/${inquiryId}`, {
+                    await axios.put(`${proxy}/inquiry/answer/${inquiryId}`, {
                         answers: answer.value,
                     },
                     {
@@ -84,7 +85,7 @@ export default {
                     return
                 }
                 try {
-                    await axios.put(`/inquiry/answer/${inquiryId}`, {
+                    await axios.put(`${proxy}/inquiry/answer/${inquiryId}`, {
                         answers: answer.value,
                     },
                     {

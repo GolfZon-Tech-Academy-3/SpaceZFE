@@ -40,6 +40,7 @@ export default {
         QnaModal,
     },
     setup() {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
         const store = useStore();
         const showQnaModal = ref(false);
         const qnas = ref([]);
@@ -47,7 +48,7 @@ export default {
 
         const getQnas = async () => {
             const companyId = store.state.companyId;
-            await axios.get(`/back-office/inquiry/total/${companyId}`, {
+            await axios.get(`${proxy}/back-office/inquiry/total/${companyId}`, {
                 headers: {
                     Authorization: store.state.accessToken
                 }

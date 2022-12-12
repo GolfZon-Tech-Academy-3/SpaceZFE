@@ -50,6 +50,7 @@ export default {
         MenuBar,
     },
     setup() {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
         const store = useStore();
         const companyInfo = ref({});
         const isEditing = ref(false);
@@ -61,7 +62,7 @@ export default {
         const rule = ref('');
 
         const getInfo = async () => {
-            await axios.get(`/company/information/${store.state.companyId}`, {
+            await axios.get(`${proxy}/company/information/${store.state.companyId}`, {
                 headers: {
                     Authorization: store.state.accessToken,
                 }
@@ -126,7 +127,7 @@ export default {
                         form.append('summary', placeSummary.value);
                         form.append('info', placeIntro.value);
                         form.append('rules', rule.value);
-                        await axios.put(`/company/update/${store.state.companyId}`, form, {
+                        await axios.put(`${proxy}/company/update/${store.state.companyId}`, form, {
                             headers: {
                                 Authorization: store.state.accessToken,
                             }

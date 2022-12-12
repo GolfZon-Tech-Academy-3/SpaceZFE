@@ -101,6 +101,7 @@ import axios from '@/axios';
 import { useStore } from 'vuex';
 export default {
     setup() {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
         const store = useStore();
         const { emit } = getCurrentInstance();
         const spaceName = ref('');
@@ -242,7 +243,7 @@ export default {
                 });
                 form.append('companyId', store.state.companyId);
                 try {
-                    await axios.post('/space/post', form, {
+                    await axios.post(`${proxy}/space/post`, form, {
                         headers: {
                             Authorization: store.state.accessToken,
                             'Content-Type': 'multipart/form-data',

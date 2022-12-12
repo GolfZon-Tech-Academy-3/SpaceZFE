@@ -65,12 +65,13 @@ export default {
         MenuBar,
     },
     setup() {
+        const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
         const store = useStore();
         const masters = ref([]);
         const candidates = ref([]);
 
         const getMasters = async () => {
-            await axios.get(`/master/list`, {
+            await axios.get(`${proxy}/master/list`, {
                 headers: {
                     Authorization: store.state.accessToken,
                 }
@@ -84,7 +85,7 @@ export default {
         const approve = async (id) => {
             if(confirm('멤버 회원을 마스터 회원으로 변경하시겠습니까?')) {
                 try {
-                    await axios.put(`/master/approve/${id}`, {
+                    await axios.put(`${proxy}/master/approve/${id}`, {
                         headers: {
                             Authorization: store.state.accessToken,
                         }
@@ -100,7 +101,7 @@ export default {
         const disapprove = async (id) => {
             if(confirm('마스터 회원을 멤버 회원으로 변경하시겠습니까?')) {
                 try {
-                    await axios.put(`/master/disapprove/${id}`, {
+                    await axios.put(`${proxy}/master/disapprove/${id}`, {
                         headers: {
                             Authorization: store.state.accessToken,
                         }
@@ -114,7 +115,7 @@ export default {
         }
 
         const changeKeyword = async (e) => {
-            await axios.get(`/master/member/list?searchWord=${e.target.value}`, {
+            await axios.get(`${proxy}/master/member/list?searchWord=${e.target.value}`, {
                 headers: {
                     Authorization: store.state.accessToken,
                 }

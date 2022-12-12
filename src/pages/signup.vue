@@ -46,7 +46,7 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 export default {
   setup() {
-    const store = useStore();
+    const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
     const router = useRouter();
     const email = ref('');
     const emailOK = ref(false);
@@ -67,7 +67,7 @@ export default {
         alert('올바른 이메일 형식이 아닙니다');
       } else {
         try {
-          await axios.post('member/mail', {email: email.value})
+          await axios.post(`${proxy}/member/mail`, {email: email.value})
           .then(
             (res) => {
               alert('인증번호가 전송되었습니다');
@@ -95,7 +95,7 @@ export default {
       if(nickname.value.length < 2) {
         alert('닉네임은 두 글자 이상 입력해야합니다');
       } else {
-        await axios.post('member/name-check', {memberName: nickname.value})
+        await axios.post(`${proxy}/member/name-check`, {memberName: nickname.value})
           .then(
             (res) => {
               if(res.data === 1) {
@@ -126,7 +126,7 @@ export default {
       } else if(!nicknameOK.value) {
         alert('닉네임 중복확인을 해주세요');
       } else {
-        await axios.post('member/signup', 
+        await axios.post(`${proxy}/member/signup`, 
           {authority: "member", email: email.value, memberName: nickname.value, password: pw.value})
             .then(
               (res) => {

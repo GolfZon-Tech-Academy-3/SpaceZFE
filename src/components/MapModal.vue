@@ -14,6 +14,7 @@ import axios from '@/axios';
 import { useStore } from 'vuex';
 export default {
   setup() {
+    const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
     const store = useStore();
     const { emit } = getCurrentInstance();
     const places = ref([]);
@@ -61,7 +62,7 @@ export default {
     };
 
     const searchSubmit = async () => {
-      await axios.get('company/space/list', {
+      await axios.get(`${proxy}/company/space/list`, {
         headers: {
           Authorization: store.state.accessToken,
         }
