@@ -244,7 +244,7 @@ export default {
                 try {
                     await axios.post('/space/post', form, {
                         headers: {
-                            Authorization: store.state.authority,
+                            Authorization: store.state.accessToken,
                             'Content-Type': 'multipart/form-data',
                         }
                     })

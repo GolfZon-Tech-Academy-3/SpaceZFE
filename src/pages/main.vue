@@ -251,7 +251,7 @@ export default {
         try {
             await axios.post(`company/like/${companyId}`, {
                 headers: {
-                    Authorization: store.state.accessToken
+                    Authorization: store.state.accessToken,
                 }
             }).then(() => {
                 if(e.target.style["fontVariationSettings"] === "\"FILL\" 0") {//하트가 비어있을때
@@ -263,6 +263,7 @@ export default {
                 }
             })
         } catch (error) {
+          console.log(error);
             alert('오류가 발생했습니다');
         }
     }

@@ -43,7 +43,7 @@ export default {
                     await axios.put(`/inquiry/answer/delete/${inquiryId}`,
                         {
                             headers: {
-                                Authorization: store.state.authority,
+                                Authorization: store.state.accessToken,
                             }
                         }).then((res) => {console.log(res.data);})
                     alert('답변이 삭제되었습니다');
@@ -66,7 +66,7 @@ export default {
                     },
                     {
                         headers: {
-                            Authorization: store.state.authority,
+                            Authorization: store.state.accessToken,
                         }
                     })
                     alert('답변이 수정되었습니다');
@@ -89,7 +89,7 @@ export default {
                     },
                     {
                         headers: {
-                            Authorization: store.state.authority,
+                            Authorization: store.state.accessToken,
                         }
                     })
                     alert('답변이 등록되었습니다');
