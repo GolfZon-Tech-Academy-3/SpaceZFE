@@ -316,7 +316,7 @@ export default {
 
         const addFavorite = async (e, companyId) => {
             try {
-                await axios.post(`company/like/${companyId}`, {
+                await axios.get(`company/like/${companyId}`, {
                     headers: {
                         Authorization: store.state.accessToken
                     }

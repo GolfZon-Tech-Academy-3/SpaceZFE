@@ -248,24 +248,25 @@ export default {
     };
 
     const addFavorite = async (e, companyId) => {
-        try {
-            await axios.post(`company/like/${companyId}`, {
-                headers: {
-                    Authorization: store.state.accessToken,
-                }
-            }).then(() => {
-                if(e.target.style["fontVariationSettings"] === "\"FILL\" 0") {//하트가 비어있을때
-                    console.log('empty');
-                    e.target.style["fontVariationSettings"] = "\"FILL\" 1";
-                } else {//하트가 채워졌을 때
-                    console.log('fill');
-                    e.target.style["fontVariationSettings"] = "\"FILL\" 0";
-                }
-            })
-        } catch (error) {
-          console.log(error);
-            alert('오류가 발생했습니다');
-        }
+      console.log(store.state.accessToken);
+      try {
+          await axios.get(`company/like/${companyId}`, {
+              headers: {
+                  Authorization: 'BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2NzEwNzA3OTAsIklNQUdFX05BTUUiOiJodHRwczovL3NwYWNlejMuczMuYXAtbm9ydGhlYXN0LTIuYW1hem9uYXdzLmNvbS9pbWdfMDAwMi5wbmciLCJVU0VSX0VNQUlMIjoibWFuYWdlckBnbWFpbC5jb20iLCJpc3MiOiJzcGFjZXoiLCJNRU1CRVJfSUQiOjExLCJOSUNLX05BTUUiOiLrp6Tri4jsoIAiLCJDT01QQU5ZX0lEIjoyMzQsIkFVVEhPUklUWSI6Im1hbmFnZXIifQ.d01-HrVb1oU246Pu1VmVJSirg4WgITtHMUgI6289gI0',
+              }
+          }).then(() => {
+              if(e.target.style["fontVariationSettings"] === "\"FILL\" 0") {//하트가 비어있을때
+                  console.log('empty');
+                  e.target.style["fontVariationSettings"] = "\"FILL\" 1";
+              } else {//하트가 채워졌을 때
+                  console.log('fill');
+                  e.target.style["fontVariationSettings"] = "\"FILL\" 0";
+              }
+          })
+      } catch (error) {
+        console.log(error);
+          alert('오류가 발생했습니다');
+      }
     }
 
     const moveToPlaceDetail = async (companyId) => {
