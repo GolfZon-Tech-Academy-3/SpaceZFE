@@ -5,11 +5,11 @@ module.exports = defineConfig({
   lintOnSave: false,
   devServer: {
     proxy: 'https://spacez3.shop/',
-    https: {
-      key: fs.readFileSync('../ssl/domain.com.key'),
-      cert: fs.readFileSync('../ssl/domain.com.crt'),
-      ca: fs.readFileSync('../ssl/rootca.crt'),
-    }
+    // https: {
+    //   key: fs.readFileSync('../ssl/domain.com.key'),
+    //   cert: fs.readFileSync('../ssl/domain.com.crt'),
+    //   ca: fs.readFileSync('../ssl/rootca.crt'),
+    // }
   }
 })
 
