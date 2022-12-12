@@ -1,5 +1,15 @@
 <template>
-  <div class="entireForm">
+  <ErrorHandle
+    :show="!!errorContent"
+    title="Error"
+    @home="errorHome"
+    @refresh="errorRef"
+  >
+    <p>{{ errorContent }}</p>
+  </ErrorHandle>
+  <Spinner v-if="loading" />
+
+  <div v-else class="entireForm">
     <div class="picsAndIntro">
       <div class="form">
         <p class="lineIntro">{{ details.companyName }}</p>
@@ -111,17 +121,21 @@
             <img class="resThumb" :src="resDetails[num - 1].spaceImage" />
             {{ resDetails[num - 1].spaceImages }}
             <ul class="ul">
-              <li style="margin-top: 2%; font-size: 1.4rem">
+              <li>
                 <b class="resType"> [{{ resDetails[num - 1].type }}] </b>
-                <b class="resSpace"> {{ resDetails[num - 1].spaceName }}실 </b>
+                <b class="resSpace"> {{ resDetails[num - 1].spaceName }} </b>
               </li>
-              <li style="margin-top: 6%; font-size: 1rem">
+              <li style="margin-top: 6%">
                 <b> 가격 </b>
                 <b
                   style="margin-left: 60%"
                   v-show="resDetails[num - 1].type == '오피스'"
                 >
-                  {{ resDetails[num - 1].price }}원/일
+                  {{
+                    resDetails[num - 1].price
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  }}원/일
                 </b>
                 <b
                   style="margin-left: 60%"
@@ -145,7 +159,7 @@
                   &gt;
                 </button>
               </li>
-              <li style="margin-top: 2%">
+              <li style="margin-top: 1.5%">
                 <button
                   class="resBtn"
                   @click="moveToPage(resDetails[num - 1].spaceId)"
@@ -207,6 +221,7 @@
               </div>
             </div>
             <button
+              v-show="qnas.list[num - 1].answers != null"
               class="qnaButton"
               @click="showCanvas(qnas.list[num - 1].inquiryId)"
             >
@@ -222,6 +237,12 @@
               >
                 &#8743;</span
               >
+            </button>
+            <button
+              v-show="qnas.list[num - 1].answers == null"
+              class="qnaButtonNot"
+            >
+              답변 미등록
             </button>
             <QnaOffcanvas
               :qnaAnswer="qnaAnswer"
@@ -241,6 +262,9 @@ import UseInfo from "@/components/details/UseInfo.vue";
 import pagination from "@/components/details/Pagination.vue";
 import QnaOffcanvas from "@/components/details/QnaAnswer.vue";
 import QnaWrite from "@/components/details/QnaWrite.vue";
+import Spinner from "@/components/UI/Spinner.vue";
+import ErrorHandle from "@/components/UI/BaseDialog.vue";
+
 import { useRoute, useRouter } from "vue-router";
 import axios from "@/axios";
 import { ref } from "vue";
@@ -253,6 +277,8 @@ export default {
     pagination,
     QnaOffcanvas,
     QnaWrite,
+    Spinner,
+    ErrorHandle,
   },
 
   setup() {
@@ -283,6 +309,9 @@ export default {
     const showWrite = ref(false);
     const qnaInfo = ref({});
 
+    const loading = ref(false);
+    const errorContent = ref(null);
+
     const mapOption = ref({
       center: {
         lat: 33.450701,
@@ -295,48 +324,70 @@ export default {
     //리뷰 qna 장소 상세 get하는 함수
 
     const res = async () => {
-      await axios
-        .get(`company/details/${id.value}`, {
-          headers: {
-            Authorization: localStorage.getItem("access_token"),
-          },
-        })
-        .then((res) => {
-          details.value = { ...res.data };
-          qnaInfo.value.cid = details.value.companyId;
-          qnaInfo.value.cName = details.value.companyName;
-          currentImg.value = details.value.spaceImages[currentImgNum.value];
-          resDetails.value = details.value.spaces;
-          companyId.value = res.data.companyId;
-          mapOption.value.location = details.value.location;
-          console.log(details.value);
-          axios
-            .get(`review/total/${companyId.value}?page=1`, {
-              headers: {
-                Authorization: localStorage.getItem("access_token"),
-              },
-            })
-            .then((res) => {
-              reviews.value = { ...res.data };
-              console.log(reviews.value);
-            });
-          axios
-            .get(`inquiry/total/${companyId.value}`, {
-              headers: {
-                Authorization: localStorage.getItem("access_token"),
-              },
-            })
-            .then((res) => {
-              qnas.value = { ...res.data };
-              for (let i = 0; i < qnas.value.length; i++) {
-                qnas.value[i].showMyAnswer = false;
-              }
-              console.log(qnas.value);
-              console.log(mapOption.value);
-            });
-        });
+      loading.value = true;
+      try {
+        await axios
+          .get(`company/details/${id.value}`, {
+            headers: {
+              Authorization: localStorage.getItem("access_token"),
+            },
+          })
+          .then((res) => {
+            details.value = { ...res.data };
+            qnaInfo.value.cid = details.value.companyId;
+            qnaInfo.value.cName = details.value.companyName;
+            currentImg.value = details.value.spaceImages[currentImgNum.value];
+            resDetails.value = details.value.spaces;
+            companyId.value = res.data.companyId;
+            mapOption.value.location = details.value.location;
+            console.log(details.value);
+            axios
+              .get(`review/total/${companyId.value}?page=1`, {
+                headers: {
+                  Authorization: localStorage.getItem("access_token"),
+                },
+              })
+              .then((res) => {
+                reviews.value = { ...res.data };
+                console.log(reviews.value);
+              });
+            axios
+              .get(`inquiry/total/${companyId.value}`, {
+                headers: {
+                  Authorization: localStorage.getItem("access_token"),
+                },
+              })
+              .then((res) => {
+                qnas.value = { ...res.data };
+                for (let i = 0; i < qnas.value.list.length; i++) {
+                  qnas.value.list[i].showMyAnswer = false;
+                }
+                console.log(qnas.value.list);
+                console.log(mapOption.value);
+              });
+          });
+      } catch (error) {
+        errorContent.value = `오류가 발생했습니다 홈페이지로 이동하시거나 
+          버튼을 눌러 응답을 받을때까지 시도해 보십시오`;
+        return;
+      }
+      loading.value = false;
     };
     res();
+
+    //get에러시 홈페이지로
+    const errorHome = () => {
+      errorContent.value = null;
+      router.push({
+        name: "Home",
+      });
+    };
+
+    //get에러시 계속 호출
+    const errorRef = () => {
+      errorContent.value = null;
+      res();
+    };
 
     //메인사진 클릭시 변경
     const changePic = () => {
@@ -405,12 +456,18 @@ export default {
 
     //qna답변보여주기
     const showCanvas = (e) => {
-      console.log(e);
       let i = e;
       find = qnas.value.list.find((e) => e.inquiryId === i);
-      console.log(find);
       find.showMyAnswer = !find.showMyAnswer;
       qnaAnswer.value = find;
+      //답변 열고 다른 답변을 열면 닫는 함수
+      for (let i = 0; i < qnas.value.list.length; i++) {
+        if (qnas.value.list[i].inquiryId != find.inquiryId) {
+          console.log(qnas.value.list[i]);
+          console.log(qnas.value.list[i].showMyAnswer);
+          qnas.value.list[i].showMyAnswer = false;
+        }
+      }
     };
 
     const moveToPage = (id) => {
@@ -504,6 +561,10 @@ export default {
       uploadQna,
       mapOption,
       qnaInfo,
+      errorHome,
+      errorRef,
+      loading,
+      errorContent,
     };
   },
 };
@@ -512,15 +573,22 @@ export default {
 <style scoped>
 .entireForm {
   height: auto;
-  min-height: 200vh;
+  min-height: 150vh;
   overflow: hidden;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
 }
 .picsAndIntro {
-  width: 75vw;
-  left: 10%;
-  float: left;
-  position: absolute;
+  width: 100%;
+  /* left: 10%; */
+  /* float: left; */
+  /* position: absolute; */
+  flex: 1;
+  padding: 0%10%0%10%;
+  /* text-align: center; */
+  height: 50vh;
 }
 .intplace {
   float: right;
@@ -528,13 +596,13 @@ export default {
   height: 20vh;
 }
 .placeLoc {
-  font-size: 1.2rem;
+  font-size: 2vh;
   float: left;
   position: absolute;
   top: 34%;
 }
 .interestPl {
-  font-size: 1.5rem;
+  font-size: 2.5vh;
   margin-right: 20%;
   width: 11vw;
   height: 8vh;
@@ -545,7 +613,7 @@ export default {
   font-weight: 600;
 }
 .placeDetails {
-  font-size: 1.2rem;
+  font-size: 2.5vh;
   float: left;
   position: absolute;
   top: 40%;
@@ -563,28 +631,31 @@ export default {
 }
 .detailNavDiv {
   height: fit-content;
-  top: 120%;
-  left: 7%;
+  /* top: 120%; */
+  /* left: 7%; */
   float: left;
-  position: absolute;
+  /* position: absolute; */
+  flex: 1;
 }
 .detailNav {
   width: 100%;
   height: inherit;
 }
 .form {
-  width: inherit;
-  height: 700px;
+  width: 100%;
+  /* height: 700px; */
   margin-top: 20px;
   text-align: center;
 }
 
 .navContainer {
   width: 900px;
+  height: -moz-fit-content;
   height: fit-content;
+  padding-left: 7%;
 }
 .img {
-  width: 70vw;
+  width: 70%;
   text-align: left;
 }
 .big {
@@ -596,8 +667,8 @@ export default {
 }
 .list {
   float: left;
-  width: 100px;
-  height: 100px;
+  width: 5vw;
+  height: 10vh;
   margin: 1.5%;
 }
 .lineIntro {
@@ -629,20 +700,30 @@ export default {
   border: 1px solid white;
   margin-bottom: 2.5%;
 }
+.qnaButtonNot {
+  color: orangered;
+  font-weight: 800;
+  background-color: white;
+  border: 1px solid white;
+  margin-bottom: 2.5%;
+}
 .lists {
   width: 90%;
-  height: 20vh;
+  height: fit-content;
   padding-top: 2%;
-  padding-bottom: 4%;
+  /* padding-bottom: 4%; */
   border: 2px solid silver;
   margin: 2%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
 }
 .resThumb {
   display: inline;
   margin-left: 2%;
   margin-top: 5%;
   width: 10vw;
-  height: 15vh;
+  height: 20vh;
 }
 .resBtn {
   width: 80%;
@@ -653,15 +734,14 @@ export default {
   background-color: rgb(4, 20, 97, 1);
   color: white;
   font-size: 1.3rem;
+  display: inline;
 }
 .ul {
-  margin-right: 8%;
   float: right;
   width: 60%;
-  height: 1vh;
-  display: inline-block;
+  height: 100%;
+  display: inline;
   list-style: none;
-  margin-bottom: none;
 }
 
 iframe {
@@ -710,5 +790,21 @@ iframe {
   margin-top: 5%;
   display: flex;
   width: 80%;
+}
+@media (max-width: 767px) {
+  #app {
+    font-family: Inter;
+    width: auto;
+    height: 100%;
+  }
+  body {
+    margin: 0px;
+  }
+  .router {
+    height: 100%;
+  }
+  html {
+    width: 10%;
+  }
 }
 </style>

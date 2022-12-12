@@ -7,7 +7,7 @@
       aria-labelledby="offcanvasTopLabel"
     >
       <div class="offcanvas-header">
-        <form class="question">
+        <div class="question">
           <p style="font-size: 1.3rem">
             {{ cName }}에 대해 궁금한 것이 있다면 물어보세요!
           </p>
@@ -21,7 +21,7 @@
           <p>
             <button class="doneBtn" @click="qnaPost">작성 완료</button>
           </p>
-        </form>
+        </div>
       </div>
       <div class="offcanvas-body"></div>
       <div class="offcanvas-footer"></div>
@@ -49,31 +49,40 @@ export default {
 
     console.log(cid.value);
 
-    const qnaPost = async () => {
-      try {
-        await axios
-          .post(
-            `inquiry/post/${cid.value}`,
-            {
-              inquiries: questions.value,
-            },
-            {
-              headers: {
-                Authorization: localStorage.getItem("access_token"),
+    const qnaPost = async (e) => {
+      if (questions.value.length < 5) {
+        alert("리뷰는 최소 5글자 이상 써주셔야합니다");
+        questions.value = "";
+      } else {
+        try {
+          await axios
+            .post(
+              `inquiry/post/${cid.value}`,
+              {
+                inquiries: questions.value,
               },
-            }
-          )
-          .then((res) => {
-            if (res.status == 200) {
-              alert("문의사항이 등록되었습니다");
-              router.go();
-            }
-          });
-      } catch (error) {
-        if (error.response.status < 500) {
-          alert("작성 폼을 다시 확인해주세요");
-        } else {
-          alert("일시적인 서버오류입니다 나중에 다시 작성해주세요");
+              {
+                headers: {
+                  Authorization: localStorage.getItem("access_token"),
+                },
+              }
+            )
+            .then((res) => {
+              if (res.status === 200) {
+                alert("문의사항이 등록되었습니다");
+                router.go();
+              }
+            });
+        } catch (error) {
+          if (error.response.status < 500) {
+            alert("작성 폼을 다시 확인해주세요");
+            questions.value = "";
+            router.go();
+          } else {
+            alert("일시적인 서버오류입니다 나중에 다시 작성해주세요");
+            questions.value = "";
+            router.go();
+          }
         }
       }
     };

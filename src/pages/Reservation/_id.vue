@@ -1,5 +1,7 @@
 <template>
-  <Reservation />
+  <div>
+    <Reservation />
+  </div>
 </template>
 
 <script>
@@ -12,4 +14,11 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+div {
+  height: auto;
+  overflow: hidden;
+  /* display: flex; */
+  min-height: 400px;
+}
+</style>

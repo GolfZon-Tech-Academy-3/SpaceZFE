@@ -1,7 +1,16 @@
 <template>
-  <div style="padding: 4.5%; height: 100vh">
-    <h1 style="color: rgb(4, 20, 97, 1)">예약자 정보</h1>
-    <div style="width: 45%; float: left">
+  <ErrorHandle
+    :show="!!errorContent"
+    title="Error"
+    @home="errorHome"
+    @refresh="errorRef"
+  >
+    <p>{{ errorContent }}</p>
+  </ErrorHandle>
+  <Spinner v-if="loading" />
+  <div v-else class="entire">
+    <div class="left">
+      <h1 style="color: rgb(4, 20, 97, 1)">예약자 정보</h1>
       <p class="inputExpl">예약자 이름</p>
       <input
         class="resInput"
@@ -28,8 +37,9 @@
       <button class="certiDone" @click="certi">인증</button>
       <p class="phoneCerti">{{ resMessage }}</p>
       <p class="payWay">결제 방법</p>
-      <select class="how2pay">
-        <option value="신용/체크카드" selected>신용/체크카드</option>
+      <select class="how2pay" @change="payWay" v-model="pay">
+        <option disabled value="">결제방법을 골라주세요</option>
+        <option value="신용/체크카드">신용/체크카드</option>
         <option value="카카오 페이">카카오 페이</option>
         <option value="토스.삼성 페이">토스.삼성 페이</option>
       </select>
@@ -55,9 +65,7 @@
         확인<a style="color: red">(필수)</a>
       </p>
     </div>
-    <div
-      style="width: 45%; float: right; background-color: #fafafa; padding: 3%"
-    >
+    <div class="right">
       <p style="margin-bottom: 1%">장소이름</p>
       <a style="font-size: 1.5rem">{{ resInfos.spaceName }} </a>
       <table class="typePriceTable" style="width: 90%">
@@ -76,29 +84,51 @@
         </tr>
       </table>
       <p style="margin-bottom: 1%">시작 날짜 및 시간</p>
+      <button
+        v-show="resInfos.type != '오피스'"
+        @click="showStartDates"
+        class="dateBtn"
+      >
+        {{ startDay }}
+      </button>
+      <div
+        v-show="showingSTartDates && resInfos.type != '오피스'"
+        class="dateBtns"
+      >
+        <button
+          v-for="num in rentDays"
+          :key="num"
+          class="resDate"
+          @click="startDate2"
+          :value="startDates[num - 1]"
+        >
+          {{ startDates[num - 1] }}
+        </button>
+      </div>
+      <br />
       <select
         v-show="resInfos.type != '오피스'"
         class="timeSelect"
         v-model="startSelected"
         @change="timeSelector"
       >
+        <!-- v-if="!newRunningTime" -->
         <option selected disabled value="">시작시간</option>
-        <option v-for="num in runningTime" :key="num">
+        <option v-for="num in newRunningTime" :key="num">
           {{ time[num - 1] }}:00
         </option>
       </select>
+      <a class="dayShow" v-show="showingStart && resInfos.type != '오피스'">
+        {{ startingDay }}일
+        <span v-show="timeShow">{{ startSelected }}부터</span>
+      </a>
 
       <div v-show="resInfos.type == '오피스'">
-        <button
-          @click="showStartDates"
-          style="background-color: white; border: 1px solid white"
-        >
-          시작날짜
-        </button>
+        <button @click="showStartDates" class="dateBtn">시작날짜</button>
         <a class="dayShow" v-show="showingStart">
           {{ startingDay }}일 00:00부터</a
         >
-        <div v-show="showingSTartDates" style="padding: 3%">
+        <div v-show="showingSTartDates" class="dateBtns">
           <button
             v-for="num in rentDays"
             :key="num"
@@ -111,16 +141,18 @@
         </div>
       </div>
 
-      <p style="margin-bottom: 1%">종료 날짜 및 시간</p>
+      <p style="margin-bottom: 1%">종료 시간</p>
       <button
         v-show="resInfos.type == '오피스'"
         @click="showEndDates"
-        style="background-color: white; border: 1px solid white"
+        class="dateBtn"
       >
         종료날짜
       </button>
-      <a class="dayShow" v-show="showingEnd"> {{ endingDay }}일 23:59까지 </a>
-      <div v-show="showingEndDates" style="padding: 3%">
+      <a class="dayShow" v-show="showingDeskEnd && resInfos.type == '오피스'">
+        {{ endingDay }}일 23:59까지
+      </a>
+      <div v-show="showingEndDates" class="dateBtns">
         <button
           v-for="num in rentDays"
           :key="num"
@@ -131,30 +163,25 @@
           {{ endDates[num - 1] }}
         </button>
       </div>
+      <br />
       <select
-        v-show="resInfos.type != '오피스' && endTimeShow"
+        v-show="endTimeShow"
         class="timeSelect"
         v-model="endSelected"
-        @change="showCoast"
+        @change="showCoast1"
       >
         <option selected disabled value="">종료시간</option>
         <option v-for="num1 in minusEndTime" :key="num1">
           {{ restTimes[num1 - 1] }}:00
         </option>
       </select>
+      <a class="dayShow" v-show="showingDeskEnd && resInfos.type != '오피스'">
+        {{ startingDay }}일 {{ endSelected }}까지
+      </a>
       <hr />
       <div v-show="showTotalCoast">
         <p style="margin-bottom: 1.5%; font-size: 1.4rem">총 결제 금액</p>
-        <p
-          style="
-            margin-bottom: 1.5%;
-            font-size: 1.4rem;
-            color: #d14a58;
-            font-weight: bolder;
-          "
-        >
-          {{ totalCoast }}원
-        </p>
+        <p class="totalCoast">{{ totalCoast }}원</p>
         <label style="color: #4d6aed; font-weight: bolder">마일리지</label>
         <input
           type="number"
@@ -191,11 +218,18 @@
 <script>
 // import Datepicker from "vue3-datepicker";
 import { useRoute, useRouter } from "vue-router";
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import axios from "@/axios";
 import { useStore } from "vuex";
+import ErrorHandle from "@/components/UI/BaseDialog.vue";
+import Spinner from "@/components/UI/Spinner.vue";
+import _ from "lodash";
 
 export default {
+  components: {
+    ErrorHandle,
+    Spinner,
+  },
   name: "Reservation",
   setup() {
     const route = useRoute();
@@ -207,6 +241,11 @@ export default {
     const phoneNum = ref();
     const certiNum = ref();
     const resMessage = ref("");
+    const pay = ref("");
+    const payWays = reactive({
+      pre: "",
+      nPre: "",
+    });
 
     const allSelected = ref(false);
     const a = ref(false);
@@ -243,86 +282,103 @@ export default {
     const showingSTartDates = ref(false);
     const showingEndDates = ref(false);
     const showingStart = ref(false);
+    const timeShow = ref(false);
     const showingEnd = ref(false);
+    const showingDeskEnd = ref(false);
 
     const startingDay = ref("");
-    const resStartDay = ref("");
+    const startDay = ref("시작날짜");
     const endingDay = ref("");
-    const resEndDay = ref("");
+    const endDay = ref("종료날짜");
 
     const rentDays = ref(30);
     const runningTime = ref([]);
+    const usedTobeRunningTime = ref(runningTime.value);
+    const newRunningTime = ref([]);
+    let resTimes = [];
+    const times = ref(true);
+    let resedTime = 0;
+    let resedFinTime = 0;
 
     const inevitable = ref(0);
 
     const startingTime = ref([]);
 
     let reserved;
+    let reservered = ref("");
+
+    const errorContent = ref(null);
+    const loading = ref(false);
 
     const date = new Date();
     now = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 
     //예약할 장소의 정보 불러오기
     const getResInfos = async () => {
-      const res = await axios.get(`reservation/details/${sid.value}`, {
-        headers: {
-          Authorization: localStorage.getItem("access_token"),
-        },
-      });
-      resInfos.value = { ...res.data };
+      loading.value = true;
+      try {
+        await axios
+          .get(`reservation/details/${sid.value}`, {
+            headers: {
+              Authorization: localStorage.getItem("access_token"),
+            },
+          })
+          .then((res) => {
+            if (res.status === 200) {
+              resInfos.value = { ...res.data };
+              totalMileage.value = res.data.mileage;
+              console.log(resInfos.value);
 
-      totalMileage.value = res.data.mileage;
-      console.log(resInfos.value);
+              //운영시간 구하기
+              let open = parseInt(resInfos.value.openTime);
+              let close = parseInt(resInfos.value.closeTime);
+              let openB = parseInt(resInfos.value.breakOpen);
+              let closeB = parseInt(resInfos.value.breakClose);
 
-      //운영시간 구하기
-      let open = parseInt(resInfos.value.openTime);
-      let close = parseInt(resInfos.value.closeTime);
-      let openB = parseInt(resInfos.value.breakOpen);
-      let closeB = parseInt(resInfos.value.breakClose);
+              for (let i = open; i <= close; i++) {
+                if (i <= openB || i >= closeB) {
+                  runningTime.value.push(i);
+                }
+              }
+              console.log(runningTime.value);
 
-      for (let i = open; i <= close; i++) {
-        if (i < openB || i > closeB) {
-          runningTime.value.push(i);
-        }
+              //예약가능 날짜 구하기(오피스)
+              reserved = resInfos.value.reservedTime;
+              for (let i = 0; i < reserved.length; i++) {
+                let found = startDates.value.find((e) => e == reserved[i]);
+                for (let j = 0; j < startDates.value.length; j++) {
+                  if (startDates.value[j] == found) startDates.value[j] = "x";
+                }
+              }
+
+              //단위 변완기
+              price.value = resInfos.value.price
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+          });
+      } catch (error) {
+        errorContent.value = `오류가 발생했습니다 홈페이지로 이동하시거나
+          버튼을 눌러 응답을 받을때까지 시도해 보십시오`;
       }
 
-      runningTime.value.slice(
-        parseInt(resInfos.value.breakOpen),
-        parseInt(resInfos.value.breakClose)
-      );
-      console.log(runningTime.value);
-
-      let reservered = resInfos.value.reservedTime;
-      for (let i = 0; i < reservered.length; i++) {
-        // console.log(reservered[i].slice(12, 13));
-        // if(runningTime[i])
-        let found = runningTime.value.find(
-          (e) => e == reservered[i].slice(12, 13)
-        );
-        console.log(found);
-        for (let j = 0; j < runningTime.value.length; j++) {
-          if (runningTime.value[j] == found) {
-            runningTime.value.splice(j, 1);
-            j--;
-          }
-        }
-      }
-
-      //예약가능 날짜 구하기(오피스)
-      reserved = resInfos.value.reservedTime;
-      for (let i = 0; i < reserved.length; i++) {
-        let found = startDates.value.find((e) => e == reserved[i]);
-        for (let j = 0; j < startDates.value.length; j++) {
-          if (startDates.value[j] == found) startDates.value[j] = "x";
-        }
-      }
-
-      //단위 변완기
-      price.value = resInfos.value.price
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      loading.value = false;
     };
     getResInfos();
+
+    //get에러시 홈페이지로
+    const errorHome = () => {
+      errorContent.value = null;
+      router.push({
+        name: "Home",
+      });
+    };
+
+    //get에러시 계속 호출
+    const errorRef = () => {
+      errorContent.value = null;
+      getResInfos();
+    };
 
     //정보제공 전체 동의 버튼
     const selectAll = () => {
@@ -360,20 +416,9 @@ export default {
         }
         time.value.push(t);
       }
-      //   console.log(time.value);
+      console.log(time.value);
     };
     timeMaker();
-
-    //종료시간 만드는 함수
-    const timeSelector = () => {
-      let closeTime = parseInt(resInfos.value.closeTime);
-      endTimeShow.value = true;
-      minusEndTime.value =
-        closeTime - parseInt(startSelected.value.slice(0, 2));
-      restTimes.value = time.value.slice(
-        parseInt(startSelected.value.slice(0, 2))
-      );
-    };
 
     //마일리지 계산기
     const milCalcul = () => {
@@ -393,9 +438,76 @@ export default {
     };
 
     //비용 계산기
+    const showCoast1 = (e) => {
+      console.log(e.target.value, startSelected.value, resedTime, resedFinTime);
+      const breakFin = resInfos.value.breakClose.slice(0, 2);
+
+      // console.log(
+      //   parseInt(startSelected.value.slice(0, 2)) < resedTime &&
+      //     parseInt(e.target.value.slice(0, 2)) >= resedFinTime
+      // );
+      if (
+        parseInt(startSelected.value.slice(0, 2)) < resedTime &&
+        parseInt(e.target.value.slice(0, 2)) >= resedFinTime
+      ) {
+        alert(
+          `선택하신 시간이 이미 예약된 시간(${resedTime}시~${resedFinTime}시)을 포함하고 있습니다 다시 선택해 주세요`
+        );
+        endTimeShow.value = false;
+        showingDeskEnd.value = false;
+        endSelected.value = "";
+        startSelected.value = "";
+        timeShow.value = false;
+        return;
+      } else if (
+        parseInt(startSelected.value.slice(0, 2)) < resedTime &&
+        parseInt(e.target.value.slice(0, 2)) >= breakFin
+      ) {
+        alert(
+          `선택하신 시간이 저희 장소 청소 및 휴게 시간(${resInfos.value.breakOpen.slice(
+            0,
+            2
+          )}시~${breakFin}시)을 포함하고 있습니다 다시 선택해 주세요`
+        );
+        endTimeShow.value = false;
+        showingDeskEnd.value = false;
+        endSelected.value = "";
+        startSelected.value = "";
+        timeShow.value = false;
+        return;
+      }
+
+      showTotalCoast.value = true;
+      showingDeskEnd.value = !showingDeskEnd.value;
+      if (resInfos.value.type != "오피스") {
+        const startTime = parseInt(startSelected.value.slice(0, 2));
+        const endTime = parseInt(endSelected.value.slice(0, 2));
+
+        total.value = (endTime - startTime) * resInfos.value.price;
+      } else if (resInfos.value.type == "오피스") {
+        //구한 날짜를 일수로 변환하는 함수
+        const getDateDiff = (d1, d2) => {
+          const date1 = new Date(d1);
+          const date2 = new Date(d2);
+          const diffDate = date1.getTime() - date2.getTime();
+          return Math.abs(diffDate / (1000 * 60 * 60 * 24));
+        };
+        //db에 저장한 공간의 대여료 곱하기 위에서 구한 일수
+        total.value =
+          getDateDiff(endingDay.value, startingDay.value) *
+          resInfos.value.price;
+        total.value =
+          getDateDiff(endingDay.value, startingDay.value) *
+          resInfos.value.price;
+      }
+      totalCoast.value = total.value
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+
     const showCoast = () => {
       showTotalCoast.value = true;
-
+      showingDeskEnd.value = !showingDeskEnd.value;
       if (resInfos.value.type != "오피스") {
         const startTime = parseInt(startSelected.value.slice(0, 2));
         const endTime = parseInt(endSelected.value.slice(0, 2));
@@ -450,11 +562,11 @@ export default {
       if (
         !resName.value ||
         !total.value ||
-        // !store.state.memberId ||
         !localStorage.getItem("memberId") ||
         !startSelected.value ||
         !endSelected.value ||
         !a.value ||
+        !payWays.nPre ||
         !b.value ||
         !c.value ||
         !d.value
@@ -463,10 +575,23 @@ export default {
         alert("입력을 다시 확인해주세요.");
         window.location.reload(true);
       } else {
+        try {
+          await axios.post("reservation/check", {
+            spaceId: resInfos.value.spaceId,
+            startDate: startingDay.value + " " + startSelected.value,
+            endDate: startingDay.value + " " + endSelected.value,
+            prepay: "001",
+          });
+        } catch (error) {
+          alert("예약 중복오류가 발생했습니다 나중에 다시 시도해 주세요");
+          router.go();
+          return;
+        }
+
         IMP.init("imp76177137");
         IMP.request_pay(
           {
-            pg: "kakaopay.TCSUBSCRIP",
+            pg: payWays.nPre,
             pay_method: "card", // 기능 없음.
             merchant_uid: resInfos.value.merchant_uid, // 상점에서 관리하는 주문 번호
             name: resInfos.value.spaceName,
@@ -492,8 +617,8 @@ export default {
                       memberId: localStorage.getItem("memberId"),
                       payStatus: "003",
                       prepay: "001",
-                      startDate: now + " " + startSelected.value,
-                      endDate: now + " " + endSelected.value,
+                      startDate: startingDay.value + " " + startSelected.value,
+                      endDate: startingDay.value + " " + endSelected.value,
                     },
                     {
                       headers: {
@@ -538,6 +663,7 @@ export default {
         !parseInt(localStorage.getItem("memberId")) ||
         !startSelected.value ||
         !endSelected.value ||
+        !payWays.pre ||
         !a.value ||
         !b.value ||
         !c.value ||
@@ -547,10 +673,22 @@ export default {
         alert("입력을 다시 확인해주세요.");
         window.location.reload(true);
       } else {
+        try {
+          await axios.post("reservation/check", {
+            spaceId: resInfos.value.spaceId,
+            startDate: startingDay.value + " " + startSelected.value,
+            endDate: startingDay.value + " " + endSelected.value,
+            prepay: "000",
+          });
+        } catch (error) {
+          alert("예약 중복오류가 발생했습니다 나중에 다시 시도해 주세요");
+          router.go();
+          return;
+        }
         IMP.init("imp76177137");
         IMP.request_pay(
           {
-            pg: "kakaopay.TC0ONETIME",
+            pg: payWays.pre,
             pay_method: "card", // 기능 없음.
             merchant_uid: resInfos.value.merchant_uid, // 상점에서 관리하는 주문 번호
             name: resInfos.value.spaceName,
@@ -575,8 +713,8 @@ export default {
                       price: total.value,
                       prepay: "000",
                       spaceId: resInfos.value.spaceId,
-                      startDate: now + " " + startSelected.value,
-                      endDate: now + " " + endSelected.value,
+                      startDate: startingDay.value + " " + startSelected.value,
+                      endDate: startingDay.value + " " + endSelected.value,
                       mileage: mileage.value,
                     },
                     {
@@ -691,16 +829,80 @@ export default {
         showingStart.value = true;
         showingSTartDates.value = !showingSTartDates.value;
         startingDay.value = e.target.value;
-        let [year, month, date] = startingDay.value.split("-");
-        if (month.charAt(0) == "0") {
-          month = month.substr(1);
-        }
-        if (date.charAt(0) == "0") {
-          date = date.substr(1);
-        }
-        resStartDay.value = `${year}-${month}-${date}`;
-        console.log(resStartDay.value);
+        startDay.value = e.target.value;
+        console.log(e.target.value);
       }
+    };
+
+    const startDate2 = (e) => {
+      showingStart.value = true;
+      showingSTartDates.value = !showingSTartDates.value;
+      startingDay.value = e.target.value;
+      startDay.value = e.target.value;
+      reservered.value = resInfos.value.reservedTime;
+
+      let dates = [];
+      let times = [];
+      for (let i = 0; i < reservered.value.length; i++) {
+        dates[i] = reservered.value[i].split(" ");
+        if (dates[i][0] == e.target.value) {
+          times.value = !times.value;
+          times[i] = parseInt(dates[i][1]);
+        }
+      }
+      newRunningTime.value = runningTime.value.filter(
+        (x) => !times.includes(x)
+      );
+      if (times.value === undefined) {
+        runningTime.value = usedTobeRunningTime.value;
+        newRunningTime.value = runningTime.value;
+      }
+      restTimes.value = times.slice();
+      times = times.filter(Boolean);
+      resedTime = times[0];
+      resedFinTime = times[times.length - 1];
+    };
+
+    //종료시간 만드는 함수
+    const timeSelector = (e) => {
+      const opening = resInfos.value.breakOpen.slice(0, 2);
+
+      if (parseInt(e.target.value.slice(0, 2)) == opening) {
+        alert(
+          `선택하신 시간은 원활한 장소 운영을 위한 청소시간(${opening}시~${resInfos.value.breakClose.slice(
+            0,
+            2
+          )}시)입니다 다시 선택해주세요`
+        );
+        startSelected.value = "";
+        timeShow.value = false;
+        return;
+      } else if (parseInt(e.target.value.slice(0, 2)) + 1 == resedTime) {
+        alert(
+          `선택하신 시간 이후 바로 예약(${resedTime}시~${resedFinTime}시)이 있어서 사용이 불가능합니다 다른 시간을 선택해주세요`
+        );
+        startSelected.value = "";
+        timeShow.value = false;
+        return;
+      }
+
+      endTimeShow.value = true;
+      let sliceTime = parseInt(startSelected.value.slice(0, 2));
+      let returnDays = newRunningTime.value.slice();
+
+      for (let i = 0; i < returnDays.length; i++) {
+        if (returnDays[i] === sliceTime) {
+          returnDays.splice(0, i + 1);
+          i--;
+        }
+        if (returnDays[i] < 10) {
+          returnDays[i] = "0" + returnDays[i];
+        }
+      }
+
+      minusEndTime.value = returnDays.length;
+      restTimes.value = returnDays.slice();
+      timeShow.value = !timeShow.value;
     };
 
     //예약 종료일 버튼
@@ -708,25 +910,14 @@ export default {
       showingEnd.value = true;
       showingEndDates.value = !showingEndDates.value;
       endingDay.value = e.target.value;
-      let [year, month, date] = endingDay.value.split("-");
-      if (month.charAt(0) == "0") {
-        month = month.substr(1);
-      }
-      if (date.charAt(0) == "0") {
-        date = date.substr(1);
-      }
-      resEndDay.value = `${year}-${month}-${date}`;
-      console.log(resEndDay.value);
+      endDay.value = e.target.value;
+
       showCoast();
     };
 
     //버튼들 보여주는 함수
     const showStartDates = () => {
       showingSTartDates.value = !showingSTartDates.value;
-      // if (startingDay.value) {
-      //   startingDay.value = "";
-      // }
-      // console.log(startingDay.value);
     };
 
     //종료날짜 버튼에 띄우는 함수
@@ -736,10 +927,6 @@ export default {
       let day = parseInt(startingDay.value.slice(8, 10));
       let resYear = startingDay.value.slice(0, 4);
       let resMonth = startingDay.value.slice(5, 7);
-      // if (resMonth > 12) {
-      //   resMonth = 1;
-      //   resYear++;
-      // }
 
       let dates = [];
       let days = new Date(resYear, resMonth, 0).getDate();
@@ -805,13 +992,14 @@ export default {
     };
 
     //오피스 결제
-    const officePayBtn = () => {
+    const officePayBtn = async () => {
       if (
         !resName.value ||
         !total.value ||
         !parseInt(localStorage.getItem("memberId")) ||
         !startingDay.value ||
         !endingDay.value ||
+        !payWays.nPre ||
         !a.value ||
         !b.value ||
         !c.value ||
@@ -821,10 +1009,22 @@ export default {
         alert("입력을 다시 확인해주세요.");
         window.location.reload(true);
       } else {
+        try {
+          await axios.post("reservation/check", {
+            spaceId: resInfos.value.spaceId,
+            startDate: startingDay.value + " " + "00:00",
+            endDate: endingDay.value + " " + "23:59",
+            prepay: "002",
+          });
+        } catch (error) {
+          alert("예약 중복오류가 발생했습니다 나중에 다시 시도해 주세요");
+          router.go();
+          return;
+        }
         IMP.init("imp76177137");
         IMP.request_pay(
           {
-            pg: "kakaopay.TCSUBSCRIP",
+            pg: payWays.nPre,
             pay_method: "card", // 기능 없음.
             merchant_uid: resInfos.value.merchant_uid, // 상점에서 관리하는 주문 번호
             name: resInfos.value.spaceName,
@@ -849,8 +1049,8 @@ export default {
                       price: total.value,
                       prepay: "002",
                       spaceId: resInfos.value.spaceId,
-                      startDate: resStartDay.value + " " + "00:00",
-                      endDate: resEndDay.value + " " + "23:59",
+                      startDate: startingDay.value + " " + "00:00",
+                      endDate: endingDay.value + " " + "23:59",
                       mileage: mileage.value,
                     },
                     {
@@ -887,6 +1087,18 @@ export default {
       }
     };
 
+    const payWay = () => {
+      //선결제는 : kcp(일반결제), uplus(toss), kakaopay.TC0ONETIME,// 후결제,보증금결제는 :kcp_billing,tosspayments, kakaopay.TCSUBSCRIP
+      if (pay.value === "신용/체크카드") {
+        (payWays.pre = "kcp"), (payWays.nPre = "kcp_billing");
+      } else if (pay.value === "카카오 페이") {
+        (payWays.pre = "kakaopay"), (payWays.nPre = "kakaopay.TCSUBSCRIP");
+      } else if (pay.value === "토스.삼성 페이") {
+        (payWays.pre = "uplus"), (payWays.nPre = "tosspayments");
+      }
+      console.log(payWays);
+    };
+
     return {
       inevitable,
       phoneRes,
@@ -899,6 +1111,7 @@ export default {
       total,
       showTotalCoast,
       showCoast,
+      showCoast1,
       totalCoast,
       price,
       restTimes,
@@ -915,7 +1128,6 @@ export default {
       selectC,
       selectD,
       timeSelector,
-      //   selectList,
       endTimeShow,
       startSelected,
       endSelected,
@@ -927,9 +1139,6 @@ export default {
       milCalcul,
       depositPay,
       prePay,
-      // dates,
-      // yearMonth,
-      // dateBoard,
       startDates,
       endDates,
       startDate,
@@ -945,14 +1154,47 @@ export default {
       showEndDates,
       officePayBtn,
       runningTime,
-      resStartDay,
-      resEndDay,
+      startDay,
+      endDay,
+      showingDeskEnd,
+      timeShow,
+      startDate2,
+      newRunningTime,
+      times,
+      reservered,
+      payWay,
+      pay,
+      payWays,
+      usedTobeRunningTime,
+      resTimes,
+      errorContent,
+      errorHome,
+      errorRef,
+      loading,
     };
   },
 };
 </script>
 
 <style scoped>
+.entire {
+  padding: 4.5%;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+.left {
+  width: 45%;
+  float: left;
+}
+.right {
+  width: 45%;
+  float: right;
+  background-color: #fafafa;
+  padding: 3%;
+  margin-top: 5%;
+}
 .inputExpl {
   margin-bottom: 1%;
   margin-top: 3%;
@@ -1023,10 +1265,11 @@ export default {
   margin-bottom: 5%;
 }
 .timeSelect {
-  width: 30%;
+  width: 15%;
   height: 6vh;
   border-radius: 7px;
-  margin-bottom: 5%;
+  margin-bottom: 2.5%;
+  margin-right: 3%;
   opacity: 0.6;
   font-size: 1.2rem;
 }
@@ -1077,67 +1320,24 @@ export default {
 .dayShow {
   color: #4d6aed;
 }
-
-/* .dateHead {
-  margin-bottom: 0.4rem;
+.dateBtn {
+  background-color: inherit;
+  border: 1px solid gray;
+  font-size: 1.2rem;
+  width: fit-content;
+  height: 6vh;
+  border-radius: 7px;
+  text-align: left;
+  opacity: 0.6;
+  margin-bottom: 1%;
+  margin-right: 2%;
 }
-
-.dateHead div {
-  background: white;
-  color: black;
-  text-align: center;
+.totalCoast {
+  margin-bottom: 1.5%;
+  font-size: 1.4rem;
+  color: #d14a58;
+  font-weight: bolder;
 }
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  grid-gap: 5px;
+.dateBtns {
 }
-
-.grid div {
-  padding: 0.6rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-.dateBoard div {
-  color: #222;
-  font-weight: bold;
-  min-height: 6rem;
-  padding: 0.6rem 0.8rem;
-  border-radius: 0.6rem;
-  border: 1px solid #eee;
-}
-
-.noColor {
-  background: #eee;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  padding: 1rem 2rem;
-}
-
-.btn {
-  display: block;
-  width: 20px;
-  height: 20px;
-  border: 3px solid #000;
-  border-width: 3px 3px 0 0;
-  cursor: pointer;
-}
-
-.prevDay {
-  transform: rotate(-135deg);
-}
-
-.nextDay {
-  transform: rotate(45deg);
-}
-
-.dateBoard div p {
-  font-weight: normal;
-  margin-top: 0.2rem;
-} */
 </style>
