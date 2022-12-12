@@ -1,5 +1,2 @@
-[[redirects]]
-  from = "/proxy/*"
-  to = "https://spacez3.shop/"
-  status = 200
-  force = true
+# Netlify settings for single-page application
+/* /index.html   200

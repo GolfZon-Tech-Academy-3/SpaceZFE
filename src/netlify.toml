@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/proxy/*"
+  to = "https://spacez3.shop/"
+  status = 200
+  force = true
