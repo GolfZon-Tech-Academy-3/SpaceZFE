@@ -1,4 +1,12 @@
 <template>
+  <ErrorHandle
+    :show="!!errorContent"
+    title="Error"
+    @home="errorHome"
+    @refresh="errorRef"
+  >
+    <p>{{ errorContent }}</p>
+  </ErrorHandle>
   <div class="form">
     <p class="qnaHeader">문의 내용 확인</p>
     <div class="frame">
@@ -71,31 +79,68 @@
 <script>
 import { ref } from "vue";
 import axios from "axios";
+import { useStore } from "vuex";
+
+import ErrorHandle from "@/components/UI/BaseDialog.vue";
 import QnaAnswers from "@/components/myPage/QnaAnswers.vue";
+
+const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
 
 export default {
   components: {
     QnaAnswers,
+    ErrorHandle,
   },
   setup() {
     const qnaAnswer = ref({});
     const qnas = ref([]);
+    const errorContent = ref(null);
+
+    const store = useStore();
+
     let find;
 
     const getQnas = async () => {
-      const res = await axios.get("mypage/inquiry/total", {
-        headers: {
-          Authorization: `${localStorage.getItem("access_token")}`,
-        },
-      });
-      qnas.value = res.data;
-      console.log(qnas.value);
-      for (let i = 0; i < qnas.value.length; i++) {
-        qnas.value[i].showMyqna = false;
-        qnas.value[i].showMyAnswer = false;
+      try {
+        await axios
+          .get(`${proxy}mypage/inquiry/total`, {
+            headers: {
+              Authorization: store.state.accessToken,
+            },
+          })
+          .then((res) => {
+            qnas.value = res.data;
+            console.log(qnas.value);
+            for (let i = 0; i < qnas.value.length; i++) {
+              qnas.value[i].showMyqna = false;
+              qnas.value[i].showMyAnswer = false;
+            }
+          });
+      } catch (error) {
+        if (error.response.status < 500 && error.response.status >= 400) {
+          alert("입력을 다시 확인해주세요.");
+          router.go();
+        } else if (error.response.status >= 500) {
+          errorContent.value =
+            "일시적인 서버장애 오류입니다 나중에 다시 확인해주세요";
+        }
       }
     };
     getQnas();
+
+    //get에러시 홈페이지로
+    const errorHome = () => {
+      errorContent.value = null;
+      router.push({
+        name: "Home",
+      });
+    };
+
+    //get에러시 계속 호출
+    const errorRef = () => {
+      errorContent.value = null;
+      getQnas();
+    };
 
     //qna배열에 담긴 정보 객체들에 접근해서 qna띄움
     const showContent = (num) => {
@@ -119,6 +164,9 @@ export default {
       showAnwer,
       qnaAnswer,
       find,
+      errorContent,
+      errorHome,
+      errorRef,
     };
   },
 };

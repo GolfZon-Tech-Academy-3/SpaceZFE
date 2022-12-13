@@ -67,6 +67,10 @@
 import { ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+
+const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
+
 export default {
   props: {
     writePack: {
@@ -84,6 +88,7 @@ export default {
     const ids = ref(props.writePack);
     const edit = ref(props.edit);
     const router = useRouter();
+    const store = useStore();
 
     console.log(edit.value);
 
@@ -110,7 +115,7 @@ export default {
         try {
           await axios
             .post(
-              "review/post",
+              `${proxy}review/post`,
               {
                 spaceId: ids.value.spaceId,
                 companyId: ids.value.companyId,
@@ -119,7 +124,7 @@ export default {
               },
               {
                 headers: {
-                  Authorization: localStorage.getItem("access_token"),
+                  Authorization: store.state.accessToken,
                 },
               }
             )
@@ -147,7 +152,7 @@ export default {
         try {
           await axios
             .put(
-              "review/update",
+              `${proxy}review/update`,
               {
                 reviewId: edit.value.id,
                 content: revContent.value,
@@ -155,7 +160,7 @@ export default {
               },
               {
                 headers: {
-                  Authorization: localStorage.getItem("access_token"),
+                  Authorization: store.state.accessToken,
                 },
               }
             )

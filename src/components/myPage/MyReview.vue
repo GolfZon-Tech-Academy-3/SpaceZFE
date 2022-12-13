@@ -42,6 +42,9 @@
 import { ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+
+const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
 export default {
   props: {
     reviewer: {
@@ -51,6 +54,7 @@ export default {
   },
   setup(props, context) {
     const router = useRouter();
+    const store = useStore();
     const write = ref(false);
     const reviewId = ref(props.reviewer);
 
@@ -66,8 +70,8 @@ export default {
       if (con == true) {
         try {
           await axios
-            .delete(`review/delete/${reviewId.value.reviewId}`, {
-              headers: { Authorization: localStorage.getItem("access_token") },
+            .delete(`${[proxy]}review/delete/${reviewId.value.reviewId}`, {
+              headers: { Authorization: store.state.accessToken },
             })
             .then((res) => {
               if (res.status === 200) {
@@ -83,7 +87,8 @@ export default {
           }
         }
       } else {
-        router.go();
+        // router.go();
+        return;
       }
     };
 

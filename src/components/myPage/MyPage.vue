@@ -1,4 +1,13 @@
 <template>
+  <ErrorHandle
+    :show="!!errorContent"
+    title="Error"
+    @home="errorHome"
+    @refresh="errorRef"
+  >
+    <p>{{ errorContent }}</p>
+  </ErrorHandle>
+  <Spinner v-if="loading" />
   <div style="height: auto; overflow: hidden; display: flex; min-height: 400px">
     <div class="sideBar">
       <p>
@@ -151,14 +160,23 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import ErrorHandle from "@/components/UI/BaseDialog.vue";
+import Spinner from "@/components/UI/Spinner.vue";
 import Mileage from "@/components/myPage/Mileage.vue";
 import MyResVue from "@/components/myPage/MyRes.vue";
 import QNA from "@/components/myPage/QNA.vue";
+
+import { ref } from "vue";
 import axios from "axios";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+
+const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
 
 export default {
   components: {
+    ErrorHandle,
+    Spinner,
     Mileage,
     MyResVue,
     QNA,
@@ -180,8 +198,13 @@ export default {
     const uploadImg = ref("");
     const imgSelect = ref(true);
     const File = ref("");
+    const router = useRouter();
+    const store = useStore();
 
-    const token = localStorage.getItem("access_token");
+    const errorContent = ref(null);
+    const loading = ref(false);
+
+    const token = store.state.accessToken;
 
     //토큰디코더
     const parseJwt = (token) => {
@@ -194,7 +217,7 @@ export default {
       }
     };
 
-    const profImg = ref(parseJwt(token).IMAGE_NAME);
+    const profImg = ref(store.state.profile);
     const useEmail = ref(parseJwt(token).USER_EMAIL);
     const userNick = ref(parseJwt(token).NICK_NAME);
 
@@ -205,8 +228,9 @@ export default {
 
     //프로필 수정 put쏘기
     const profEditPut = async () => {
+      loading.value = true;
       const formData = new FormData();
-      formData.append("memberId", parseInt(localStorage.getItem("memberId")));
+      formData.append("memberId", parseInt(store.state.memberId));
       formData.append("memberName", nick.value);
       formData.append("multipartFile", File.value);
       if (nick.value === "" && File.value === "") {
@@ -217,28 +241,85 @@ export default {
       } else {
         try {
           await axios
-            .put("member/profile", formData, {
+            .put(`${proxy}member/profile`, formData, {
               headers: {
-                Authorization: localStorage.getItem("access_token"),
+                Authorization: store.state.accessToken,
                 "Content-Type": "multipart/form-data",
               },
             })
             .then((res) => {
               if (res.status < 300 && res.status >= 200) {
-                alert("프로필 변경이 성공하였습니다.");
-                window.location.reload(true);
+                store.dispatch("refreshToken").then(async () => {
+                  try {
+                    await axios
+                      .post(`${proxy}/member/login`, {
+                        email: store.state.memberEmail,
+                        password: store.state.memberPw,
+                      })
+                      .then((res) => {
+                        // store.dispatch("setMemberEmail", email.value);
+                        // store.dispatch("setMemberPw", pw.value);
+                        store.dispatch(
+                          "setMemberId",
+                          parseJwt(res.headers.authorization).MEMBER_ID
+                        );
+                        store.dispatch(
+                          "setAuthority",
+                          parseJwt(res.headers.authorization).AUTHORITY
+                        );
+                        store.dispatch(
+                          "setProfile",
+                          parseJwt(res.headers.authorization).IMAGE_NAME
+                        );
+                        store.dispatch(
+                          "setCompanyId",
+                          parseJwt(res.headers.authorization).COMPANY_ID
+                        );
+                        store.dispatch(
+                          "setAccessToken",
+                          res.headers.authorization
+                        );
+                      })
+                      .then((res1) => {
+                        if (res1.status < 300 && res1.status >= 200) {
+                          alert("프로필 변경이 성공하였습니다.");
+                          router.go();
+                        }
+                      });
+                  } catch (error) {
+                    console.log(error);
+                    alert("프로필 변경이 실패했습니다");
+                    // router.go();
+                    return;
+                  }
+                });
               }
             });
         } catch (error) {
           if (error.response.status < 500 && error.response.status >= 400) {
             alert("입력을 다시 확인해주세요.");
-            window.location.reload(true);
+            router.go();
           } else if (error.response.status >= 500) {
-            alert("일시적인 서버장애 오류입니다 나중에 다시 확인해주세요");
-            window.location.reload(true);
+            errorContent.value =
+              "일시적인 서버장애 오류입니다 나중에 다시 확인해주세요";
           }
         }
       }
+      loading.value = false;
+    };
+
+    //get에러시 홈페이지로
+    const errorHome = () => {
+      errorContent.value = null;
+      router.push({
+        name: "Home",
+      });
+    };
+
+    //get에러시 계속 호출
+    const errorRef = () => {
+      errorContent.value = null;
+      profEditPut();
     };
 
     //프로필 바뀐거로 미리 보여주는 함수
@@ -283,7 +364,7 @@ export default {
         dupleNick.value = false;
         nDupleNick.value = false;
         await axios
-          .post("member/name-check", { memberName: nick.value })
+          .post(`${proxy}member/name-check`, { memberName: nick.value })
           .then((res) => {
             if (res.data == 0) {
               dupleNick.value = true;
@@ -324,6 +405,10 @@ export default {
       onFileSelected,
       nickNull,
       profEditPut,
+      errorContent,
+      loading,
+      errorHome,
+      errorRef,
     };
   },
 };
@@ -368,6 +453,7 @@ p {
   float: right;
   text-align: center;
   padding-top: 4%;
+  padding-bottom: 5%;
 }
 .otherForm {
   width: 85%;
@@ -375,6 +461,7 @@ p {
   text-align: center;
   overflow: hidden;
   height: auto;
+  padding-bottom: 5%;
 }
 .board {
   margin: auto;

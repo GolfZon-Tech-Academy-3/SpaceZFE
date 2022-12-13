@@ -220,9 +220,12 @@ import { useRoute, useRouter } from "vue-router";
 import { ref, reactive } from "vue";
 import axios from "@/axios";
 import { useStore } from "vuex";
+
 import ErrorHandle from "@/components/UI/BaseDialog.vue";
 import Spinner from "@/components/UI/Spinner.vue";
+
 import _ from "lodash";
+const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
 
 export default {
   components: {
@@ -235,6 +238,7 @@ export default {
     const router = useRouter();
     const sid = ref(route.query.sid);
     const cid = ref(route.query.cid);
+    const store = useStore();
 
     const phoneRes = ref();
     const phoneNum = ref();
@@ -317,9 +321,9 @@ export default {
       loading.value = true;
       try {
         await axios
-          .get(`reservation/details/${sid.value}`, {
+          .get(`${proxy}reservation/details/${sid.value}`, {
             headers: {
-              Authorization: localStorage.getItem("access_token"),
+              Authorization: store.state.accessToken,
             },
           })
           .then((res) => {
@@ -339,7 +343,6 @@ export default {
                   runningTime.value.push(i);
                 }
               }
-              console.log(runningTime.value);
 
               //예약가능 날짜 구하기(오피스)
               reserved = resInfos.value.reservedTime;
@@ -530,7 +533,7 @@ export default {
         correctNum.value = true;
       }
       const res = await axios.get(
-        `/reservation/phoneCheck?phone=${phoneNum.value}`
+        `${proxy}/reservation/phoneCheck?phone=${phoneNum.value}`
       );
       certiNum.value = res.data;
     };
@@ -552,7 +555,7 @@ export default {
       if (
         !resName.value ||
         !total.value ||
-        !localStorage.getItem("memberId") ||
+        !store.state.memberId ||
         !startSelected.value ||
         !endSelected.value ||
         !a.value ||
@@ -566,7 +569,7 @@ export default {
         window.location.reload(true);
       } else {
         try {
-          await axios.post("reservation/check", {
+          await axios.post(`${proxy}reservation/check`, {
             spaceId: resInfos.value.spaceId,
             startDate: startingDay.value + " " + startSelected.value,
             endDate: startingDay.value + " " + endSelected.value,
@@ -586,7 +589,7 @@ export default {
             merchant_uid: resInfos.value.merchant_uid, // 상점에서 관리하는 주문 번호
             name: resInfos.value.spaceName,
             amount: (total.value + mileage.value) * 0.2, // 빌링키 발급과 함께 40원 결제승인을 시도합니다. price의 20%만 계산해서 넣는다. //후결제인 경우, 0으로 넣는다.
-            customer_uid: localStorage.getItem("memberId"), // 필수 입력
+            customer_uid: store.state.memberId, // 필수 입력
             buyer_email: "",
             buyer_name: "",
             buyer_tel: "",
@@ -596,7 +599,7 @@ export default {
               try {
                 await axios
                   .post(
-                    "reservation/post",
+                    `${proxy}reservation/post`,
                     {
                       impUid: rsp.imp_uid,
                       prepayUid: rsp.merchant_uid,
@@ -604,7 +607,7 @@ export default {
                       companyId: cid.value,
                       spaceId: resInfos.value.spaceId,
                       mileage: mileage.value,
-                      memberId: localStorage.getItem("memberId"),
+                      memberId: store.state.memberId,
                       payStatus: "003",
                       prepay: "001",
                       startDate: startingDay.value + " " + startSelected.value,
@@ -612,7 +615,7 @@ export default {
                     },
                     {
                       headers: {
-                        Authorization: localStorage.getItem("access_token"),
+                        Authorization: store.state.accessToken,
                       },
                     }
                   )
@@ -631,12 +634,12 @@ export default {
                   error.response.status >= 400
                 ) {
                   alert("입력을 다시 확인해주세요.");
-                  window.location.reload(true);
+                  router.go();
                 } else if (error.response.status >= 500) {
                   alert(
                     "일시적인 서버장애 오류입니다 나중에 다시 확인해주세요"
                   );
-                  window.location.reload(true);
+                  router.go();
                 }
               }
             }
@@ -650,7 +653,7 @@ export default {
       if (
         !resName.value ||
         !total.value ||
-        !parseInt(localStorage.getItem("memberId")) ||
+        !store.state.memberId ||
         !startSelected.value ||
         !endSelected.value ||
         !payWays.pre ||
@@ -664,7 +667,7 @@ export default {
         window.location.reload(true);
       } else {
         try {
-          await axios.post("reservation/check", {
+          await axios.post(`${proxy}reservation/check`, {
             spaceId: resInfos.value.spaceId,
             startDate: startingDay.value + " " + startSelected.value,
             endDate: startingDay.value + " " + endSelected.value,
@@ -683,7 +686,7 @@ export default {
             merchant_uid: resInfos.value.merchant_uid, // 상점에서 관리하는 주문 번호
             name: resInfos.value.spaceName,
             amount: total.value, // 빌링키 발급과 함께 40원 결제승인을 시도합니다. price의 20%만 계산해서 넣는다. //후결제인 경우, 0으로 넣는다.
-            customer_uid: localStorage.getItem("memberId"), // 필수 입력
+            customer_uid: store.state.memberId, // 필수 입력
             buyer_email: "",
             buyer_name: "",
             buyer_tel: "",
@@ -691,13 +694,13 @@ export default {
           async function (rsp) {
             if (rsp.success) {
               try {
-                axios
+                await axios
                   .post(
-                    "reservation/post",
+                    `${proxy}reservation/post`,
                     {
                       impUid: rsp.imp_uid,
                       prepayUid: rsp.merchant_uid,
-                      memberId: parseInt(localStorage.getItem("memberId")),
+                      memberId: store.state.memberId,
                       reservationName: resName.value,
                       companyId: cid.value,
                       price: total.value,
@@ -709,7 +712,7 @@ export default {
                     },
                     {
                       headers: {
-                        Authorization: localStorage.getItem("access_token"),
+                        Authorization: store.state.accessToken,
                       },
                     }
                   )
@@ -984,7 +987,7 @@ export default {
       if (
         !resName.value ||
         !total.value ||
-        !parseInt(localStorage.getItem("memberId")) ||
+        !store.state.memberId ||
         !startingDay.value ||
         !endingDay.value ||
         !payWays.nPre ||
@@ -998,7 +1001,7 @@ export default {
         window.location.reload(true);
       } else {
         try {
-          await axios.post("reservation/check", {
+          await axios.post(`${proxy}reservation/check`, {
             spaceId: resInfos.value.spaceId,
             startDate: startingDay.value + " " + "00:00",
             endDate: endingDay.value + " " + "23:59",
@@ -1017,7 +1020,7 @@ export default {
             merchant_uid: resInfos.value.merchant_uid, // 상점에서 관리하는 주문 번호
             name: resInfos.value.spaceName,
             amount: 0, // 빌링키 발급과 함께 40원 결제승인을 시도합니다. price의 20%만 계산해서 넣는다. //후결제인 경우, 0으로 넣는다.
-            customer_uid: localStorage.getItem("memberId"), // 필수 입력
+            customer_uid: store.state.memberId, // 필수 입력
             buyer_email: "",
             buyer_name: "",
             buyer_tel: "",
@@ -1025,14 +1028,14 @@ export default {
           async function (rsp) {
             if (rsp.success) {
               try {
-                axios
+                await axios
                   .post(
-                    "reservation/post",
+                    `${proxy}reservation/post`,
                     {
                       impUid: rsp.imp_uid,
                       reservationName: resName.value,
                       prepayUid: rsp.merchant_uid,
-                      memberId: parseInt(localStorage.getItem("memberId")),
+                      memberId: store.state.memberId,
                       companyId: cid.value,
                       price: total.value,
                       prepay: "002",
@@ -1043,7 +1046,7 @@ export default {
                     },
                     {
                       headers: {
-                        Authorization: localStorage.getItem("access_token"),
+                        Authorization: store.state.accessToken,
                       },
                     }
                   )

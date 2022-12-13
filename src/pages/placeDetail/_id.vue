@@ -269,6 +269,7 @@ import { useRoute, useRouter } from "vue-router";
 import axios from "@/axios";
 import { ref } from "vue";
 import { useStore } from "vuex";
+const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
 
 export default {
   components: {
@@ -327,9 +328,9 @@ export default {
       loading.value = true;
       try {
         await axios
-          .get(`company/details/${id.value}`, {
+          .get(`${proxy}company/details/${id.value}`, {
             headers: {
-              Authorization: localStorage.getItem("access_token"),
+              Authorization: store.state.accessToken,
             },
           })
           .then((res) => {
@@ -342,19 +343,18 @@ export default {
             mapOption.value.location = details.value.location;
             console.log(details.value);
             axios
-              .get(`review/total/${companyId.value}?page=1`, {
+              .get(`${proxy}review/total/${companyId.value}?page=1`, {
                 headers: {
-                  Authorization: localStorage.getItem("access_token"),
+                  Authorization: store.state.accessToken,
                 },
               })
               .then((res) => {
                 reviews.value = { ...res.data };
-                console.log(reviews.value);
               });
             axios
-              .get(`inquiry/total/${companyId.value}`, {
+              .get(`${proxy}inquiry/total/${companyId.value}`, {
                 headers: {
-                  Authorization: localStorage.getItem("access_token"),
+                  Authorization: store.state.accessToken,
                 },
               })
               .then((res) => {
@@ -362,8 +362,6 @@ export default {
                 for (let i = 0; i < qnas.value.list.length; i++) {
                   qnas.value.list[i].showMyAnswer = false;
                 }
-                console.log(qnas.value.list);
-                console.log(mapOption.value);
               });
           });
       } catch (error) {
@@ -428,23 +426,20 @@ export default {
     //관심장소
     const changeClick = async (id) => {
       await axios
-        .post(`company/like/${id}`, {
+        .post(`${proxy}company/like/${id}`, {
           headers: {
-            Authorization: localStorage.getItem("access_token"),
+            Authorization: store.state.accessToken,
           },
         })
-        .then(() => {
-          router.go();
+        .then((res) => {
+          console.log(res);
         });
-      console.log(details.value.companyLike);
     };
 
     //이용안내 모달 띄우는 함수
     const useInfo = (info) => {
       useInfoModal.value = !useInfoModal.value;
       useInfoString.value = info;
-      console.log(info);
-      console.log(useInfoModal.value);
     };
 
     //이용안내 모달 닫는 함수
@@ -463,13 +458,12 @@ export default {
       //답변 열고 다른 답변을 열면 닫는 함수
       for (let i = 0; i < qnas.value.list.length; i++) {
         if (qnas.value.list[i].inquiryId != find.inquiryId) {
-          console.log(qnas.value.list[i]);
-          console.log(qnas.value.list[i].showMyAnswer);
           qnas.value.list[i].showMyAnswer = false;
         }
       }
     };
 
+    //예약 페이지로 가는 함수
     const moveToPage = (id) => {
       router.push({
         name: "Reservation",
@@ -479,8 +473,9 @@ export default {
         },
       });
     };
+
+    //Qna 오프캔버스 띄울 함수
     const uploadQna = () => {
-      console.log(1);
       showWrite.value = !showWrite.value;
     };
 
@@ -573,7 +568,6 @@ export default {
 <style scoped>
 .entireForm {
   height: auto;
-  min-height: 150vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -582,12 +576,8 @@ export default {
 }
 .picsAndIntro {
   width: 100%;
-  /* left: 10%; */
-  /* float: left; */
-  /* position: absolute; */
   flex: 1;
   padding: 0%10%0%10%;
-  /* text-align: center; */
   height: 50vh;
 }
 .intplace {
@@ -617,7 +607,7 @@ export default {
   float: left;
   position: absolute;
   top: 40%;
-  width: 20vw;
+  width: calc(fit-content+2%);
   height: 20vh;
   padding-top: 1.5%;
   color: white;
@@ -631,28 +621,25 @@ export default {
 }
 .detailNavDiv {
   height: fit-content;
-  /* top: 120%; */
-  /* left: 7%; */
   float: left;
-  /* position: absolute; */
   flex: 1;
 }
 .detailNav {
   width: 100%;
   height: inherit;
+  padding: 3%;
 }
 .form {
   width: 100%;
-  /* height: 700px; */
   margin-top: 20px;
   text-align: center;
 }
 
 .navContainer {
   width: 900px;
-  height: -moz-fit-content;
   height: fit-content;
   padding-left: 7%;
+  padding-bottom: 5%;
 }
 .img {
   width: 70%;
@@ -670,10 +657,13 @@ export default {
   width: 5vw;
   height: 10vh;
   margin: 1.5%;
+  text-align: center;
+}
+.list:hover {
 }
 .lineIntro {
   text-align: left;
-  font-size: 3vh;
+  font-size: 5vh;
   margin-bottom: 0;
 }
 .shortInto {
@@ -750,9 +740,9 @@ iframe {
 }
 .nav {
   display: inline-block;
-  font-size: 25px;
-  margin-right: 50px;
-  margin-left: 50px;
+  font-size: 1.5em;
+  margin-right: 5%;
+  margin-left: 5%;
   justify-content: space-evenly;
 }
 
@@ -764,9 +754,11 @@ iframe {
   font-size: 1.3rem;
 }
 .rulesClicked {
-  margin-top: 20px;
-  font-size: 30px;
+  margin-top: 5%;
+  font-size: 1.4em;
+  padding-left: 6%;
 }
+
 .reviews {
   width: 90%;
   margin-top: 5%;

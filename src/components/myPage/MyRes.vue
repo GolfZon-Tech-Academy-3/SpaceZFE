@@ -1,4 +1,13 @@
 <template>
+    <ErrorHandle
+    :show="!!errorContent || !!errorContetn1"
+    title="Error"
+    @home="errorHome"
+    @refresh="errorRef"
+  >
+    <p>{{ errorContent }}</p>
+  </ErrorHandle>
+  <Spinner v-if="loading" />
   <div class="form">
     <h1 style="margin-bottom: 2%; font-weight: 700">나의 예약 정보</h1>
     <div class="outer">
@@ -191,20 +200,29 @@
 <script>
 import { ref } from "vue";
 import axios from "@/axios";
+import {useRouter} from 'vue-router'
+import {useStore } from  'vuex'
+
+import ErrorHandle from "@/components/UI/BaseDialog.vue";
+import Spinner from "@/components/UI/Spinner.vue";
 import ReviewWrite from '@/components/myPage/ReviewWrite.vue'
 import MyReview from '@/components/myPage/MyReview.vue'
-import {useRouter} from 'vue-router'
+
+const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
 
 export default {
     components:{
         ReviewWrite,
         MyReview,
+        ErrorHandle,
+        Spinner
     },
   setup() {
     const resStatus = ref(false);
     const resRecord = ref(true);
     const reviewShow = ref(false);
     const router = useRouter()
+    const store = useStore()
 
     const editOrDel = ref({})
     const writePack = ref({
@@ -218,32 +236,79 @@ export default {
     const resDone = ref([])
     const myReview = ref(false)
 
+    const errorContent = ref(null);
+    const errorContetn1 = ref(null);
+    const loading = ref(false);
+
     let find
 
     //예약 이력 띄우는 함수
     const getResStatuses = async ()=>{
-      const res = await axios.get(`mypage/reservation/proceeding/${localStorage.getItem('memberId')}`,{
-        headers: { Authorization: localStorage.getItem("access_token") },
+      loading.value = true
+      try {
+        await axios.get(`${proxy}mypage/reservation/proceeding/${store.state.memberId}`,{
+        headers: { Authorization: store.state.accessToken },
+      }).then((res)=>{
+           for(let i = 0; i<res.data.length;i++){
+               resStatuses.value.push(res.data[i])
+            }
       })
-      for(let i = 0; i<res.data.length;i++){
-        resStatuses.value.push(res.data[i])
+      } catch (error) {
+        if (error.response.status < 500 && error.response.status >= 400) {
+            alert("입력을 다시 확인해주세요.");
+            router.go()
+          } else if (error.response.status >= 500) {
+            errorContent.value =
+              "일시적인 서버장애 오류입니다 나중에 다시 확인해주세요";
+          }
       }
-      console.log(resStatuses.value)
+      loading.value = false
     }
     getResStatuses()
 
     //예약 현황 띄우는 함수
     const getResDones = async()=>{
-      const res = await axios.get(`mypage/reservation/total/${localStorage.getItem('memberId')}`,{
-        headers: { Authorization: localStorage.getItem("access_token") },
+      try {
+        await axios.get(`${proxy}mypage/reservation/total/${store.state.memberId}`,{
+        headers: { Authorization: store.state.accessToken },
+      }).then((res)=>{
+          for(let i = 0;i<res.data.length;i++){
+                  resDone.value.push(res.data[i])
+                  resDone.value[i].reviewToggle=false
+                }
       })
-      for(let i = 0;i<res.data.length;i++){
-        resDone.value.push(res.data[i])
-        resDone.value[i].reviewToggle=false
+      } catch (error) {
+         if (error.response.status < 500 && error.response.status >= 400) {
+            alert("입력을 다시 확인해주세요.");
+            window.location.reload(true);
+          } else if (error.response.status >= 500) {
+            errorContetn1.value =
+              "일시적인 서버장애 오류입니다 나중에 다시 확인해주세요";
+          }
       }
-      console.log(resDone.value)
+      loading.value = false
     }
     getResDones()
+
+    //get에러시 홈페이지로
+     const errorHome = () => {
+      errorContent.value = null;
+      router.push({
+        name: "Home",
+      });
+    };
+
+    //get에러시 계속 호출
+    const errorRef = () => {
+      if(errorContent.value){
+        errorContent.value = null;
+        getResStatuses();
+      }
+      else if(errorContetn1.vaue){
+        errorContetn1.value = null;
+        getResDones()
+      }
+    };
 
     //예약 이력 보이는 함수
     const showResRecord = () => {
@@ -262,13 +327,13 @@ export default {
       if(con==true){
         let url
         if(resId.type=='오피스'){
-          url = 'reservation/office-cancel/'
+          url = `${proxy}reservation/office-cancel/`
         } else{
-          url='reservation/desk-cancel/'
+          url=`${proxy}reservation/desk-cancel/`
         }
         try {
         await axios.put(url+resId.reservationId,{
-          headers: { Authorization: localStorage.getItem("access_token") },
+          headers: { Authorization: store.state.accessToken },
         }).then(res=>{
           if(res.status < 300 && res.status >= 200){
             alert('취소가 완료되었습니다')
@@ -278,12 +343,13 @@ export default {
         } catch (error) {
           if (error.response.status < 500 && error.response.status >= 400) {
             alert("다시 확인해주세요.");
+            router.go()
           } else if (error.response.status >= 500) {
             alert("일시적인 서버장애 오류입니다 나중에 다시 확인해주세요");
           }
         }
       }else{
-        
+        return
       }
     }
 
@@ -349,6 +415,11 @@ export default {
       writePack,
       editOrDel,
       showDelete,
+      loading,
+errorHome,
+errorRef,
+// errorContent,
+// errorContetn1,
       };
   },
 };
