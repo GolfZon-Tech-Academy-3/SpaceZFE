@@ -1,4 +1,13 @@
 <template>
+  <ErrorHandle
+    :show="!!errorContent"
+    title="Error"
+    @home="errorHome"
+    @refresh="errorRef"
+  >
+    <p>{{ errorContent }}</p>
+  </ErrorHandle>
+  <Spinner v-if="loading" />
   <div class="form">
     <h1 style="margin-bottom: 2%; font-weight: 700">마일리지 조회</h1>
     <div style="margin-bottom: 2.5%">
@@ -155,7 +164,16 @@
 <script>
 import { ref } from "vue";
 import axios from "axios";
+import { useStore } from "vuex";
+import ErrorHandle from "@/components/UI/BaseDialog.vue";
+import Spinner from "@/components/UI/Spinner.vue";
+const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
+
 export default {
+  components: {
+    ErrorHandle,
+    Spinner,
+  },
   setup() {
     const allClick = ref(false);
     const earnedClick = ref(true);
@@ -175,38 +193,65 @@ export default {
     const refundMile = ref([]);
 
     const mileages = ref([]);
+    const store = useStore();
+
+    const errorContent = ref(null);
+    const loading = ref(false);
 
     const getMileInfo = async () => {
-      const res = await axios.get("mypage/mileage?type=" + "전체", {
-        headers: { Authorization: localStorage.getItem("access_token") },
-      });
-      totalMileage.value = res.data.totalScore;
-      totalGet.value = res.data.rewardScore;
-      totalCancel.value = res.data.canceledScore;
-      totalUse.value = res.data.usedScore;
-      totalRefund.value = res.data.refundScore;
-      // console.log(res.data);
-      for (let i = 0; i < res.data.mileages.length; i++) {
-        mileages.value.push(res.data.mileages[i]);
+      loading.value = true;
+      try {
+        await axios
+          .get(`${proxy}mypage/mileage?type=` + "전체", {
+            headers: { Authorization: store.state.accessToken },
+          })
+          .then((res) => {
+            totalMileage.value = res.data.totalScore;
+            totalGet.value = res.data.rewardScore;
+            totalCancel.value = res.data.canceledScore;
+            totalUse.value = res.data.usedScore;
+            totalRefund.value = res.data.refundScore;
+            for (let i = 0; i < res.data.mileages.length; i++) {
+              mileages.value.push(res.data.mileages[i]);
+            }
+            //마일 상태에 따라 분류 및 마일 상태에 따른 합 계산
+            for (let i = 0; i < mileages.value.length; i++) {
+              if (mileages.value[i].status === "적립") {
+                getMile.value.push(mileages.value[i]);
+                totalGet.value = totalGet.value + mileages.value[i].score;
+              } else if (mileages.value[i].status === "사용") {
+                useMile.value.push(mileages.value[i]);
+                totalRefund.value = totalRefund.value + mileages.value[i].score;
+              } else if (mileages.value[i].status === "취소") {
+                cancelMile.value.push(mileages.value[i]);
+                totalUse.value = totalUse.value + mileages.value[i].score;
+              } else if (mileages.value[i].status === "환급") {
+                refundMile.value.push(mileages.value[i]);
+                totalCancel.value = totalCancel.value + mileages.value[i].score;
+              }
+            }
+          });
+      } catch (error) {
+        errorContent.value = `오류가 발생했습니다 홈페이지로 이동하시거나
+          버튼을 눌러 응답을 받을때까지 시도해 보십시오`;
       }
-      //마일 상태에 따라 분류 및 마일 상태에 따른 합 계산
-      for (let i = 0; i < mileages.value.length; i++) {
-        if (mileages.value[i].status === "적립") {
-          getMile.value.push(mileages.value[i]);
-          totalGet.value = totalGet.value + mileages.value[i].score;
-        } else if (mileages.value[i].status === "사용") {
-          useMile.value.push(mileages.value[i]);
-          totalRefund.value = totalRefund.value + mileages.value[i].score;
-        } else if (mileages.value[i].status === "취소") {
-          cancelMile.value.push(mileages.value[i]);
-          totalUse.value = totalUse.value + mileages.value[i].score;
-        } else if (mileages.value[i].status === "환급") {
-          refundMile.value.push(mileages.value[i]);
-          totalCancel.value = totalCancel.value + mileages.value[i].score;
-        }
-      }
+      loading.value = false;
     };
     getMileInfo();
+
+    //get에러시 홈페이지로
+    const errorHome = () => {
+      errorContent.value = null;
+      router.push({
+        name: "Home",
+      });
+    };
+
+    //get에러시 계속 호출
+    const errorRef = () => {
+      errorContent.value = null;
+      getMileInfo();
+    };
 
     //버튼 바꿔주는 함수들
     const all = () => {
@@ -266,6 +311,10 @@ export default {
       totalRefund,
       totalUse,
       totalCancel,
+      errorContent,
+      loading,
+      errorHome,
+      errorRef,
     };
   },
 };
@@ -274,10 +323,9 @@ export default {
 <style scoped>
 .form {
   width: 100%;
-  float: right;
   text-align: center;
-  padding-right: 10%;
   padding-bottom: 2%;
+  margin-left: 2%;
 }
 .btn {
   font-family: "Inter";

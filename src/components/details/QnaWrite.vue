@@ -34,6 +34,8 @@
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import axios from "axios";
+
+const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
 export default {
   props: {
     qnaAnswer: {
@@ -47,23 +49,21 @@ export default {
     const cid = ref(props.qnaAnswer.cid);
     const cName = ref(props.qnaAnswer.cName);
 
-    console.log(cid.value);
-
     const qnaPost = async (e) => {
       if (questions.value.length < 5) {
-        alert("리뷰는 최소 5글자 이상 써주셔야합니다");
+        alert("Q&A는 최소 5글자 이상 써주셔야합니다");
         questions.value = "";
       } else {
         try {
           await axios
             .post(
-              `inquiry/post/${cid.value}`,
+              `${proxy}inquiry/post/${cid.value}`,
               {
                 inquiries: questions.value,
               },
               {
                 headers: {
-                  Authorization: localStorage.getItem("access_token"),
+                  Authorization: store.state.accessToken,
                 },
               }
             )

@@ -12,6 +12,8 @@ export default createStore({
     authority: null,
     profile: null,
     accessToken: null,
+    memberEmail: null,
+    memberPw: null,
   },
   mutations: {
     SET_MEMBER_ID(state, payload) {
@@ -19,6 +21,12 @@ export default createStore({
     },
     SET_COMPANY_ID(state, payload) {
       state.companyId = payload;
+    },
+    SET_MEMBER_MAIL(state, payload) {
+      state.memberEmail = payload;
+    },
+    SET_MEMBER_PW(state, payload) {
+      state.memberPw = payload;
     },
     SET_AUTHORITY(state, payload) {
       state.authority = payload;
@@ -46,6 +54,12 @@ export default createStore({
     setMemberId({ commit }, memberId) {
       commit("SET_MEMBER_ID", memberId);
     },
+    setMemberEmail({ commit }, memberEmail) {
+      commit("SET_MEMBER_MAIL", memberEmail);
+    },
+    setMemberPw({ commit }, memberPw) {
+      commit("SET_MEMBER_PW", memberPw);
+    },
     setCompanyId({ commit }, companyId) {
       commit("SET_COMPANY_ID", companyId);
     },
@@ -71,6 +85,15 @@ export default createStore({
       commit("UPDATE_SEARCH_WORD", newWord);
     },
     initToken({ commit }) {
+      commit("SET_MEMBER_ID", null);
+      commit("SET_COMPANY_ID", null);
+      commit("SET_AUTHORITY", null);
+      commit("SET_PROFILE", null);
+      commit("SET_ACCESS_TOKEN", null);
+      commit("SET_MEMBER_MAIL", null);
+      commit("SET_MEMBER_PW", null);
+    },
+    refreshToken({ commit }) {
       commit("SET_MEMBER_ID", null);
       commit("SET_COMPANY_ID", null);
       commit("SET_AUTHORITY", null);
