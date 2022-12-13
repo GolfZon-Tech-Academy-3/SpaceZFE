@@ -41,7 +41,7 @@ export default {
         const deleteAnswer = async (inquiryId) => {
             if(confirm("답변을 삭제하시겠습니까?")) {
                 try {
-                    await axios.put(`${proxy}/inquiry/answer/delete/${inquiryId}`,
+                    await axios.put(`${proxy}/inquiry/answer/delete/${inquiryId}`, null,
                         {
                             headers: {
                                 Authorization: store.state.accessToken,

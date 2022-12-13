@@ -85,7 +85,7 @@ export default {
         const approve = async (id) => {
             if(confirm('멤버 회원을 마스터 회원으로 변경하시겠습니까?')) {
                 try {
-                    await axios.put(`${proxy}/master/approve/${id}`, {
+                    await axios.put(`${proxy}/master/approve/${id}`, null, {
                         headers: {
                             Authorization: store.state.accessToken,
                         }
@@ -93,6 +93,7 @@ export default {
                     alert('변경되었습니다');
                     window.location.reload();
                 } catch (error) {
+                    console.log(error);
                     alert('변경에 실패하였습니다');
                 }
             }
@@ -101,7 +102,7 @@ export default {
         const disapprove = async (id) => {
             if(confirm('마스터 회원을 멤버 회원으로 변경하시겠습니까?')) {
                 try {
-                    await axios.put(`${proxy}/master/disapprove/${id}`, {
+                    await axios.put(`${proxy}/master/disapprove/${id}`, null, {
                         headers: {
                             Authorization: store.state.accessToken,
                         }

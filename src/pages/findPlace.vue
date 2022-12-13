@@ -33,7 +33,7 @@
                     <span style="display:inline-block;width: 100px; height: 100%;margin-left:1%;">
                         <div style="color: #9E9E9E; font-size: 1em;">시간</div>
                         <select id="timeSelector" @change="changeTime($event)" :value="searchTime">
-                            <option value="none" selected>선택안함</option>
+                            <option value='null' selected>선택안함</option>
                             <option v-for="val in 23" :key="val">{{val}} 시</option>
                         </select>
                     </span>
@@ -225,7 +225,6 @@ export default {
                         }
                     })
                         .then((res) => {
-                            console.log(res.data);
                             resultAllNum.value = res.data.totalSize;
                             pageNum.value = res.data.totalPage;
                             if(res.data.company.length === 0) {
@@ -250,7 +249,7 @@ export default {
         }
         
         const changeTime = (event) => {
-            if(event.target.value === 'null') {
+            if(event.target.value == 'null') {
                 store.dispatch('updateTime', null);
             } else {
                 store.dispatch('updateTime', event.target.value);
@@ -323,10 +322,8 @@ export default {
                     }
                 }).then(() => {
                     if(e.target.style["fontVariationSettings"] === "\"FILL\" 0") {//하트가 비어있을때
-                        console.log('empty');
                         e.target.style["fontVariationSettings"] = "\"FILL\" 1";
                     } else {//하트가 채워졌을 때
-                        console.log('fill');
                         e.target.style["fontVariationSettings"] = "\"FILL\" 0";
                     }
                 })
