@@ -141,7 +141,7 @@ export default {
         const approve = async (id) => {
             if(confirm('매니저로 승인하시겠습니까?')) {
                 try {
-                    await axios.put(`${proxy}/company/approve/${id}`, {
+                    await axios.put(`${proxy}/company/approve/${id}`, null, {
                         headers: {
                             Authorization: store.state.accessToken
                         }
@@ -158,7 +158,7 @@ export default {
         const decline = async (id) => {
             if(confirm('매니저 승인을 거절하시겠습니까?')) {
                 try {
-                    await axios.put(`${proxy}/company/disapprove/${id}`, {
+                    await axios.put(`${proxy}/company/disapprove/${id}`,null, {
                         headers: {
                             Authorization: store.state.accessToken
                         }
