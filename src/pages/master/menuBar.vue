@@ -14,7 +14,7 @@
         <div style="text-decoration: none; color: white">계정 관리</div>
       </div>
       <div
-        :class="[link === '/master/masterChat' ? 'menuSelected' : 'menu']"
+        :class="[link === '/master/masterchat' ? 'menuSelected' : 'menu']"
         @click="masterChat"
       >
         <div style="text-decoration: none; color: white">마스터 문의</div>

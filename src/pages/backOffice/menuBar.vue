@@ -30,7 +30,7 @@
         <div style="text-decoration: none; color: white">문의</div>
       </div>
       <div
-        :class="[link === '/backoffice/managerChat' ? 'menuSelected' : 'menu']"
+        :class="[link === '/backoffice/managerchat' ? 'menuSelected' : 'menu']"
         @click="moveTo('ManagerChat')"
       >
         <div style="text-decoration: none; color: white">마스터 문의</div>

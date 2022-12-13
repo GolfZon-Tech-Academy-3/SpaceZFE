@@ -149,7 +149,7 @@ const router = createRouter({
       beforeEnter: beforeBackoffice(),
     },
     {
-      path: "/backoffice/managerChat",
+      path: "/backoffice/managerchat",
       name: "ManagerChat",
       component: ManagerChat,
       beforeEnter: beforeBackoffice(),
@@ -167,7 +167,7 @@ const router = createRouter({
       beforeEnter: beforeMaster(),
     },
     {
-      path: "/master/masterChat",
+      path: "/master/masterchat",
       name: "MasterChat",
       component: MasterChat,
       beforeEnter: beforeMaster(),
