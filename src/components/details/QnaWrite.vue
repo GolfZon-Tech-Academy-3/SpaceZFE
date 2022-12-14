@@ -35,7 +35,6 @@ import { useRouter } from "vue-router";
 import { ref } from "vue";
 import axios from "axios";
 
-const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
 export default {
   props: {
     qnaAnswer: {
@@ -44,6 +43,7 @@ export default {
     },
   },
   setup(props) {
+    const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
     const router = useRouter();
     const questions = ref("");
     const cid = ref(props.qnaAnswer.cid);
@@ -57,7 +57,7 @@ export default {
         try {
           await axios
             .post(
-              `${proxy}inquiry/post/${cid.value}`,
+              `${proxy}/inquiry/post/${cid.value}`,
               {
                 inquiries: questions.value,
               },

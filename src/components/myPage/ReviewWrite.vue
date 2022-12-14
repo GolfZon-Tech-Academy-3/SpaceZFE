@@ -69,8 +69,6 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
-const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
-
 export default {
   props: {
     writePack: {
@@ -83,6 +81,7 @@ export default {
     },
   },
   setup(props, { emit }) {
+    const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
     const score = ref(0);
     const revContent = ref("");
     const ids = ref(props.writePack);
@@ -111,11 +110,13 @@ export default {
       if (revContent.value.length < 5) {
         alert("리뷰는 최소 5자 이상 써주세요!");
         revContent.value = "";
+      } else if (score.value == 0) {
+        alert("평점은 최소 1점이상 매겨주세요");
       } else {
         try {
           await axios
             .post(
-              `${proxy}review/post`,
+              `${proxy}/review/post`,
               {
                 spaceId: ids.value.spaceId,
                 companyId: ids.value.companyId,
@@ -148,11 +149,13 @@ export default {
       if (revContent.value === "") {
         alert("리뷰를 수정하고 수정버튼을 눌러주세요!");
         revContent.value = "";
+      } else if (score.value == 0) {
+        alert("평점은 최소 1점이상 매겨주세요");
       } else {
         try {
           await axios
             .put(
-              `${proxy}review/update`,
+              `${proxy}/review/update`,
               {
                 reviewId: edit.value.id,
                 content: revContent.value,

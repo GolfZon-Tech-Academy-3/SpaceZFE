@@ -44,7 +44,6 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
-const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
 export default {
   props: {
     reviewer: {
@@ -53,6 +52,7 @@ export default {
     },
   },
   setup(props, context) {
+    const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
     const router = useRouter();
     const store = useStore();
     const write = ref(false);
@@ -70,7 +70,7 @@ export default {
       if (con == true) {
         try {
           await axios
-            .delete(`${[proxy]}review/delete/${reviewId.value.reviewId}`, {
+            .delete(`${proxy}/review/delete/${reviewId.value.reviewId}`, {
               headers: { Authorization: store.state.accessToken },
             })
             .then((res) => {
@@ -82,8 +82,10 @@ export default {
         } catch (error) {
           if (error.response.status < 500 && error.response.status >= 400) {
             alert("삭제가 완료되지 않았습니다.");
+            router.go();
           } else if (error.response.status >= 500) {
             alert("일시적인 서버장애 오류입니다 나중에 다시 확인해주세요");
+            router.go();
           }
         }
       } else {

@@ -241,7 +241,7 @@ export default {
       } else {
         try {
           await axios
-            .put(`${proxy}member/profile`, formData, {
+            .put(`${proxy}/member/profile`, formData, {
               headers: {
                 Authorization: store.state.accessToken,
                 "Content-Type": "multipart/form-data",
@@ -257,31 +257,27 @@ export default {
                         password: store.state.memberPw,
                       })
                       .then((res) => {
-                        // store.dispatch("setMemberEmail", email.value);
-                        // store.dispatch("setMemberPw", pw.value);
-                        store.dispatch(
-                          "setMemberId",
-                          parseJwt(res.headers.authorization).MEMBER_ID
-                        );
-                        store.dispatch(
-                          "setAuthority",
-                          parseJwt(res.headers.authorization).AUTHORITY
-                        );
-                        store.dispatch(
-                          "setProfile",
-                          parseJwt(res.headers.authorization).IMAGE_NAME
-                        );
-                        store.dispatch(
-                          "setCompanyId",
-                          parseJwt(res.headers.authorization).COMPANY_ID
-                        );
-                        store.dispatch(
-                          "setAccessToken",
-                          res.headers.authorization
-                        );
-                      })
-                      .then((res1) => {
-                        if (res1.status < 300 && res1.status >= 200) {
+                        if (res.status < 300 && res.status >= 200) {
+                          store.dispatch(
+                            "setMemberId",
+                            parseJwt(res.headers.authorization).MEMBER_ID
+                          );
+                          store.dispatch(
+                            "setAuthority",
+                            parseJwt(res.headers.authorization).AUTHORITY
+                          );
+                          store.dispatch(
+                            "setProfile",
+                            parseJwt(res.headers.authorization).IMAGE_NAME
+                          );
+                          store.dispatch(
+                            "setCompanyId",
+                            parseJwt(res.headers.authorization).COMPANY_ID
+                          );
+                          store.dispatch(
+                            "setAccessToken",
+                            res.headers.authorization
+                          );
                           alert("프로필 변경이 성공하였습니다.");
                           router.go();
                         }
@@ -289,7 +285,7 @@ export default {
                   } catch (error) {
                     console.log(error);
                     alert("프로필 변경이 실패했습니다");
-                    // router.go();
+                    router.go();
                     return;
                   }
                 });

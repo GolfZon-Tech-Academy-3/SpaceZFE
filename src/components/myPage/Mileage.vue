@@ -167,7 +167,6 @@ import axios from "axios";
 import { useStore } from "vuex";
 import ErrorHandle from "@/components/UI/BaseDialog.vue";
 import Spinner from "@/components/UI/Spinner.vue";
-const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
 
 export default {
   components: {
@@ -175,6 +174,7 @@ export default {
     Spinner,
   },
   setup() {
+    const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
     const allClick = ref(false);
     const earnedClick = ref(true);
     const usedClick = ref(true);
@@ -202,7 +202,7 @@ export default {
       loading.value = true;
       try {
         await axios
-          .get(`${proxy}mypage/mileage?type=` + "전체", {
+          .get(`${proxy}/mypage/mileage?type=${"전체"}`, {
             headers: { Authorization: store.state.accessToken },
           })
           .then((res) => {

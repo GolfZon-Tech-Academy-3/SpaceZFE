@@ -208,7 +208,6 @@ import Spinner from "@/components/UI/Spinner.vue";
 import ReviewWrite from '@/components/myPage/ReviewWrite.vue'
 import MyReview from '@/components/myPage/MyReview.vue'
 
-const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
 
 export default {
     components:{
@@ -216,8 +215,9 @@ export default {
         MyReview,
         ErrorHandle,
         Spinner
-    },
-  setup() {
+      },
+setup() {
+    const proxy = window.location.hostname === "localhost" ? "" : "/proxy"; 
     const resStatus = ref(false);
     const resRecord = ref(true);
     const reviewShow = ref(false);
@@ -246,7 +246,7 @@ export default {
     const getResStatuses = async ()=>{
       loading.value = true
       try {
-        await axios.get(`${proxy}mypage/reservation/proceeding/${store.state.memberId}`,{
+        await axios.get(`${proxy}/mypage/reservation/proceeding/${store.state.memberId}`,{
         headers: { Authorization: store.state.accessToken },
       }).then((res)=>{
            for(let i = 0; i<res.data.length;i++){
@@ -269,7 +269,7 @@ export default {
     //예약 현황 띄우는 함수
     const getResDones = async()=>{
       try {
-        await axios.get(`${proxy}mypage/reservation/total/${store.state.memberId}`,{
+        await axios.get(`${proxy}/mypage/reservation/total/${store.state.memberId}`,{
         headers: { Authorization: store.state.accessToken },
       }).then((res)=>{
           for(let i = 0;i<res.data.length;i++){
@@ -327,9 +327,9 @@ export default {
       if(con==true){
         let url
         if(resId.type=='오피스'){
-          url = `${proxy}reservation/office-cancel/`
+          url = `${proxy}/reservation/office-cancel/`
         } else{
-          url=`${proxy}reservation/desk-cancel/`
+          url=`${proxy}/reservation/desk-cancel/`
         }
         try {
         await axios.put(url+resId.reservationId,{
@@ -346,6 +346,7 @@ export default {
             router.go()
           } else if (error.response.status >= 500) {
             alert("일시적인 서버장애 오류입니다 나중에 다시 확인해주세요");
+            router.go()
           }
         }
       }else{

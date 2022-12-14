@@ -84,14 +84,13 @@ import { useStore } from "vuex";
 import ErrorHandle from "@/components/UI/BaseDialog.vue";
 import QnaAnswers from "@/components/myPage/QnaAnswers.vue";
 
-const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
-
 export default {
   components: {
     QnaAnswers,
     ErrorHandle,
   },
   setup() {
+    const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
     const qnaAnswer = ref({});
     const qnas = ref([]);
     const errorContent = ref(null);
@@ -103,7 +102,7 @@ export default {
     const getQnas = async () => {
       try {
         await axios
-          .get(`${proxy}mypage/inquiry/total`, {
+          .get(`${proxy}/mypage/inquiry/total`, {
             headers: {
               Authorization: store.state.accessToken,
             },
