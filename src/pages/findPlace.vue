@@ -429,8 +429,9 @@ export default {
 }
 .search {
     border: 1px #9E9E9E solid;
-    padding: 3% 5%;
+    padding: 0.6em 1em;
     border-radius: 2em;
+    width: 11em;
 }
 .search:focus {
     outline : none;
