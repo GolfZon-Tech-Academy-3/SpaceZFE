@@ -225,7 +225,6 @@ import ErrorHandle from "@/components/UI/BaseDialog.vue";
 import Spinner from "@/components/UI/Spinner.vue";
 
 import _ from "lodash";
-const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
 
 export default {
   components: {
@@ -234,6 +233,7 @@ export default {
   },
   name: "Reservation",
   setup() {
+    const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
     const route = useRoute();
     const router = useRouter();
     const sid = ref(route.query.sid);
@@ -321,7 +321,7 @@ export default {
       loading.value = true;
       try {
         await axios
-          .get(`${proxy}reservation/details/${sid.value}`, {
+          .get(`${proxy}/reservation/details/${sid.value}`, {
             headers: {
               Authorization: store.state.accessToken,
             },
@@ -566,10 +566,10 @@ export default {
         // resMessage.value != "인증성공" (휴대폰 인증이 유료인 관계로 제한)
       ) {
         alert("입력을 다시 확인해주세요.");
-        window.location.reload(true);
+        router.go();
       } else {
         try {
-          await axios.post(`${proxy}reservation/check`, {
+          await axios.post(`${proxy}/reservation/check`, {
             spaceId: resInfos.value.spaceId,
             startDate: startingDay.value + " " + startSelected.value,
             endDate: startingDay.value + " " + endSelected.value,
@@ -599,7 +599,7 @@ export default {
               try {
                 await axios
                   .post(
-                    `${proxy}reservation/post`,
+                    `${proxy}/reservation/post`,
                     {
                       impUid: rsp.imp_uid,
                       prepayUid: rsp.merchant_uid,
@@ -664,10 +664,9 @@ export default {
         // resMessage.value != "인증성공" (휴대폰 인증이 유료인 관계로 제한)
       ) {
         alert("입력을 다시 확인해주세요.");
-        window.location.reload(true);
       } else {
         try {
-          await axios.post(`${proxy}reservation/check`, {
+          await axios.post(`${proxy}/reservation/check`, {
             spaceId: resInfos.value.spaceId,
             startDate: startingDay.value + " " + startSelected.value,
             endDate: startingDay.value + " " + endSelected.value,
@@ -696,7 +695,7 @@ export default {
               try {
                 await axios
                   .post(
-                    `${proxy}reservation/post`,
+                    `${proxy}/reservation/post`,
                     {
                       impUid: rsp.imp_uid,
                       prepayUid: rsp.merchant_uid,
@@ -731,12 +730,12 @@ export default {
                   error.response.status >= 400
                 ) {
                   alert("입력을 다시 확인해주세요.");
-                  window.location.reload(true);
+                  router.go();
                 } else if (error.response.status >= 500) {
                   alert(
                     "일시적인 서버장애 오류입니다 나중에 다시 확인해주세요"
                   );
-                  window.location.reload(true);
+                  router.go();
                 }
               }
             }
@@ -1001,7 +1000,7 @@ export default {
         window.location.reload(true);
       } else {
         try {
-          await axios.post(`${proxy}reservation/check`, {
+          await axios.post(`${proxy}/reservation/check`, {
             spaceId: resInfos.value.spaceId,
             startDate: startingDay.value + " " + "00:00",
             endDate: endingDay.value + " " + "23:59",
@@ -1030,7 +1029,7 @@ export default {
               try {
                 await axios
                   .post(
-                    `${proxy}reservation/post`,
+                    `${proxy}/reservation/post`,
                     {
                       impUid: rsp.imp_uid,
                       reservationName: resName.value,
@@ -1064,12 +1063,12 @@ export default {
                   error.response.status >= 400
                 ) {
                   alert("입력을 다시 확인해주세요.");
-                  window.location.reload(true);
+                  router.go();
                 } else if (error.response.status >= 500) {
                   alert(
                     "일시적인 서버장애 오류입니다 나중에 다시 확인해주세요"
                   );
-                  window.location.reload(true);
+                  router.go();
                 }
               }
             }

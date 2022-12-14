@@ -269,7 +269,6 @@ import { useRoute, useRouter } from "vue-router";
 import axios from "@/axios";
 import { ref } from "vue";
 import { useStore } from "vuex";
-const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
 
 export default {
   components: {
@@ -283,6 +282,7 @@ export default {
   },
 
   setup() {
+    const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
     const store = useStore();
     const router = useRouter();
     const route = useRoute();
@@ -328,7 +328,7 @@ export default {
       loading.value = true;
       try {
         await axios
-          .get(`${proxy}company/details/${id.value}`, {
+          .get(`${proxy}/company/details/${id.value}`, {
             headers: {
               Authorization: store.state.accessToken,
             },
@@ -343,7 +343,7 @@ export default {
             mapOption.value.location = details.value.location;
             console.log(details.value);
             axios
-              .get(`${proxy}review/total/${companyId.value}?page=1`, {
+              .get(`${proxy}/review/total/${companyId.value}?page=1`, {
                 headers: {
                   Authorization: store.state.accessToken,
                 },
@@ -352,7 +352,7 @@ export default {
                 reviews.value = { ...res.data };
               });
             axios
-              .get(`${proxy}inquiry/total/${companyId.value}`, {
+              .get(`${proxy}/inquiry/total/${companyId.value}`, {
                 headers: {
                   Authorization: store.state.accessToken,
                 },
@@ -426,7 +426,7 @@ export default {
     //관심장소
     const changeClick = async (id) => {
       await axios
-        .post(`${proxy}company/like/${id}`, {
+        .post(`${proxy}/company/like/${id}`, {
           headers: {
             Authorization: store.state.accessToken,
           },
