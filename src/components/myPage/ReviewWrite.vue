@@ -46,6 +46,7 @@
         <textarea
           v-model="revContent"
           name="reviewContent"
+          :placeholder="edit.edit == 'edit' ? edit.id.content : ''"
           id="text"
           cols="10"
           rows="10"
@@ -64,7 +65,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -82,17 +83,19 @@ export default {
   },
   setup(props, { emit }) {
     const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
-    const score = ref(0);
+
     const revContent = ref("");
     const ids = ref(props.writePack);
     const edit = ref(props.edit);
     const router = useRouter();
     const store = useStore();
+    const score = ref(edit.value.edit == "edit" ? edit.value.id.rating + 1 : 0);
 
     console.log(edit.value);
 
-    console.log(ids.value.companyId);
-    console.log(ids.value.spaceId);
+    // console.log(ids.value.companyId);
+    // console.log(ids.value.spaceId);
+    console.log(ids.value.reservationId);
 
     const onClose = () => {
       emit("close");
@@ -120,6 +123,7 @@ export default {
               {
                 spaceId: ids.value.spaceId,
                 companyId: ids.value.companyId,
+                reservationId: ids.value.reservationId,
                 content: revContent.value,
                 rating: score.value - 1,
               },

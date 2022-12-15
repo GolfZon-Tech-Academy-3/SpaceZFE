@@ -126,7 +126,7 @@
       <div v-show="resInfos.type == '오피스'">
         <button @click="showStartDates" class="dateBtn">시작날짜</button>
         <a class="dayShow" v-show="showingStart">
-          {{ startingDay }}일 00:00부터</a
+          {{ startingDay }}일 {{ resInfos.openTime }}시 부터</a
         >
         <div v-show="showingSTartDates" class="dateBtns">
           <button
@@ -143,14 +143,14 @@
 
       <p style="margin-bottom: 1%">종료 시간</p>
       <button
-        v-show="resInfos.type == '오피스'"
+        v-show="showingEnd && resInfos.type == '오피스'"
         @click="showEndDates"
         class="dateBtn"
       >
         종료날짜
       </button>
       <a class="dayShow" v-show="showingDeskEnd && resInfos.type == '오피스'">
-        {{ endingDay }}일 23:59까지
+        {{ endingDay }}일 {{ resInfos.closeTime }}시 까지
       </a>
       <div v-show="showingEndDates" class="dateBtns">
         <button
@@ -313,6 +313,9 @@ export default {
     const errorContent = ref(null);
     const loading = ref(false);
 
+    let refreshBtn = true;
+    const cantReserve = ref(true);
+
     const date = new Date();
     now = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 
@@ -385,8 +388,13 @@ export default {
     //정보제공 전체 동의 버튼
     const selectAll = () => {
       allSelected.value = !allSelected.value;
-      a.value = true;
-      (b.value = true), (c.value = true), (d.value = true);
+      if (allSelected.value) {
+        a.value = true;
+        (b.value = true), (c.value = true), (d.value = true);
+      } else {
+        a.value = false;
+        (b.value = false), (c.value = false), (d.value = false);
+      }
     };
     const selectA = () => {
       allSelected.value = false;
@@ -569,12 +577,20 @@ export default {
         router.go();
       } else {
         try {
-          await axios.post(`${proxy}/reservation/check`, {
-            spaceId: resInfos.value.spaceId,
-            startDate: startingDay.value + " " + startSelected.value,
-            endDate: startingDay.value + " " + endSelected.value,
-            prepay: "001",
-          });
+          await axios.post(
+            `${proxy}/reservation/check`,
+            {
+              spaceId: resInfos.value.spaceId,
+              startDate: startingDay.value + " " + startSelected.value,
+              endDate: startingDay.value + " " + endSelected.value,
+              prepay: "001",
+            },
+            {
+              headers: {
+                Authorization: store.state.accessToken,
+              },
+            }
+          );
         } catch (error) {
           alert("예약 중복오류가 발생했습니다 나중에 다시 시도해 주세요");
           router.go();
@@ -608,6 +624,7 @@ export default {
                       spaceId: resInfos.value.spaceId,
                       mileage: mileage.value,
                       memberId: store.state.memberId,
+                      price: total.value,
                       payStatus: "003",
                       prepay: "001",
                       startDate: startingDay.value + " " + startSelected.value,
@@ -666,12 +683,20 @@ export default {
         alert("입력을 다시 확인해주세요.");
       } else {
         try {
-          await axios.post(`${proxy}/reservation/check`, {
-            spaceId: resInfos.value.spaceId,
-            startDate: startingDay.value + " " + startSelected.value,
-            endDate: startingDay.value + " " + endSelected.value,
-            prepay: "000",
-          });
+          await axios.post(
+            `${proxy}/reservation/check`,
+            {
+              spaceId: resInfos.value.spaceId,
+              startDate: startingDay.value + " " + startSelected.value,
+              endDate: startingDay.value + " " + endSelected.value,
+              prepay: "000",
+            },
+            {
+              headers: {
+                Authorization: store.state.accessToken,
+              },
+            }
+          );
         } catch (error) {
           alert("예약 중복오류가 발생했습니다 나중에 다시 시도해 주세요");
           router.go();
@@ -809,18 +834,48 @@ export default {
 
     //클릭하면 버튼목록 지우고 클릭한 날짜 띄우는 함수
     const startDate = (e) => {
-      if (e.target.value == "x") {
-        alert("이미 예약된 날짜 입니다 다른 날짜를 선택해주세요");
-        showingSTartDates.value = !showingSTartDates.value;
-        startingDay.value = "";
-        showingStart.value = false;
+      // refreshBtn = true;
+      if (refreshBtn) {
+        if (e.target.value == "x") {
+          alert("이미 예약된 날짜 입니다 다른 날짜를 선택해주세요");
+          showingSTartDates.value = false;
+          startingDay.value = "";
+          showingStart.value = false;
+          cantReserve.value = false;
+        } else {
+          showingSTartDates.value = false;
+          showingStart.value = true;
+          startingDay.value = "";
+          startDay.value = "";
+          startingDay.value = e.target.value;
+          startDay.value = e.target.value;
+          showingEnd.value = true;
+          console.log(e.target.value);
+          console.log(startingDay.value);
+          refreshBtn = false;
+          cantReserve.value = true;
+        }
       } else {
-        showingStart.value = true;
-        showingSTartDates.value = !showingSTartDates.value;
-        startingDay.value = e.target.value;
-        startDay.value = e.target.value;
-        console.log(e.target.value);
+        if (e.target.value == "x") {
+          alert("이미 예약된 날짜 입니다 다른 날짜를 선택해주세요");
+          showingSTartDates.value = false;
+          startingDay.value = "";
+          showingStart.value = false;
+          cantReserve.value = false;
+        } else {
+          console.log("hi");
+          showingSTartDates.value = !showingSTartDates.value;
+          showingStart.value = true;
+          startingDay.value = "";
+          startDay.value = "";
+          startingDay.value = e.target.value;
+          startDay.value = e.target.value;
+          showingEnd.value = true;
+          refreshBtn = true;
+          cantReserve.value = true;
+        }
       }
+      console.log(startingDay.value);
     };
 
     //예약된 시간들 빼고 시간들 보여줌
@@ -897,12 +952,38 @@ export default {
 
     //예약 종료일 버튼
     const endDate = (e) => {
-      showingEnd.value = true;
       showingEndDates.value = !showingEndDates.value;
       endingDay.value = e.target.value;
       endDay.value = e.target.value;
 
-      showCoast();
+      let officeReserved = endDates.value.indexOf("x");
+      let clickedEndDay = endDates.value.indexOf(e.target.value);
+      if (e.target.value == "x") {
+        alert("이미 예약된 날짜 입니다 다른 날짜를 선택해주세요");
+        showingSTartDates.value = false;
+        startingDay.value = "";
+        showingStart.value = false;
+        showingEnd.value = false;
+        cantReserve.value = false;
+        showingDeskEnd.value = false;
+        console.log(cantReserve.value);
+      } else if (officeReserved < clickedEndDay) {
+        alert(
+          "선택하신 기간중 이미 예약된 시간이 있습니다 다른 종료 날짜를 선택해주세요"
+        );
+        showingSTartDates.value = false;
+        startingDay.value = "";
+        showingStart.value = false;
+        showingEnd.value = false;
+        showingEndDates.value = false;
+        showingDeskEnd.value = false;
+        endingDay.value = "";
+        endDay.value = "";
+        cantReserve.value = false;
+        console.log(cantReserve.value);
+      } else {
+        showCoast();
+      }
     };
 
     //버튼들 보여주는 함수
@@ -912,71 +993,77 @@ export default {
 
     //종료날짜 버튼에 띄우는 함수
     const showEndDates = () => {
-      showingEndDates.value = !showingEndDates.value;
-      //시작일의 문자열을 잘라서 사용
-      let day = parseInt(startingDay.value.slice(8, 10));
-      let resYear = startingDay.value.slice(0, 4);
-      let resMonth = startingDay.value.slice(5, 7);
+      console.log(cantReserve.value);
+      if (!cantReserve.value) {
+        startingDay.value = "";
+        console.log(startingDay.value);
+      } else {
+        showingEndDates.value = !showingEndDates.value;
+        //시작일의 문자열을 잘라서 사용
+        let day = parseInt(startingDay.value.slice(8, 10));
+        let resYear = startingDay.value.slice(0, 4);
+        let resMonth = startingDay.value.slice(5, 7);
 
-      let dates = [];
-      let days = new Date(resYear, resMonth, 0).getDate();
+        let dates = [];
+        let days = new Date(resYear, resMonth, 0).getDate();
 
-      //dates배열을 해당 월수 만큼 늘리기
-      for (let i = 1; i <= days; i++) {
-        dates.push(i);
-      }
-      //배열에 예약일(오늘) 이전 날짜들 삭제
-      dates = dates.slice(day);
-      //만약 말일을 선택하면 배열이 0이 되니까 월 변경
-      if (dates.length < 1) {
-        resMonth++;
-      }
-      //삭제하고 다시 배열의 길이가 30이 되도록 추가
-      for (let i = 1; i < 31; i++) {
-        dates.push(i);
-        //31일로 30일 초과면 마지막거 삭제
-        if (dates.length > 30) {
-          dates.pop();
+        //dates배열을 해당 월수 만큼 늘리기
+        for (let i = 1; i <= days; i++) {
+          dates.push(i);
         }
-      }
-      //2월(윤년포함)은
-      if (days < 30) {
-        //배열의 길이가 30이 될때까지 추가
-        for (let j = 1; j + day == 30; j++) {
-          dates.push(j);
-        }
-      }
-      //계산한 일수들을 배열에 입력
-      for (let i = 0; i < dates.length; i++) {
-        //1일이 되면 자동으로 월바꿔주고 12월 넘으면 1월이 되면서 연도 증가
-        if (dates[i] === 1 && dates[0] !== 1) {
-          resMonth++;
-          if (resMonth > 12) {
-            resMonth = 1;
-            resYear++;
-          }
-          //10월 이전들은 보기 안좋으니까 0추가
-          if (resMonth < 10) {
-            resMonth = "0" + resMonth;
-          }
-        }
-        //일도 10일 이전은 0추가
-        if (dates[i] > 0 && dates[i] < 10) {
-          dates[i] = `0${dates[i]}`;
-        }
-        //배열에 입력하기 전에 월을 바꾸면 오류가 날수 있어서 여기서도 1일이되면 달추가
-        if (dates[i] === 1 && dates[0] !== 1) {
+        //배열에 예약일(오늘) 이전 날짜들 삭제
+        dates = dates.slice(day);
+        //만약 말일을 선택하면 배열이 0이 되니까 월 변경
+        if (dates.length < 1) {
           resMonth++;
         }
-        endDates.value.push(`${resYear}-${resMonth}-${dates[i]}`);
-      }
-      reserved = resInfos.value.reservedTime;
-      console.log(reserved);
-      for (let i = 0; i < reserved.length; i++) {
-        let found = endDates.value.find((e) => e == reserved[i]);
-        console.log(found);
-        for (let j = 0; j < endDates.value.length; j++) {
-          if (endDates.value[j] == found) endDates.value[j] = "x";
+        //삭제하고 다시 배열의 길이가 30이 되도록 추가
+        for (let i = 1; i < 31; i++) {
+          dates.push(i);
+          //31일로 30일 초과면 마지막거 삭제
+          if (dates.length > 30) {
+            dates.pop();
+          }
+        }
+        //2월(윤년포함)은
+        if (days < 30) {
+          //배열의 길이가 30이 될때까지 추가
+          for (let j = 1; j + day == 30; j++) {
+            dates.push(j);
+          }
+        }
+        //계산한 일수들을 배열에 입력
+        for (let i = 0; i < dates.length; i++) {
+          //1일이 되면 자동으로 월바꿔주고 12월 넘으면 1월이 되면서 연도 증가
+          if (dates[i] === 1 && dates[0] !== 1) {
+            resMonth++;
+            if (resMonth > 12) {
+              resMonth = 1;
+              resYear++;
+            }
+            //10월 이전들은 보기 안좋으니까 0추가
+            if (resMonth < 10) {
+              resMonth = "0" + resMonth;
+            }
+          }
+          //일도 10일 이전은 0추가
+          if (dates[i] > 0 && dates[i] < 10) {
+            dates[i] = `0${dates[i]}`;
+          }
+          //배열에 입력하기 전에 월을 바꾸면 오류가 날수 있어서 여기서도 1일이되면 달추가
+          if (dates[i] === 1 && dates[0] !== 1) {
+            resMonth++;
+          }
+          endDates.value.push(`${resYear}-${resMonth}-${dates[i]}`);
+        }
+        reserved = resInfos.value.reservedTime;
+        // console.log(reserved);
+        for (let i = 0; i < reserved.length; i++) {
+          let found = endDates.value.find((e) => e == reserved[i]);
+          // console.log(found);
+          for (let j = 0; j < endDates.value.length; j++) {
+            if (endDates.value[j] == found) endDates.value[j] = "x";
+          }
         }
       }
     };
@@ -1000,12 +1087,20 @@ export default {
         window.location.reload(true);
       } else {
         try {
-          await axios.post(`${proxy}/reservation/check`, {
-            spaceId: resInfos.value.spaceId,
-            startDate: startingDay.value + " " + "00:00",
-            endDate: endingDay.value + " " + "23:59",
-            prepay: "002",
-          });
+          await axios.post(
+            `${proxy}/reservation/check`,
+            {
+              spaceId: resInfos.value.spaceId,
+              startDate: startingDay.value + " " + "00:00",
+              endDate: endingDay.value + " " + "23:59",
+              prepay: "002",
+            },
+            {
+              headers: {
+                Authorization: store.state.accessToken,
+              },
+            }
+          );
         } catch (error) {
           alert("예약 중복오류가 발생했습니다 나중에 다시 시도해 주세요");
           router.go();
@@ -1160,6 +1255,7 @@ export default {
       errorHome,
       errorRef,
       loading,
+      cantReserve,
     };
   },
 };

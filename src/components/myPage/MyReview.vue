@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="reviewsho">
     <div
       class="offcanvas offcanvas-top"
       tabindex="-1"
@@ -60,7 +60,7 @@ export default {
 
     const change = (e) => {
       context.emit("editOrDel", e.target.id);
-      context.emit("reviewId", reviewId.value.reviewId);
+      context.emit("reviewId", reviewId.value);
 
       console.log(reviewId.value.reviewId);
     };
@@ -137,5 +137,8 @@ button {
   left: 0;
   width: 100%;
   height: 100%;
+}
+.reviewsho {
+  transition: 1s;
 }
 </style>

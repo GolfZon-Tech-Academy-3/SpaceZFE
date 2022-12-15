@@ -374,6 +374,7 @@ export default {
           });
       }
     };
+    console.log(store.state.accessToken);
 
     return {
       imgSelect,
