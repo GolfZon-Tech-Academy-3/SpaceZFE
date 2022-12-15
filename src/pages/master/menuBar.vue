@@ -1,39 +1,35 @@
 <template>
   <div>
-    <div class="wrapper">
-      <div
-        :class="[link === '/master/company' ? 'menuSelected' : 'menu']"
-        @click="moveToCompany"
-      >
+    <span v-if="!showMenuBar" @click="controlMenuBar" style="position:fixed;margin: 0.5em;cursor: pointer;" class="material-symbols-outlined">
+      menu
+    </span>
+    <div v-else class="wrapper">
+      <div :class="[link === '/master/company' ? 'menuSelected' : 'menu']" @click="moveTo('MasterCompany')" >
         <div style="text-decoration: none; color: white">업체 관리</div>
       </div>
-      <div
-        :class="[link === '/master/account' ? 'menuSelected' : 'menu']"
-        @click="moveToAccount"
-      >
+      <div :class="[link === '/master/account' ? 'menuSelected' : 'menu']" @click="moveTo('MasterAccount')" >
         <div style="text-decoration: none; color: white">계정 관리</div>
       </div>
-      <div
-        :class="[link === '/master/masterchat' ? 'menuSelected' : 'menu']"
-        @click="masterChat"
-      >
+      <div :class="[link === '/master/masterchat' ? 'menuSelected' : 'menu']" @click="moveTo('MasterChat')" >
         <div style="text-decoration: none; color: white">마스터 문의</div>
       </div>
     </div>
-    <div class="fake"></div>
   </div>
 </template>
 
 <script>
+import { ref } from 'vue';
 import { useRouter } from "vue-router";
 export default {
   setup() {
     const router = useRouter();
     const link = window.location.pathname;
+    const showMenuBar = ref(false);
 
-    const moveToCompany = () => {
+    const moveTo = (link) => {
+      showMenuBar.value = !showMenuBar.value;
       router.push({
-        name: "MasterCompany",
+        name: link,
       });
     };
 
@@ -48,10 +44,15 @@ export default {
         name: "MasterChat",
       });
     };
+
+    const controlMenuBar = () => {
+      showMenuBar.value = !showMenuBar.value;
+    }
+
     return {
-      moveToCompany,
-      moveToAccount,
-      masterChat,
+      moveTo,
+      controlMenuBar,
+      showMenuBar,
       link,
     };
   },
@@ -61,15 +62,11 @@ export default {
 <style scoped>
 .wrapper {
   width: 200px;
-  height: 100vh;
+  height: calc(100vh - 3.75em);
   background-color: #6f5ebe;
   text-align: center;
   position: fixed;
-}
-.fake {
-  width: 200px;
-  height: 100vh;
-  text-align: center;
+  z-index: 75;
 }
 .menu {
   width: 100%;
@@ -92,5 +89,12 @@ export default {
   text-decoration: none;
   background-color: #7d6ec4;
   cursor: pointer;
+}
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
 }
 </style>

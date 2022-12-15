@@ -2,12 +2,14 @@
     <div style="display:flex">
         <MenuBar />
         <div class="content">
-            <div class="sorter">
-                <div style="font-size: 2em; font-weight: bold;">업체관리</div>
+            <div style="width: 90%;padding: 1.3em 0 0.3em 0;margin: 0 auto;font-size: 1.5em;font-weight: bold;">
+                업체관리
+            </div>
+            <div style="width: 90%;height: 50px;margin: 0 auto;">
                 <button :class="[selected === 'all' ? 'sort-selected' : 'sort']" @click="selectAll">전체</button>
-                <button :class="[selected === 'wait' ? 'sort-selected' : 'sort']" @click="selectWait">승인 대기</button>
-                <button :class="[selected === 'completed' ? 'sort-selected' : 'sort']" @click="selectCompleted">승인 완료</button>
-                <button :class="[selected === 'declined' ? 'sort-selected' : 'sort']" @click="selectDeclined">승인 거부</button>
+                <button :class="[selected === 'wait' ? 'sort-selected' : 'sort']" @click="selectWait">대기</button>
+                <button :class="[selected === 'completed' ? 'sort-selected' : 'sort']" @click="selectCompleted">완료</button>
+                <button :class="[selected === 'declined' ? 'sort-selected' : 'sort']" @click="selectDeclined">거부</button>
             </div>
             <div class="scrolltable">
                 <table>
@@ -192,27 +194,21 @@ export default {
 
 <style scoped>
 .content {
-    width: calc(100% - 200px);
-    height:100vh;
+    width: 100%;
+    height: calc(100vh - 3.75em);
 }
 .scrolltable {
-    width: 100%;
+    width: 90%;
     max-height: 80%;
     display:block;
-    overflow: scroll;
     overflow-x: auto;
     overflow-y: auto;
-}
-.sorter {
-    width: 80%;
-    height: 2.5em;
+    white-space: nowrap;
     margin: 0 auto;
-    padding-top: 2.5em;
-    display: flex;
 }
 .sort {
     margin-left: 1em;
-    padding: 0 1em;
+    padding: 0.5em 1em;
     border: none;
     font-weight: bold;
     border-radius: 1em;
@@ -221,7 +217,7 @@ export default {
 }
 .sort:hover {
     margin-left: 1em;
-    padding: 0 1em;
+    padding: 0.5em 1em;
     border: none;
     font-weight: bold;
     border-radius: 1em;
@@ -230,7 +226,7 @@ export default {
 }
 .sort-selected {
     margin-left: 1em;
-    padding: 0 1em;
+    padding: 0.5em 1em;
     border: none;
     font-weight: bold;
     border-radius: 1em;
@@ -239,8 +235,7 @@ export default {
 }
 table {
     width: 90%;
-    height: 80%;
-    margin: 3em auto;
+    height: 75%;
     overflow: auto;
     font-weight: bold;
     border-collapse: collapse;
