@@ -253,7 +253,7 @@ export default {
       try {
           await axios.get(`${proxy}/company/like/${companyId}`, {
               headers: {
-                  Authorization: 'BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJFWFBJUkVEX0RBVEUiOjE2NzEwNzA3OTAsIklNQUdFX05BTUUiOiJodHRwczovL3NwYWNlejMuczMuYXAtbm9ydGhlYXN0LTIuYW1hem9uYXdzLmNvbS9pbWdfMDAwMi5wbmciLCJVU0VSX0VNQUlMIjoibWFuYWdlckBnbWFpbC5jb20iLCJpc3MiOiJzcGFjZXoiLCJNRU1CRVJfSUQiOjExLCJOSUNLX05BTUUiOiLrp6Tri4jsoIAiLCJDT01QQU5ZX0lEIjoyMzQsIkFVVEhPUklUWSI6Im1hbmFnZXIifQ.d01-HrVb1oU246Pu1VmVJSirg4WgITtHMUgI6289gI0',
+                  Authorization: store.state.accessToken,
               }
           }).then(() => {
               if(e.target.style["fontVariationSettings"] === "\"FILL\" 0") {//하트가 비어있을때
@@ -278,20 +278,6 @@ export default {
         },
       });
     };
-
-    //편의점 CS2, 지하철 SW8, 숙박 AD5, 음식점 FD6, 카페 CE7
-    const test = async () => {
-      await axios.get(`https://dapi.kakao.com/v2/local/search/category.json?category_group_code=CS2&x=126.73206089548538&y=37.52580830698037&radius=200`, {
-        headers: {
-          Authorization: 'KakaoAK 076ace465a5b49eeff44095c98711587',
-        }
-      }).then((res) => {
-        console.log(res.data);
-      })
-    }
-
-    test();
-    
 
     return {
       moveToAll,
