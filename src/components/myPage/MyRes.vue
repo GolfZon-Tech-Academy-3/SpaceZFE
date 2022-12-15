@@ -46,8 +46,11 @@
             <td class="imgTd"><img :src="resStatuses[num - 1].imageName" /></td>
             <td class="centerTd">
               <p>
-                <span style="font-size: 2rem; margin-right: 3%;">{{ resStatuses[num - 1].spaceName }}</span> 
-                <span style="font-size: 1.3rem; color:#9E9E9E;margin-right: 5%">{{resStatuses[num - 1].type}}</span> 
+                <span  class="tooltip" style="font-size: 2rem; margin-right: 3%;" @mouseenter="showPopup" @click="toCompany(resStatuses[num - 1].companyId)">
+                  <span  class="tooltiptext" v-show="popup">해당 공간으로 이동</span>
+                  {{ resStatuses[num - 1].spaceName }}
+                </span> 
+                <span style="font-size: 1.3rem; color:#9E9E9E;margin-right: 5%" @mouseenter="showPopup" @click="toCompany(resStatuses[num - 1].companyId)">{{resStatuses[num - 1].type}}</span> 
                 <span
                     v-if="resStatuses[num - 1].payStatus ==='003'"
                     class="payStatusBtn"
@@ -114,8 +117,11 @@
             <td class="imgTd"><img :src="resDone[num-1].imageName" /></td>
             <td class="centerTd">
               <p>
-                <span style="font-size: 2rem; margin-right: 3%;">{{ resDone[num - 1].spaceName }}</span> 
-                <span style="font-size: 1.3rem; color:#9E9E9E;margin-right: 5%">{{resDone[num - 1].type}}</span> 
+                <span  class="tooltip" style="font-size: 2rem; margin-right: 3%;" @mouseenter="showPopup" @click="toCompany(resDone[num - 1].companyId)">
+                  <span  class="tooltiptext" v-show="popup">해당 공간으로 이동</span>
+                  {{ resDone[num - 1].spaceName }}
+                </span> 
+                <span style="font-size: 1.3rem; color:#9E9E9E;margin-right: 5%;" >{{resDone[num - 1].type}}</span> 
                 <span
                     class="payStatusBtn"
                     style="background-color: white;
@@ -169,7 +175,7 @@
                         <button 
                         v-show="resDone[num - 1].review" 
                         v-if="!resDone[num-1].reviewToggle"
-                        class="showReviewlBtn" 
+                        class="nShowReviewlBtn" 
                         @click="reviewToggle(resDone[num-1].reservationId)">
                         리뷰 보기
                       </button>
@@ -186,8 +192,8 @@
             </td>
           </tr>
           <tr>
-            <td  colspan="3" style="border-bottom: 1px solid silver;" v-if="(resDone[num-1].review!==null)" v-show="resDone[num-1].reviewToggle">
-              <MyReview  :reviewer="resDone[num-1].review" @editOrDel="showWrite" @reviewId="showWrite2"/>
+            <td class="reviewsho" colspan="3" style="border-bottom: 1px solid silver;" v-if="(resDone[num-1].review!==null)" v-show="resDone[num-1].reviewToggle">
+              <MyReview   :reviewer="resDone[num-1].review" @editOrDel="showWrite" @reviewId="showWrite2"/>
             </td>
           </tr>
         </table>
@@ -227,7 +233,8 @@ setup() {
     const editOrDel = ref({})
     const writePack = ref({
       companyId:'',
-      spaceId:''
+      spaceId:'',
+      reservationId:'',
     })
     const showDelete = ref(false)
 
@@ -239,10 +246,11 @@ setup() {
     const errorContent = ref(null);
     const errorContetn1 = ref(null);
     const loading = ref(false);
+    const popup = ref(false)
 
     let find
 
-    //예약 이력 띄우는 함수
+    //예약 현황 띄우는 함수
     const getResStatuses = async ()=>{
       loading.value = true
       try {
@@ -263,10 +271,11 @@ setup() {
           }
       }
       loading.value = false
+      console.log(resStatuses.value)
     }
     getResStatuses()
 
-    //예약 현황 띄우는 함수
+    //예약 이력 띄우는 함수
     const getResDones = async()=>{
       try {
         await axios.get(`${proxy}/mypage/reservation/total/${store.state.memberId}`,{
@@ -287,6 +296,7 @@ setup() {
           }
       }
       loading.value = false
+      console.log(resDone.value)
     }
     getResDones()
 
@@ -354,17 +364,24 @@ setup() {
       }
     }
 
+    const showPopup = ()=>{
+      popup.value = true
+    }
+
     //리뷰 작성 함수
     const writeReview=  (e)=>{
-        
         let i=e
         find = resDone.value.find(e=>e.reservationId===i)
-        if(find.status === '002'||'003'){
+        console.log(find)
+        if(find.status === '002'|| find.status ==='003'){
           alert('예약을 취소하시면 리뷰를 작성할 수 없습니다')
-        }else{
+        }else if(find.status ==='004'){
           writePack.value.companyId = find.companyId 
           writePack.value.spaceId =  find.spaceId
+          writePack.value.reservationId = find.reservationId
           reviewShow.value= !reviewShow.value
+          editOrDel.value.edit = ''
+          // editOrDel.value.id.rating = 0
         }
     }
 
@@ -380,14 +397,18 @@ setup() {
       let i = e;
       find = resDone.value.find(e=>e.reservationId===i)
       find.reviewToggle = !find.reviewToggle
+      console.log(find)
     }
 
     //마이리뷰에서 수정을 누르면 emit으로 수정할 리뷰에게 수정할 것이라고 알려주고 ReviewWrite컴포넌트에게 수정을 전달해줘서 수정페이지로 변환
     const showWrite=(todo)=>{
-      if(todo==='edit'){
+      if(todo ==='edit'){
         editOrDel.value.edit = todo
+
+        console.log(todo)
         reviewShow.value = !reviewShow.value;
       }else{
+        
         showDelete.value = true
       }
     }
@@ -395,6 +416,16 @@ setup() {
     //자식 컴포넌트인 MyReview에서 리뷰 아이디 받아오기
     const showWrite2=(id)=>{
       editOrDel.value.id = id
+    }
+    
+    //상세로 갈 함수
+    const toCompany = (id)=>{
+      router.push({
+        name: "PlaceDetail",
+        query: {
+          id: id,
+        },
+      });
     }
 
     return {
@@ -419,8 +450,11 @@ setup() {
       loading,
 errorHome,
 errorRef,
-// errorContent,
-// errorContetn1,
+errorContent,
+errorContetn1,
+popup,
+showPopup,
+toCompany,
       };
   },
 };
@@ -520,8 +554,13 @@ img{
     background-color: white;
     border-radius: 10px;
 }
-.showReviewlBtn{
-     margin-top: 8%;
+.cancelBtn:hover{
+  border: 1px solid gray;
+  color: gray;
+  transition:  0.2s;
+}
+.nShowReviewlBtn{
+    margin-top: 8%;
     width: 70%;
     height: 6vh;
     background-color: #9E9E9E;
@@ -529,5 +568,61 @@ img{
     color:white;
     border-radius: 10px;
 }
+.showReviewlBtn{
+   margin-top: 8%;
+    width: 70%;
+    height: 6vh;
+   border: 1px solid #9E9E9E;
+  background-color: #9E9E9E;
+   color:white;
+    border-radius: 10px;
+}
+.nShowReviewlBtn:hover{
+  border: 1px solid #e1dfdf;
+  /* background-color: #e1dfdf; */
+  transition:  0.2s;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
 
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: fit-content;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px ;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 0.4em;
+  white-space:nowrap;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+.reviewsho{
+ transition: 0.5s;
+}
 </style>

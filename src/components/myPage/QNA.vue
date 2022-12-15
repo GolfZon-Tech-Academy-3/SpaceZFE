@@ -155,7 +155,12 @@ export default {
       find = qnas.value.find((num) => num.inquiryId === i);
       find.showMyAnswer = !find.showMyAnswer;
       qnaAnswer.value = find;
-      console.log(find.showMyAnswer);
+      //답변 열고 다른 답변을 열면 닫는 함수
+      for (let i = 0; i < qnas.value.length; i++) {
+        if (qnas.value[i].inquiryId != find.inquiryId) {
+          qnas.value[i].showMyAnswer = false;
+        }
+      }
     };
     return {
       qnas,
@@ -185,6 +190,7 @@ export default {
   width: 85%;
   text-align: center;
   padding-top: 0%;
+  margin-left: 15%;
   /* padding: 2%0%0%4%; */
 }
 .frame {

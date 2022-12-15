@@ -19,17 +19,16 @@
         </div>
         <div class="img">
           <div class="intplace">
-            <button class="interestPl" @click="changeClick(details.companyId)">
-              <img
-                style="margin-right: 4%; width: 2vw; height: 2vh"
-                v-show="!details.companyLike"
-                src="@/assets/heart.png"
-              />
-              <img
-                style="margin-right: 4%; width: 2vw; height: 2vh"
-                v-show="details.companyLike"
-                src="@/assets/heart_red.png"
-              />
+            <button class="interestPl" @click="changeClick">
+              <span v-show="!companyLike" class="material-symbols-outlined"
+                >favorite</span
+              >
+              <span
+                v-show="companyLike"
+                class="material-symbols-outlined"
+                style="font-variation-settings: 'FILL' 1"
+                >favorite</span
+              >
               관심장소
             </button>
             <p class="placeLoc">{{ details.location }}</p>
@@ -192,10 +191,17 @@
                 >⭐</a
               >
               {{ reviews.reviews[num - 1].rating }} <br />
-              [{{ reviews.reviews[num - 1].type }}] 사용 <br />
+              [{{ reviews.reviews[num - 1].spaceName }}] 사용 <br />
               {{ reviews.reviews[num - 1].content }}
             </div>
           </div>
+          <pagination
+            v-if="reviews.reviews.length"
+            :numberOfPages="numberOfPages"
+            :currentPage="currentPage"
+            @click="getReviews"
+          >
+          </pagination>
         </div>
         <div class="qnaClicked" v-show="qnaClicked">
           <h2 @click="uploadQna">질문하기</h2>
@@ -267,7 +273,7 @@ import ErrorHandle from "@/components/UI/BaseDialog.vue";
 
 import { useRoute, useRouter } from "vue-router";
 import axios from "@/axios";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 
 export default {
@@ -294,6 +300,7 @@ export default {
     let currentImgNum = ref(0);
     let currentImg = ref("");
     let imageList = ref([]);
+    const companyLike = ref(false);
 
     const resClicked = ref(false);
     const locClicked = ref(false);
@@ -322,7 +329,14 @@ export default {
       location: null,
     });
 
-    //리뷰 qna 장소 상세 get하는 함수
+    // let limit = 5;
+    const currentPage = ref(1);
+    const numberOfReviews = ref(0);
+    const numberOfPages = computed(() => {
+      return Math.ceil(numberOfReviews.value / 5);
+    });
+
+    // qna 장소 상세 get하는 함수
 
     const res = async () => {
       loading.value = true;
@@ -342,15 +356,7 @@ export default {
             companyId.value = res.data.companyId;
             mapOption.value.location = details.value.location;
             console.log(details.value);
-            axios
-              .get(`${proxy}/review/total/${companyId.value}?page=1`, {
-                headers: {
-                  Authorization: store.state.accessToken,
-                },
-              })
-              .then((res) => {
-                reviews.value = { ...res.data };
-              });
+
             axios
               .get(`${proxy}/inquiry/total/${companyId.value}`, {
                 headers: {
@@ -365,13 +371,30 @@ export default {
               });
           });
       } catch (error) {
-        errorContent.value = `오류가 발생했습니다 홈페이지로 이동하시거나 
+        errorContent.value = `오류가 발생했습니다 홈페이지로 이동하시거나
           버튼을 눌러 응답을 받을때까지 시도해 보십시오`;
         return;
       }
       loading.value = false;
     };
     res();
+
+    //review받아서  pagination하는함수
+    const getReviews = async (page = currentPage.value) => {
+      currentPage.value = page;
+      await axios
+        .get(`${proxy}/review/total/${id.value}?page=${page}`, {
+          headers: {
+            Authorization: store.state.accessToken,
+          },
+        })
+        .then((res) => {
+          reviews.value = { ...res.data };
+          numberOfReviews.value = reviews.value.totalCount;
+          console.log(res.data);
+        });
+    };
+    getReviews();
 
     //get에러시 홈페이지로
     const errorHome = () => {
@@ -424,15 +447,16 @@ export default {
     };
 
     //관심장소
-    const changeClick = async (id) => {
+    const changeClick = async (e) => {
       await axios
-        .post(`${proxy}/company/like/${id}`, {
+        .get(`${proxy}/company/like/${id.value}`, {
           headers: {
             Authorization: store.state.accessToken,
           },
         })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
+          companyLike.value = !companyLike.value;
+          // console.log(e.target);
         });
     };
 
@@ -560,6 +584,10 @@ export default {
       errorRef,
       loading,
       errorContent,
+      currentPage,
+      numberOfPages,
+      getReviews,
+      companyLike,
     };
   },
 };
@@ -586,21 +614,23 @@ export default {
   height: 20vh;
 }
 .placeLoc {
-  font-size: 2vh;
+  font-size: 3vh;
   float: left;
   position: absolute;
-  top: 34%;
+  top: 32%;
 }
 .interestPl {
   font-size: 2.5vh;
   margin-right: 20%;
-  width: 11vw;
-  height: 8vh;
-  float: left;
+  width: 10vw;
+  height: 5vh;
+  text-align: center;
+  /* float: left; */
   background: #d2e1f9;
   border: 1px solid #d2e1f9;
   border-radius: 10px;
-  font-weight: 600;
+  /* font-weight: 600; */
+  display: inline;
 }
 .placeDetails {
   font-size: 2.5vh;
@@ -658,8 +688,6 @@ export default {
   height: 10vh;
   margin: 1.5%;
   text-align: center;
-}
-.list:hover {
 }
 .lineIntro {
   text-align: left;
@@ -783,6 +811,12 @@ iframe {
   display: flex;
   width: 80%;
 }
+.material-symbols-outlined {
+  color: red;
+  cursor: pointer;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 48;
+}
+
 @media (max-width: 767px) {
   #app {
     font-family: Inter;
