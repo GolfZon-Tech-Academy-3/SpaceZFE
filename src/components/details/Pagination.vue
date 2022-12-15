@@ -1,14 +1,16 @@
 <template>
-  <nav aria-label="Page navigation example">
+  <nav aria-label="Page navigation example" class="nav">
     <ul class="pagination">
-      <li v-if="currentPage !== 1" class="page-item">
-        <a
+      <!-- v-show="currentPage !== 1" -->
+      <li>
+        <button
           style="cursor: pointer"
-          class="page-link"
+          :disabled="currentPage == 1"
+          :class="currentPage !== 1 ? 'show' : 'nshow'"
           @click="onClick(currentPage - 1)"
         >
-          Previous
-        </a>
+          이전
+        </button>
       </li>
       <li
         v-for="page in numberOfPages"
@@ -20,13 +22,16 @@
           {{ page }}
         </a>
       </li>
-      <li v-if="numberOfPages !== currentPage" class="page-item">
-        <a
+      <!--  v-show="numberOfPages !== currentPage" class="page-item" -->
+      <li>
+        <button
           style="cursor: pointer"
-          class="page-link"
+          :disabled="numberOfPages == currentPage"
+          :class="numberOfPages !== currentPage ? 'show' : 'nshow'"
           @click="onClick(currentPage + 1)"
-          >Next</a
         >
+          다음
+        </button>
       </li>
     </ul>
   </nav>
@@ -59,4 +64,30 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.nav {
+  display: grid;
+}
+ul {
+  width: 100%;
+  display: inline-flex;
+  list-style: none;
+}
+li {
+  margin: 0%2%0%2%;
+}
+.active {
+  color: blue;
+}
+.show {
+  background: white;
+  border: 1px solid white;
+  font-size: 0.8em;
+}
+.nshow {
+  background: white;
+  border: 1px solid white;
+  font-size: 0.8em;
+  opacity: 0.5;
+}
+</style>
