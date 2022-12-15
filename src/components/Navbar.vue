@@ -1,13 +1,11 @@
 <template>
     <div>
         <nav class="nav">
-            <div class="logo" @click="moveTo('Home')">
+            <div v-if="width > 400" class="logo" @click="moveTo('Home')">
                 SPACEZ
             </div>
+            <img v-else style="width: 35px;height: 35px;margin-left: 3%;cursor: pointer;" src="../assets/startLogo.png" @click="moveTo('Home')" />
             <input v-if="isLogined" id="searchInput" autocomplete="off" @focus="openSearchModal" @keyup.enter="moveToSearch" :value="searchWord" @input="searchModal"/>
-            <div v-if="!isManager && !isMaster && isLogined" style="cursor: pointer;margin: 0 1em;" @click="controlMapModal">
-                map
-            </div>
             <div v-if="isMaster" style="cursor: pointer;margin: 0 1em;" @click="moveTo('MasterCompany')">
                 master
             </div>
@@ -24,33 +22,26 @@
         </nav>
         <LoginModal v-if="showLoginModal" @close="closeLoginModal" />
         <SearchModal v-if="showSearchModal" @close="closeSearchModal" :result="result" />
-        <MapModal v-if="showMapModal" @close="controlMapModal" />
-        <Toast v-if="showToast" :message="toastMessage" />
     </div>
     
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import LoginModal from '@/components/LoginModal.vue';
 import SearchModal from '@/components/SearchModal.vue';
-import MapModal from '@/components/MapModal.vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import axios from '@/axios';
-import Toast from '@/components/Toast.vue'
-import { useToast } from '@/composables/toast';
 export default {
     components: {
         LoginModal,
         SearchModal,
-        MapModal,
-        Toast,
     },
     setup() {
         const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
+        const width = ref(0);
         const showSearchModal = ref(false);
-        const showMapModal = ref(false);
         const showClose = ref(false);
         const searchWord = ref('');
         const router = useRouter();
@@ -60,10 +51,15 @@ export default {
         const isMaster = ref(false);
         const profile_image = store.state.profile;
         const result = ref([]);
+        width.value = window.innerWidth;
 
-        const {
-            toastMessage, showToast, triggerToast,
-        } = useToast();
+        onMounted(() => {
+            window.addEventListener('resize', handleResize);
+        })
+
+        onUnmounted(() => {
+            window.removeEventListener('resize', handleResize);
+        })
 
         if(store.state.authority == null) {
             isLogined.value = false;
@@ -141,18 +137,15 @@ export default {
             });
         }
 
-        const controlMapModal = () => {
-            if(showMapModal.value === false) {
-                triggerToast('지도를 닫으려면 회색 영역을 더블클릭');
-            }
-            showMapModal.value = !showMapModal.value;
-        }
-
         const moveTo = (page) => {
             router.push({
                 name: page,
             })
             closeSearchModal();
+        }
+
+        const handleResize = () => {
+            width.value = window.innerWidth;
         }
 
         return {
@@ -172,12 +165,8 @@ export default {
             profile_image,
             searchModal,
             result,
-            controlMapModal,
-            showMapModal,
             moveTo,
-            toastMessage,
-            showToast,
-            triggerToast,
+            width,
         }
     }
 }
@@ -202,8 +191,8 @@ export default {
     cursor: pointer;
     color: #041461;
     font-size: 2em;
-    margin-left: 1em;
-    margin-right:21%;
+    margin-left: 3%;
+    margin-right: 3%;
 }
 ul {
     list-style: none;
@@ -220,13 +209,14 @@ a {
     color: grey;
 }
 #searchInput {
-    width: 10em;
+    width: 50%;
     font-size: 1.4em;
     color: grey;
     border: none;
     background-color: #EDEDED;
     border-radius: 1em;
     padding: 0.2em 1em;
+    margin-left: 3%;
 }
 #searchInput:focus {
     outline: none;

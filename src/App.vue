@@ -22,7 +22,7 @@ export default {
 <style>
 #app {
   font-family: 'Noto Sans KR', sans-serif;
-  min-width: 1000px;
+  min-width: 335px;
 }
 body {
   margin: 0px;

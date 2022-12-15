@@ -1,13 +1,13 @@
 <template>
-  <div style="width : 400px;height : 600px;margin: 0 auto;">
+  <div style="width : 330px;margin: 0 auto;">
     <h2 style="width: 100%;">회원가입</h2>
-      <div style="width: 400px;height: 600px;margin: 0 auto;">
+      <div style="width: 330px;margin: 0 auto;">
           <div style="width: 100%">
             이메일
           </div>
           <div style="width: 100%;margin-bottom: 1em;">
             <input :disabled="emailOK" class="input" type="text" placeholder="이메일" v-model="email">
-            <button :disabled="emailOK" class="button" @click="sendCertification">인증번호 보내기</button>
+            <button :disabled="emailOK" class="button" @click="sendCertification">인증받기</button>
           </div>
           <div style="width: 100%">
             인증번호
@@ -43,7 +43,6 @@
 import { ref } from 'vue';
 import axios from '@/axios';
 import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
 export default {
   setup() {
     const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
@@ -164,7 +163,7 @@ export default {
   color: white;
   border: none;
   border-radius: 2em;
-  margin-left: 1em;
+  margin-left: 1%;
   cursor: pointer;
 }
 .input {

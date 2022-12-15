@@ -1,5 +1,6 @@
 import store from "../store";
 import { createRouter, createWebHistory } from "vue-router";
+import NoPage from "../pages/noPage.vue";
 import Home from "../pages/home.vue";
 import SignUp from "../pages/signup.vue";
 import Main from "../pages/main.vue";
@@ -92,6 +93,10 @@ const router = createRouter({
     }
   },
   routes: [
+    {
+      path: '/:pathMatch(.*)*',
+      component: NoPage,
+    },
     {
       path: "/",
       name: "Home",
