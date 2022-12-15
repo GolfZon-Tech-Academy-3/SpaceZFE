@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="wrapper" >
-            <div style="width: 100%;min-weight: 330px;height: 90%; background-color: transparent; text-align: center;">
+            <div style="width: 100%;min-width: 316px;padding: 0 7px;height: 90%; background-color: transparent; text-align: center;">
                 <img src="../assets/guide.png" style="width: 150px;margin-top: 20px;"/>
                 <div style="height: 25%; color: #041461;font-weight:bold;font-size:1.5em;">
                     내 장소를 공유하고 손쉽게 수익을 올려보세요

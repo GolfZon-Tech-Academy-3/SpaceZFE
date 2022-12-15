@@ -57,7 +57,7 @@
             검색결과 없음
         </div>
         <div v-else class="grid">
-            <div v-for="place in resultPlace" :key="place.companyId" @scroll="handleScroll">
+            <div style="width: 100%;" v-for="place in resultPlace" :key="place.companyId" @scroll="handleScroll">
                 <div style="height: 50%;padding: 1em 1em 0 1em;">
                     <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)"/>
                 </div>
@@ -343,7 +343,7 @@ export default {
 
         const controlMapModal = () => {
             if(showMapModal.value === false) {
-                triggerToast('지도를 닫으려면 회색 영역을 더블클릭');
+                triggerToast('지도를 닫으려면 더블클릭');
             }
             showMapModal.value = !showMapModal.value;
         }
@@ -391,11 +391,14 @@ export default {
     padding: 3em 0;
 }
 .typeSelection {
-    width: 1000px;
+    width: 100%;
     height: 70px;
     padding: 1em 0;
-    margin: 0 auto;
+    text-align: center;
     align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
 }
 .yes {
     display: inline;
@@ -448,35 +451,32 @@ export default {
   cursor: pointer;
   margin-right: 1em;
 }
-.grid {
-    display: grid;
-    width: 1000px;
-    margin: 2em auto;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-auto-rows: 410px;
+@media (min-width: 100px) and (max-width: 500px) {
+    .grid {
+        display: grid;
+        width: 100%;
+        margin: 2em auto;
+        grid-template-columns: 1fr;
+        grid-auto-rows: 410px;
+    }
 }
-.pagination {
-    width: 100%;
-    height: 3em;
-    display : flex;
-    justify-content: center;
-    align-items : center;
-    text-align: center;
-    margin: 2em 0;
+@media (min-width: 500px) and (max-width: 900px) {
+    .grid {
+        display: grid;
+        width: 100%;
+        margin: 2em auto;
+        grid-template-columns: calc(100% / 2) calc(100% / 2);
+        grid-auto-rows: 410px;
+    }
 }
-.curPage {
-    width: 5vh;
-    height:5vh;
-    position: relative;
-    color: white;
-    font-weight:bolder;
-    background-color: #041461;
-    cursor: pointer;
-    display : flex;
-    justify-content: center;
-    align-items : center;
-    border-radius: 50%;
-    margin: 0 1%;
+@media (min-width: 700px) {
+    .grid {
+        display: grid;
+        width: 100%;
+        margin: 2em auto;
+        grid-template-columns: calc(100% / 3) calc(100% / 3) calc(100% / 3);
+        grid-auto-rows: 410px;
+    }
 }
 .mapBtn {
     display: inline;
