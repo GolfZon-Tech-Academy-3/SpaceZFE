@@ -115,7 +115,7 @@ export default {
         const cancelResv = async (type, id) => {
             if(type === '오피스') {
                 if(confirm("예약을 취소하시겠습니까?")) {
-                    await axios.put(`${proxy}/reservation/office-cancel/${id}`, {
+                    await axios.put(`${proxy}/reservation/office-cancel/${id}`, null, {
                         headers: {
                             Authorization: store.state.accessToken,
                         }
@@ -126,7 +126,7 @@ export default {
                 }
             } else {
                 if(confirm("예약을 취소하시겠습니까?")) {
-                    await axios.put(`${proxy}/reservation/desk-cancel/${id}`, {
+                    await axios.put(`${proxy}/reservation/desk-cancel/${id}`, null, {
                         headers: {
                             Authorization: store.state.accessToken,
                         }
@@ -140,7 +140,7 @@ export default {
 
         const completeResv = async (id) => {
             if(confirm("이용 완료 처리하시겠습니까?")) {
-                    await axios.put(`${proxy}/back-office/reservation//done/${id}`, {
+                    await axios.put(`${proxy}/back-office/reservation//done/${id}`, null, {
                         headers: {
                             Authorization: store.state.accessToken,
                         }

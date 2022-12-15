@@ -44,7 +44,7 @@ export default {
   z-index: 100;
 }
 .modal-dialog {
-  width: 350px;
+  width: 335px;
   height: 600px;
   display: flex;
   position: absolute;
