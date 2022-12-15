@@ -1,11 +1,11 @@
 <template>
     <div>
         <nav class="nav">
-            <div v-if="width > 400" class="logo" @click="moveTo('Home')">
+            <div v-if="width > 500" class="logo" @click="moveTo('Home')">
                 SPACEZ
             </div>
             <img v-else style="width: 35px;height: 35px;margin-left: 3%;cursor: pointer;" src="../assets/startLogo.png" @click="moveTo('Home')" />
-            <input v-if="isLogined" id="searchInput" autocomplete="off" @focus="openSearchModal" @keyup.enter="moveToSearch" :value="searchWord" @input="searchModal"/>
+            <input v-if="isLogined && width > 355" id="searchInput" autocomplete="off" @focus="openSearchModal" @keyup.enter="moveToSearch" :value="searchWord" @input="searchModal"/>
             <div v-if="isMaster" style="cursor: pointer;margin: 0 1em;" @click="moveTo('MasterCompany')">
                 master
             </div>

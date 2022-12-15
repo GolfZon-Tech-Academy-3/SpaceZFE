@@ -2,7 +2,7 @@
     <div style="display:flex">
         <MenuBar />
         <div class="content">
-            <div style="width: 50%; height:100vh">
+            <div style="width: 100%; height:100%">
                 <div style="width: 90%;height:2em;margin: 0 auto;padding-top:1em;font-size:2em;font-weight: bold;">
                     계정 관리
                 </div>
@@ -25,7 +25,7 @@
                 </table>
                 </div>
             </div>
-            <div style="width: 50%; height:100vh">
+            <div style="width: 100%; height:100%">
                 <div style="width: 90%;height:4em;margin: 0 auto;padding-top:1em;font-size:2em;font-weight: bold;">
                     등록
                     <div style="display:block;margin-top: 1em;">
@@ -139,37 +139,51 @@ export default {
 </script>
 
 <style scoped>
-.content {
-    width: calc(100% - 200px);
-    height:100vh;
-    overflow:scroll;
-    overflow-x: hidden;
-    overflow-y: auto;
-    display:flex;
+@media (min-width: 600px) {
+    .content {
+        width: 100%;
+        height: calc(100vh - 3.75em);
+        overflow-x: auto;
+        overflow-y: auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        white-space: nowrap;
+    }
+}
+@media (max-width: 600px) {
+    .content {
+        width: 100%;
+        height: calc(100vh - 3.75em);
+        overflow-x: auto;
+        overflow-y: auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        white-space: nowrap;
+    }
 }
 .scrolltable {
     width: 100%;
     max-height: 80%;
     display:block;
-    overflow: scroll;
-    overflow-x: hidden;
+    overflow-x: auto;
     overflow-y: auto;
+    white-space: nowrap;
 }
 .table1 {
     width: 90%;
     height: 80%;
     margin: 3em auto;
-    overflow: auto;
     font-weight: bold;
     border-collapse: collapse;
+    white-space: nowrap;
 }
 .table2 {
     width: 90%;
     height: 80%;
     margin: auto;
-    overflow: auto;
     font-weight: bold;
     border-collapse: collapse;
+    white-space: nowrap;
 }
 thead {
     height: 5%;

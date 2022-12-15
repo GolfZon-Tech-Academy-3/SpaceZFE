@@ -1,35 +1,35 @@
 <template>
     <div style="display:flex;">
-        <MenuBar />
+        <MenuBar/>
         <div class="content">
-            <div v-if="!isEditing" style="width:600px;height: 600px;margin: auto;">
-                <h2>업체정보<span @click="controlEdit" style="background-color: #041461;padding: 0.5em;border-radius: 0.5em;color: white;font-size: 0.7em;float: right;cursor: pointer;">수정</span></h2>
+            <div v-if="!isEditing" style="width:330px;height: 600px;margin: 40px auto;">
+                <h2>업체정보<span @click="controlEdit" style="background-color: #041461;padding: 0.5em;border-radius: 1em;color: white;font-size: 0.5em;float: right;cursor: pointer;">수정</span></h2>
                 <img style="width: 200px;border-radius: 1em;box-shadow: 0 0 5px 0 gray;" :src="companyInfo.imageName" />
-                <h4>업체 이름</h4>
+                <div style="margin: 0.5em 0;">업체 이름</div>
                 <div style="color:gray;">{{companyInfo.companyName}}</div>
-                <h4>주소</h4>
+                <div style="margin: 0.5em 0;">주소</div>
                 <div style="color:gray;">{{companyInfo.location}} {{companyInfo.details}}</div>
-                <h4>장소 요약</h4>
+                <div style="margin: 0.5em 0;">장소 요약</div>
                 <textarea readonly :value="companyInfo.summary"></textarea>
-                <h4>장소 소개</h4>
+                <div style="margin: 0.5em 0;">장소 소개</div>
                 <textarea readonly :value="companyInfo.info"></textarea>
-                <h4>이용 규칙</h4>
+                <div style="margin: 0.5em 0;">이용 규칙</div>
                 <textarea readonly :value="companyInfo.rules"></textarea>
             </div>
 
-            <div v-if="isEditing" style="width:600px;height: 600px;margin: auto;">
+            <div v-if="isEditing" style="width:330px;height: 600px;margin: 40px auto;">
                 <h2>업체 정보 수정</h2>
-                <h4 class="item">업체 이름</h4>
+                <div style="margin: 0.5em 0;">업체 이름</div>
                 <input class="input" type="text" placeholder="업체 이름" v-model="placeName" />
-                <h4 class="item">주소</h4>
+                <div style="margin: 0.5em 0;">주소</div>
                 <input disabled class="input" type="text" id="address" placeholder="주소" v-model="address">
                 <input class="btn" type="button" @click="searchAddress()" value="주소 찾기">
                 <input class="input" type="text" id="detailAddress" placeholder="상세주소" v-model="detailAddress">
-                <h4 class="item">장소 요약</h4>
+                <div style="margin: 0.5em 0;">장소 요약</div>
                 <textarea class="textarea" placeholder="장소 요약 정보를 입력해주세요" maxlength="250" v-model="placeSummary"/>
-                <h4 class="item">장소 소개</h4>
+                <div style="margin: 0.5em 0;">장소 소개</div>
                 <textarea class="textarea" placeholder="장소 소개를 입력해주세요" maxlength="250" v-model="placeIntro" />
-                <h4 class="item">이용 규칙</h4>
+                <div style="margin: 0.5em 0;">이용 규칙</div>
                 <textarea class="textarea" placeholder="장소 이용 규칙을 입력해주세요" maxlength="250" v-model="rule" />
                 <div style="text-align: center;">
                     <button @click="controlEdit" class="btn-red">취소</button>
@@ -164,11 +164,11 @@ export default {
 
 <style scoped>
 .content {
-    width: calc(100% - 200px);
-    height:100vh;
+    width: 100%;
+    height: calc(100vh - 3.75em);
 }
 textarea {
-    width: 90%;height: 100px;resize: none;
+    width: 90%;height: 80px;resize: none;
     color: gray;
     border: 1px solid gray;
     border-radius: 1em;

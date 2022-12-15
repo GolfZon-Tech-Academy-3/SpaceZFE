@@ -89,25 +89,28 @@ export default {
 
 <style scoped>
 .content {
-    width: 85%;
+    width: 100%;
     height:100vh;
 }
 .scrolltable {
-    width: 100%;
-    max-height: 80%;
+    width: 80%;
+    max-height: 75%;
     display:block;
+    overflow-x: auto;
+    overflow-y: auto;
+    margin: 0 auto;
 }
 .content {
-    width: calc(100% - 200px);
-    height:100vh;
+    width: 100%;
+    height: calc(100vh - 3.75em);
 }
 table {
-    width: 80%;
+    width: 100%;
     height: 80%;
     margin: 3em auto;
-    overflow: auto;
     font-weight: bold;
     border-collapse: collapse;
+    white-space: nowrap;
 }
 thead {
     height: 5%;

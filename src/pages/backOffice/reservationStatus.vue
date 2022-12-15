@@ -5,11 +5,11 @@
       <div style="width: 70% height: 2em;">
         <div class="status">
           <div class="reserved">
-            <div style="font-weight: bold">금일 예약 {{ todayResv }} 건</div>
+            금일 예약 {{ todayResv }} 건
           </div>
           <div class="canceled">
-            <div style="font-weight: bold">
-              금일 취소 예약 {{ todayCancel }} 건
+            <div style="font-weight: bold;white-space: nowrap;">
+              금일 취소 {{ todayCancel }} 건
             </div>
           </div>
         </div>
@@ -229,8 +229,8 @@ export default {
 
 <style scoped>
 .reserved {
-  width: 40%;
-  height: 100%;
+  width: 100px;
+  height: 70%;
   background-color: #edf8e7;
   float: left;
   text-align: center;
@@ -238,10 +238,12 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: bold;
+  white-space: nowrap;
 }
 .canceled {
-  width: 40%;
-  height: 100%;
+  width: 100px;
+  height: 70%;
   background-color: #fcdddd;
   float: right;
   text-align: center;
@@ -249,10 +251,12 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: bold;
+  white-space: nowrap;
 }
 .content {
-  width: calc(100% - 200px);
-  height: 100vh;
+  width: 100%;
+  height: calc(100vh - 3.75em);
   overflow: scroll;
   overflow-x: hidden;
   overflow-y: auto;
@@ -260,8 +264,11 @@ export default {
 }
 .condition {
   width: 80%;
-  height: 4%;
+  height: 7%;
   margin: 1em auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
 }
 .date {
   color: #9e9e9e;
@@ -275,7 +282,7 @@ export default {
   outline: none;
 }
 .status {
-  width: 50%;
+  width: 60vw;
   height: 4em;
   margin: 1em auto;
 }
@@ -299,8 +306,7 @@ export default {
   width: 80%;
   max-height: 70%;
   display: block;
-  overflow: scroll;
-  overflow-x: hidden;
+  overflow-x: auto;
   overflow-y: auto;
   margin: 0 auto;
 }
@@ -308,9 +314,9 @@ table {
   width: 100%;
   height: 80%;
   margin: 0 auto 3em auto;
-  overflow: auto;
   font-weight: bold;
   border-collapse: collapse;
+  white-space: nowrap;
 }
 thead {
   height: 5%;

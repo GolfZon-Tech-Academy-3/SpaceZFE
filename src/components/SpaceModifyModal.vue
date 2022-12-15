@@ -25,7 +25,7 @@
                     <div style="padding: 0 1em 0.5em 0">
                         Space 가격
                     </div>
-                    <input v-if="isOffice" v-model="officePrice" style="padding: 0.5em" type="text" />
+                    <input v-if="isOffice" v-model="officePrice" style="width: 80px;padding: 0.5em" type="text" />
                     <span v-if="isOffice" style="font-size:0.8em; padding-left: 0.5em">원 / 일</span>
                     <label v-if="!isOffice">{{price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} 원 / 시간</label>
                 </div>
@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { ref, watch, getCurrentInstance } from 'vue';
+import { ref, watch } from 'vue';
 import axios from '@/axios';
 import { useStore } from 'vuex';
 export default {
@@ -292,12 +292,13 @@ export default {
     left: 0;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 100;
+    font-size: 0.8em;
 }
 .modal-back {
     width: 40%;
-    min-width: 500px;
+    min-width: 335px;
     height: 90%;
-    min-height: 700px;
+    min-height: 600px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -305,45 +306,45 @@ export default {
     background-color: white;
 }
 .name {
-    width: 80%;
+    width: 90%;
     height: 15%;
     margin: 1em auto;
     font-size: 1.5em;
 }
 .type {
-    width: 80%;
+    width: 90%;
     height: 15%;
     margin: 0.5em auto;
     font-size: 1.5em;
     display: flex;
 }
 .facility {
-    width: 80%;
+    width: 90%;
     height: 15%;
     margin: 0.5em auto;
     font-size: 1.5em;
 }
 .time {
-    width: 80%;
+    width: 90%;
     height: 15%;
     margin: 0.5em auto;
     font-size: 1.5em;
     display: flex;
 }
 .button {
-    width: 60%;
+    width: 300px;
     height: 15%;
     margin: 0 auto;
 }
 .input {
     width: 50%;
-    padding: 1em;
+    padding: 0.5em;
 }
 .input:focus {
     outline: none;
 }
 .select {
-    padding: 1em;
+    padding: 0.5em 0.3em;
 }
 .select:focus {
     outline: none;
