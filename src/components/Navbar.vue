@@ -206,14 +206,6 @@ export default {
     background-color: white;
     z-index: 100;
 }
-.logo{
-    font-family: Archivo;
-    cursor: pointer;
-    color: #041461;
-    font-size: 2em;
-    margin-left: 3%;
-    margin-right: 3%;
-}
 ul {
     list-style: none;
 }
@@ -228,15 +220,46 @@ a {
     text-decoration: none;
     color: grey;
 }
-#searchInput {
-    width: 50%;
-    font-size: 1.4em;
-    color: grey;
-    border: none;
-    background-color: #EDEDED;
-    border-radius: 1em;
-    padding: 0.2em 1em;
-    margin-left: 3%;
+@media (min-width: 750px) {
+    #searchInput {
+        position: fixed;
+        width: 20%;
+        font-size: 1em;
+        color: grey;
+        border: none;
+        background-color: #EDEDED;
+        border-radius: 1em;
+        left: 38.7%;
+        padding: 0.4em 1.3%;
+    }
+    .logo{
+        font-family: Archivo;
+        cursor: pointer;
+        color: #041461;
+        font-size: 2em;
+        margin-left: 3%;
+        margin-right: 50%;
+    }
+}
+@media (max-width: 750px) {
+    #searchInput {
+        width: 50%;
+        font-size: 1em;
+        color: grey;
+        border: none;
+        background-color: #EDEDED;
+        border-radius: 1em;
+        padding: 0.4em 1.3%;
+        margin-left: 3%;
+    }
+    .logo{
+        font-family: Archivo;
+        cursor: pointer;
+        color: #041461;
+        font-size: 2em;
+        margin-left: 3%;
+        margin-right: 3%;
+    }
 }
 #searchInput:focus {
     outline: none;

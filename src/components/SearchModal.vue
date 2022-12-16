@@ -56,7 +56,7 @@ export default {
 @media (min-width: 950px) {
     .results {
         position: relative;
-        width: 30%;
+        width: 22.6%;
         height: auto;
         max-height: 90vh;
         background-color: white;
