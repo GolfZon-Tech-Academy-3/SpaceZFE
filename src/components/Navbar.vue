@@ -4,7 +4,7 @@
             <router-link v-if="width > 500" class="logo" :to="isLogined ? {name: 'Main'} : {name: 'Home'}">
                 SPACEZ
             </router-link>
-            <router-link v-else :to="{name: 'Home'}" style="margin-left: 3%;">
+            <router-link v-else :to="isLogined ? {name: 'Main'} : {name: 'Home'}" style="margin-left: 3%;">
                 <img src="../assets/startLogo.png" @click="closeSearchModal" style="width: 35px;height: 35px;cursor: pointer;" />
             </router-link>
             <input v-if="isLogined && width > 355" placeholder="검색" id="searchInput" autocomplete="off" @focus="openSearchModal" @keyup.enter="moveToSearch" :value="searchWord" @input="searchModal"/>
