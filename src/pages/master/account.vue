@@ -1,9 +1,9 @@
 <template>
-    <div style="display:flex">
+    <div style="display:flex;flex-direction: column;">
         <MenuBar />
         <div class="content">
             <div style="width: 100%; height:100%">
-                <div style="width: 90%;height:2em;margin: 0 auto;padding-top:1em;font-size:2em;font-weight: bold;">
+                <div style="width: 90%;height:2em;margin: 0em auto;font-size:2em;font-weight: bold;">
                     계정 관리
                 </div>
                 <div class="scrolltable">
@@ -28,8 +28,8 @@
             <div style="width: 100%; height:100%">
                 <div style="width: 90%;height:4em;margin: 0 auto;padding-top:1em;font-size:2em;font-weight: bold;">
                     등록
-                    <div style="display:block;margin-top: 1em;">
-                        <input type="text" @input="changeKeyword" />
+                    <div style="display:block;margin-top: 0.5em;">
+                        <input placeholder="검색" type="text" @input="changeKeyword" />
                     </div>
                 </div>
                 <div class="scrolltable">
@@ -45,7 +45,7 @@
                             <td><img :src="candidate.imgName" style="width:2.5em;" /></td>
                             <td>{{candidate.memberName}}</td>
                             <td>{{candidate.email}}</td>
-                            <td style="font-size: 2em;cursor: pointer;color:red;" @click="approve(candidate.memberId)">✓</td>
+                            <td style="font-size: 2em;cursor: pointer;color: green;" @click="approve(candidate.memberId)">✓</td>
                         </tr>
                     </tbody>
                 </table>
@@ -210,9 +210,13 @@ input {
     outline:none;
     border:none;
     background-color: #F1EEEE;
+    box-shadow: 0 0 5px 0 gray;
     color: #838383;
-    font-weight: bold;
-    font-size: 0.7em;
+    font-size: 0.5em;
     border-radius: 1em;
+}
+input:hover {
+    background-color: rgb(190, 190, 190);
+    box-shadow: 0 0 5px 0 gray;
 }
 </style>

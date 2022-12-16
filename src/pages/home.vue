@@ -71,10 +71,13 @@ export default {
     background-color: transparent;
     font-weight: bold;
     cursor: pointer;
-    font-size: 2em;
+    font-size: 1.5em;
     margin: 1em;
+    padding: 0.5em;
 }
 .button:hover {
-    color: grey;
+    background-color: rgb(190, 190, 190);
+    border-radius: 1em;
+    padding: 0.5em;
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
-    <div style="display:flex;">
+    <div style="display:flex;flex-direction: column;">
         <MenuBar/>
         <div class="content">
-            <div v-if="!isEditing" style="width:330px;height: 600px;margin: 40px auto;">
-                <h2>업체정보<span @click="controlEdit" style="background-color: #041461;padding: 0.5em;border-radius: 1em;color: white;font-size: 0.5em;float: right;cursor: pointer;">수정</span></h2>
+            <div v-if="!isEditing" style="width:330px;height: 600px;margin: 0 auto;">
+                <h2 style="margin: 0.3em;">업체정보<span @click="controlEdit" style="background-color: #041461;padding: 0.5em;border-radius: 1em;color: white;font-size: 0.5em;float: right;cursor: pointer;">수정</span></h2>
                 <img style="width: 200px;border-radius: 1em;box-shadow: 0 0 5px 0 gray;" :src="companyInfo.imageName" />
                 <div style="margin: 0.5em 0;">업체 이름</div>
                 <div style="color:gray;">{{companyInfo.companyName}}</div>
@@ -165,7 +165,7 @@ export default {
 <style scoped>
 .content {
     width: 100%;
-    height: calc(100vh - 3.75em);
+    height: calc(100vh - 3.75em - 48px);
 }
 textarea {
     width: 90%;height: 80px;resize: none;

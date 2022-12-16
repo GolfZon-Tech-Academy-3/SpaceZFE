@@ -1,8 +1,8 @@
 <template>
-    <div style="display:flex">
+    <div style="display:flex;flex-direction: column;">
         <MenuBar />
         <div class="content">
-            <div style="width: 90%;padding: 1.3em 0 0.3em 0;margin: 0 auto;font-size: 1.5em;font-weight: bold;">
+            <div style="width: 90%;padding: 0 0 0.5em 0.5em;margin: 0em auto;font-size: 1.5em;font-weight: bold;">
                 업체관리
             </div>
             <div style="width: 90%;height: 50px;margin: 0 auto;">
@@ -235,10 +235,11 @@ export default {
 }
 table {
     width: 90%;
-    height: 75%;
+    height: 70%;
     overflow: auto;
     font-weight: bold;
     border-collapse: collapse;
+    margin: 0 auto;
 }
 thead {
     height: 5%;

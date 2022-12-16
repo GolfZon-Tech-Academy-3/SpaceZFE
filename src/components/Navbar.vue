@@ -7,20 +7,20 @@
             <router-link v-else :to="{name: 'Home'}" style="margin-left: 3%;">
                 <img src="../assets/startLogo.png" @click="closeSearchModal" style="width: 35px;height: 35px;cursor: pointer;" />
             </router-link>
-            <input v-if="isLogined && width > 355" id="searchInput" autocomplete="off" @focus="openSearchModal" @keyup.enter="moveToSearch" :value="searchWord" @input="searchModal"/>
-            <div v-if="!isManager && !isMaster && isLogined" style="cursor: pointer;margin: 0 1em;" @click="controlMapModal">
+            <input v-if="isLogined && width > 355" placeholder="검색" id="searchInput" autocomplete="off" @focus="openSearchModal" @keyup.enter="moveToSearch" :value="searchWord" @input="searchModal"/>
+            <div class="element" v-if="!isManager && !isMaster && isLogined" @click="controlMapModal">
                 map
             </div>
-            <router-link v-if="isMaster" style="cursor: pointer;margin: 0 1em;" :to="{name: 'MasterCompany'}" @click="closeSearchModal">
+            <router-link v-if="isMaster" class="element" :to="{name: 'MasterCompany'}" @click="closeSearchModal">
                 master
             </router-link>
-            <router-link v-if="isManager" style="cursor: pointer;margin: 0 1em;" :to="{name: 'ManageCompany'}" @click="closeSearchModal">
+            <router-link v-if="isManager" class="element" :to="{name: 'ManageCompany'}" @click="closeSearchModal">
                 manager
             </router-link>
-            <div class="element" style="cursor: pointer;margin: 0 1em;" v-if="!isLogined" @click= "openLoginModal" >
+            <div class="element" v-if="!isLogined" @click= "openLoginModal" >
                 login
             </div>
-            <router-link class="element" style="cursor: pointer;margin: 0 1em;" v-if="isLogined" :to="{name: 'Home'}" @click="logout">
+            <router-link class="element" v-if="isLogined" :to="{name: 'Home'}" @click="logout">
                 logout
             </router-link>
             <router-link v-if="isLogined" :to="{name: 'MyPage'}" style="margin: 0 1em;" @click="closeSearchModal">
@@ -137,7 +137,10 @@ export default {
         const logout = () => {
             store.dispatch('initToken');
             isLogined.value = false;
-            router.push({name: 'Home'});
+                router.push({name: 'Home'});
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
         }
 
         const moveToSearch = async () => {
@@ -225,8 +228,8 @@ a {
         position: fixed;
         width: 20%;
         font-size: 1em;
-        color: grey;
         border: none;
+        box-shadow: 0 0 5px 0 gray;
         background-color: #EDEDED;
         border-radius: 1em;
         left: 38.7%;
@@ -245,8 +248,8 @@ a {
     #searchInput {
         width: 50%;
         font-size: 1em;
-        color: grey;
         border: none;
+        box-shadow: 0 0 5px 0 gray;
         background-color: #EDEDED;
         border-radius: 1em;
         padding: 0.4em 1.3%;
@@ -261,6 +264,9 @@ a {
         margin-right: 3%;
     }
 }
+#searchInput:hover {
+    background-color: rgb(190, 190, 190);
+}
 .closeBtn {
     background-color: white;
     border: none;
@@ -269,5 +275,16 @@ a {
 }
 a {
     color: black;
+}
+.element {
+    cursor: pointer;margin: 0 1em;
+    padding: 0.5em;
+}
+.element:hover {
+    cursor: pointer;
+    margin: 0 1em;
+    background-color: rgb(190, 190, 190);
+    padding: 0.5em;
+    border-radius: 1em;
 }
 </style>

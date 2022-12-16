@@ -1,5 +1,5 @@
 <template>
-    <div style="display:flex">
+    <div style="display:flex;flex-direction: column;">
         <MenuBar />
         <div class="content">
             <div class="scrolltable">

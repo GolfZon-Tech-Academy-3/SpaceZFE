@@ -1,9 +1,12 @@
 <template>
   <div>
-    <span v-if="!showMenuBar" @click="controlMenuBar" style="position:fixed;margin: 0.5em;cursor: pointer;" class="material-symbols-outlined">
+    <span v-if="!showMenuBar" @click="controlMenuBar" style="cursor: pointer;" class="material-symbols-outlined">
       menu
     </span>
     <div v-else style="width: 100%;height: 100%;display:flex;">
+      <span style="cursor: pointer;" class="material-symbols-outlined">
+        menu
+      </span>
       <div class="wrapper">
         <div :class="[ link === '/backoffice/managecompany' ? 'menuSelected' : 'menu', ]" @click="moveTo('ManageCompany')" >
           <div style="text-decoration: none; color: white">장소 정보/수정</div>
@@ -90,10 +93,16 @@ export default {
   cursor: pointer;
 }
 .material-symbols-outlined {
+  padding: 0.5em;
   font-variation-settings:
   'FILL' 0,
   'wght' 400,
   'GRAD' 0,
   'opsz' 48
+}
+.material-symbols-outlined:hover {
+  padding: 0.5em;
+  background-color: rgb(190, 190, 190);
+  border-radius: 50%;
 }
 </style>

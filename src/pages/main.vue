@@ -395,7 +395,7 @@ export default {
   'GRAD' 0,
   'opsz' 48
 }
-a{
+a {
   color: black;
 }
 </style>
