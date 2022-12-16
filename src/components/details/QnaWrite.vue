@@ -34,6 +34,7 @@
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import axios from "axios";
+import { useStore } from "vuex";
 
 export default {
   props: {
@@ -48,6 +49,7 @@ export default {
     const questions = ref("");
     const cid = ref(props.qnaAnswer.cid);
     const cName = ref(props.qnaAnswer.cName);
+    const store = useStore();
 
     const qnaPost = async (e) => {
       if (questions.value.length < 5) {
@@ -68,12 +70,14 @@ export default {
               }
             )
             .then((res) => {
+              console.log(res);
               if (res.status === 200) {
                 alert("문의사항이 등록되었습니다");
                 router.go();
               }
             });
         } catch (error) {
+          console.log(error);
           if (error.response.status < 500) {
             alert("작성 폼을 다시 확인해주세요");
             questions.value = "";

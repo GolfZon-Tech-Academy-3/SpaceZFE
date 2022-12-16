@@ -956,6 +956,7 @@ export default {
       endingDay.value = e.target.value;
       endDay.value = e.target.value;
 
+      console.log(endDates.value.indexOf("x"));
       let officeReserved = endDates.value.indexOf("x");
       let clickedEndDay = endDates.value.indexOf(e.target.value);
       if (e.target.value == "x") {
@@ -967,7 +968,7 @@ export default {
         cantReserve.value = false;
         showingDeskEnd.value = false;
         console.log(cantReserve.value);
-      } else if (officeReserved < clickedEndDay) {
+      } else if (officeReserved >= 0 && officeReserved < clickedEndDay) {
         alert(
           "선택하신 기간중 이미 예약된 시간이 있습니다 다른 종료 날짜를 선택해주세요"
         );

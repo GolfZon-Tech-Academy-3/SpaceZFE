@@ -41,8 +41,15 @@
         </span>
       </p>
       <div v-show="!resStatus" class="inner">
+        <div v-if="resStatuses.length ==0">
+          <p class="hogaek" @click="toMain">
+        <b style="color: rgb(4, 20, 97, 1)">SPACEZ</b>로 공간 예약하러 가기 !!! <span class="arrow">&rarr;</span>
+        <span class="arrow2">GoGo!</span>
+      </p>
+          <Nothing what="예약현황이"/>
+        </div>
         <table>
-          <tr v-for="num in resStatuses.length" :key="num">
+          <tr v-for="num in resStatuses.length < resStatuseses? resStatuses.length : resStatuseses" :key="num">
             <td class="imgTd"><img :src="resStatuses[num - 1].imageName" /></td>
             <td class="centerTd">
               <p>
@@ -110,9 +117,13 @@
             </td>
           </tr>
         </table>
+        <button v-if="resStatuses.length>0" class="showMore" :disabled="resStatuses.length < resStatuseses ? true : noMoreResStatus" @click="showResStatuses">더보기</button>
       </div>
       <div v-show="!resRecord" class="inner">
-        <table v-for="num in resDone.length" :key="num">
+        <div v-if="resDone.length ==0">
+          <Nothing what="예약 이력이"/>
+        </div>
+        <table v-for="num in (resDone.length < resDones ? resDone.length : resDones)" :key="num">
           <tr>
             <td class="imgTd"><img :src="resDone[num-1].imageName" /></td>
             <td class="centerTd">
@@ -197,6 +208,8 @@
             </td>
           </tr>
         </table>
+        <button v-if="resDone.length>0" class="showMore" :disabled="resDone.length < resDones ? true : noMore" @click="showResDones">더보기</button>
+        <button class="toTop" v-show="resDones>4" @click="toTop">맨위로</button>
       </div>
     </div>
   </div>
@@ -213,14 +226,15 @@ import ErrorHandle from "@/components/UI/BaseDialog.vue";
 import Spinner from "@/components/UI/Spinner.vue";
 import ReviewWrite from '@/components/myPage/ReviewWrite.vue'
 import MyReview from '@/components/myPage/MyReview.vue'
-
+import Nothing from "@/components/UI/Nothing.vue";
 
 export default {
     components:{
         ReviewWrite,
         MyReview,
         ErrorHandle,
-        Spinner
+        Spinner,
+        Nothing
       },
 setup() {
     const proxy = window.location.hostname === "localhost" ? "" : "/proxy"; 
@@ -247,6 +261,11 @@ setup() {
     const errorContetn1 = ref(null);
     const loading = ref(false);
     const popup = ref(false)
+
+    const resDones = ref(4)
+    const noMore = ref(false)
+    const resStatuseses = ref(4)
+    const noMoreResStatus = ref(false)
 
     let find
 
@@ -341,8 +360,9 @@ setup() {
         } else{
           url=`${proxy}/reservation/desk-cancel/`
         }
+        console.log(url,resId.reservationId)
         try {
-        await axios.put(url+resId.reservationId,{
+        await axios.put(url+resId.reservationId,null,{
           headers: { Authorization: store.state.accessToken },
         }).then(res=>{
           if(res.status < 300 && res.status >= 200){
@@ -428,6 +448,38 @@ setup() {
       });
     }
 
+    //더보기
+    const showResDones = ()=>{
+      resDones.value += 4 
+      if(resDones.value >= resDone.value.length){
+        resDones.value = resDone.value.length
+        noMore.value = true
+        return 
+      }
+    }
+    const showResStatuses = ()=>{
+      resStatuseses.value +=4
+      if(resStatuseses.value >= resStatuses.value.length){
+        resStatuseses.value = resStatuses.value.length
+        noMoreResStatus.value = true
+        return
+      }
+    }
+      
+    //맨위로
+    const toTop = (e) => {
+      let where = e.path.length-4
+      e.path[where].scrollIntoView(true);
+      e.path[where].scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
+      resDones.value = 4
+      resStatuseses.value = 4
+      noMore.value = false
+    };
+    
     return {
       resStatus,
       resRecord,
@@ -448,13 +500,20 @@ setup() {
       editOrDel,
       showDelete,
       loading,
-errorHome,
-errorRef,
-errorContent,
-errorContetn1,
-popup,
-showPopup,
-toCompany,
+      errorHome,
+      errorRef,
+      errorContent,
+      errorContetn1,
+      popup,
+      showPopup,
+      toCompany,
+      showResDones,
+      resDones,
+      noMore,
+      resStatuseses,
+      noMoreResStatus,
+      showResStatuses,
+      toTop
       };
   },
 };
@@ -585,7 +644,7 @@ img{
 .tooltip {
   position: relative;
   display: inline-block;
-  border-bottom: 1px dotted black;
+  border-bottom: 1px  black;
 }
 
 .tooltip .tooltiptext {
@@ -624,5 +683,38 @@ img{
 }
 .reviewsho{
  transition: 0.5s;
+}
+.showMore{
+  background: white;
+  border: 1px solid white;
+}
+.showMore:hover{
+  border-bottom: 1px solid black;
+  transition: 0.1s;
+}
+.toTop{
+  background: white;
+  border: 1px solid white;
+  float: right;
+}
+.toTop:hover{
+  border-top: 1px solid black;
+  transition: 0.1s;
+}
+.hogaek {
+  font-family: "Inter";
+  font-style: normal;
+  font-size: 1.2em;
+}
+.hogaek:hover > .arrow {
+  color: red;
+  font-weight: 700;
+}
+.arrow2 {
+  color: white;
+}
+.hogaek:hover > .arrow2 {
+  color: red;
+  font-weight: 700;
 }
 </style>

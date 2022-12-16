@@ -57,14 +57,19 @@
         환급
       </button>
     </div>
-    <div>
+    <div v-if="mileages.length > 0">
       <table class="table" v-show="!allClick">
         <th>날짜</th>
         <th>업체</th>
         <th>마일리지</th>
         <th>상태</th>
         <!-- <hr /> -->
-        <tr v-for="num in mileages.length" :key="num">
+        <tr
+          v-for="num in mileages.length < totalMileages
+            ? mileages.length
+            : totalMileages"
+          :key="num"
+        >
           <td>{{ mileages[num - 1].mileageDate }}</td>
           <td>{{ mileages[num - 1].spaceName }}</td>
           <td>{{ Math.abs(mileages[num - 1].score) }}</td>
@@ -79,6 +84,14 @@
           </td>
           <td v-show="mileages[num - 1].status === '취소'"><b>취소</b></td>
         </tr>
+        <button
+          v-show="mileages.length > 0"
+          class="showAll"
+          @click="showAll"
+          :disabled="mileages.length < totalMileages ? true : noMore"
+        >
+          전체 보기
+        </button>
       </table>
       <table class="table" v-show="!earnedClick">
         <th>날짜</th>
@@ -136,7 +149,15 @@
         </tr>
       </table>
     </div>
-    <div class="total">
+    <div v-else>
+      <p class="hogaek" @click="toMain">
+        <b style="color: rgb(4, 20, 97, 1)">SPACEZ</b>로 공간 예약해서 마일리지
+        쌓으러 가기 !!! <span class="arrow">&rarr;</span>
+        <span class="arrow2">GoGo!</span>
+      </p>
+      <Nothing what="마일리지가" />
+    </div>
+    <div class="total" v-if="mileages.length > 0">
       <table class="milUsage">
         <th style="text-align: left">총 마일리지</th>
         <th style="text-align: right">{{ totalMileage }}점</th>
@@ -158,6 +179,7 @@
         </tr>
       </table>
     </div>
+    <div v-else></div>
   </div>
 </template>
 
@@ -165,13 +187,16 @@
 import { ref } from "vue";
 import axios from "axios";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import ErrorHandle from "@/components/UI/BaseDialog.vue";
 import Spinner from "@/components/UI/Spinner.vue";
+import Nothing from "@/components/UI/Nothing.vue";
 
 export default {
   components: {
     ErrorHandle,
     Spinner,
+    Nothing,
   },
   setup() {
     const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
@@ -194,9 +219,13 @@ export default {
 
     const mileages = ref([]);
     const store = useStore();
+    const router = useRouter();
 
     const errorContent = ref(null);
     const loading = ref(false);
+
+    const totalMileages = ref(17);
+    const noMore = ref(false);
 
     const getMileInfo = async () => {
       loading.value = true;
@@ -253,6 +282,14 @@ export default {
       getMileInfo();
     };
 
+    const showAll = () => {
+      totalMileages.value += 6;
+      if (totalMileages.value >= mileages.value.length) {
+        totalMileages.value = mileages.value.length;
+        noMore.value = true;
+      }
+    };
+
     //버튼 바꿔주는 함수들
     const all = () => {
       allClick.value = !allClick.value;
@@ -289,6 +326,12 @@ export default {
       earnedClick.value = true;
       usedClick.value = true;
     };
+
+    const toMain = () => {
+      router.push({
+        name: "Main",
+      });
+    };
     return {
       totalMileage,
       mileages,
@@ -315,6 +358,10 @@ export default {
       loading,
       errorHome,
       errorRef,
+      totalMileages,
+      showAll,
+      noMore,
+      toMain,
     };
   },
 };
@@ -381,5 +428,30 @@ table {
   font-family: "Inter";
   font-style: normal;
   font-weight: 500;
+}
+.showAll {
+  background: white;
+  border: 1px solid white;
+}
+.showAll:hover {
+  border: 1px solid black;
+  border-radius: 10px;
+  transition: 0.1s;
+}
+.hogaek {
+  font-family: "Inter";
+  font-style: normal;
+  font-size: 1.2em;
+}
+.hogaek:hover > .arrow {
+  color: red;
+  font-weight: 700;
+}
+.arrow2 {
+  color: white;
+}
+.hogaek:hover > .arrow2 {
+  color: red;
+  font-weight: 700;
 }
 </style>

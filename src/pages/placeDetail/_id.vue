@@ -199,62 +199,76 @@
             v-if="reviews.reviews.length"
             :numberOfPages="numberOfPages"
             :currentPage="currentPage"
+            :currentQnaPage="[]"
+            :limit="0"
             @click="getReviews"
           >
           </pagination>
+          <Nothing v-if="reviews.reviews.length == 0" what="리뷰가" />
         </div>
         <div class="qnaClicked" v-show="qnaClicked">
           <h2 @click="uploadQna">질문하기</h2>
-          <span v-show="showWrite" @click="showWrite = true">접기</span>
+          <Nothing v-if="qnas.list.length == 0" v-show="showQ" what="Q&A가" />
           <div>
             <QnaWrite :qnaAnswer="qnaInfo" v-if="showWrite" />
           </div>
           <div
             style="margin-top: 2%"
-            v-for="num in qnas.list.length"
+            v-for="num in currnetQnaPage.length"
             :key="num"
           >
             <div class="qnas">
-              <img class="profilePic" :src="qnas.list[num - 1].imagePath" />
+              <img
+                class="profilePic"
+                :src="currnetQnaPage[num - 1].imagePath"
+              />
               <div style="line-height: 1.6; margin-left: 3%">
                 <p>
                   <b>
-                    {{ qnas.list[num - 1].memberName }}
+                    {{ currnetQnaPage[num - 1].memberName }}
                   </b>
-                  {{ qnas.list[num - 1].inquiryTime }}
+                  {{ currnetQnaPage[num - 1].inquiryTime }}
                 </p>
-                {{ qnas.list[num - 1].inquiries }}
+                {{ currnetQnaPage[num - 1].inquiries }}
               </div>
             </div>
             <button
-              v-show="qnas.list[num - 1].answers != null"
+              v-show="currnetQnaPage[num - 1].answers != null"
               class="qnaButton"
-              @click="showCanvas(qnas.list[num - 1].inquiryId)"
+              @click="showCanvas(currnetQnaPage[num - 1].inquiryId)"
             >
               답변보기
               <span
                 style="color: black"
-                v-show="!qnas.list[num - 1].showMyAnswer"
+                v-show="!currnetQnaPage[num - 1].showMyAnswer"
                 >&#8744;</span
               >
               <span
                 style="color: black"
-                v-show="qnas.list[num - 1].showMyAnswer"
+                v-show="currnetQnaPage[num - 1].showMyAnswer"
               >
                 &#8743;</span
               >
             </button>
             <button
-              v-show="qnas.list[num - 1].answers == null"
+              v-show="currnetQnaPage[num - 1].answers == null"
               class="qnaButtonNot"
             >
               답변 미등록
             </button>
             <QnaOffcanvas
               :qnaAnswer="qnaAnswer"
-              v-show="qnas.list[num - 1].showMyAnswer"
+              v-show="currnetQnaPage[num - 1].showMyAnswer"
             />
           </div>
+          <pagination
+            v-if="qnas.list.length"
+            :numberOfPages="numberofQnaPages"
+            :currentPage="0"
+            :currentQnaPage="currnetQnaPage"
+            :limit="qnasLimit"
+            @click="getQnas"
+          />
         </div>
       </div>
     </div>
@@ -270,6 +284,7 @@ import QnaOffcanvas from "@/components/details/QnaAnswer.vue";
 import QnaWrite from "@/components/details/QnaWrite.vue";
 import Spinner from "@/components/UI/Spinner.vue";
 import ErrorHandle from "@/components/UI/BaseDialog.vue";
+import Nothing from "@/components/UI/Nothing.vue";
 
 import { useRoute, useRouter } from "vue-router";
 import axios from "@/axios";
@@ -285,10 +300,12 @@ export default {
     QnaWrite,
     Spinner,
     ErrorHandle,
+    Nothing,
   },
 
   setup() {
     const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
+
     const store = useStore();
     const router = useRouter();
     const route = useRoute();
@@ -319,6 +336,7 @@ export default {
 
     const loading = ref(false);
     const errorContent = ref(null);
+    const showQ = ref(true);
 
     const mapOption = ref({
       center: {
@@ -334,6 +352,13 @@ export default {
     const numberOfReviews = ref(0);
     const numberOfPages = computed(() => {
       return Math.ceil(numberOfReviews.value / 5);
+    });
+
+    let qnasLimit = ref(5);
+    const currnetQnaPage = ref([]);
+    const numberOfQnas = ref(0);
+    const numberofQnaPages = computed(() => {
+      return Math.ceil(numberOfQnas.value / 5);
     });
 
     // qna 장소 상세 get하는 함수
@@ -368,6 +393,11 @@ export default {
                 for (let i = 0; i < qnas.value.list.length; i++) {
                   qnas.value.list[i].showMyAnswer = false;
                 }
+                currnetQnaPage.value = res.data.list.slice(0, 5);
+                numberOfQnas.value = res.data.count;
+                console.log(res.data);
+                console.log(currnetQnaPage.value.length);
+                console.log(currnetQnaPage.value);
               });
           });
       } catch (error) {
@@ -391,10 +421,30 @@ export default {
         .then((res) => {
           reviews.value = { ...res.data };
           numberOfReviews.value = reviews.value.totalCount;
-          console.log(res.data);
         });
     };
     getReviews();
+
+    //qna pagination
+    const getQnas = (e) => {
+      let x = 0;
+      if (e == "go") {
+        qnasLimit.value += 5;
+        x += 5;
+        currnetQnaPage.value = qnas.value.list.slice(x, qnasLimit.value);
+      } else if (e == "back") {
+        qnasLimit.value -= 5;
+        x -= 5;
+        currnetQnaPage.value = qnas.value.list.slice(x, qnasLimit.value);
+      } else if (e != "go" && e != "back") {
+        // qnasLimit.value = e * qnasLimit.value;
+        qnasLimit.value = e * 5;
+        x = e * 5;
+        currnetQnaPage.value = qnas.value.list.slice(x - 5, e * 5);
+        console.log(qnasLimit.value, x);
+      }
+      console.log(e);
+    };
 
     //get에러시 홈페이지로
     const errorHome = () => {
@@ -439,7 +489,6 @@ export default {
 
     //사진 리스트 클릭시 해당 사진 변경
     const directChangePic = (e) => {
-      e.target.style.opacity = 1;
       for (let i = 0; i < details.value.spaceImages.length; i++) {
         imageList.value = details.value.spaceImages[i];
       }
@@ -501,6 +550,7 @@ export default {
     //Qna 오프캔버스 띄울 함수
     const uploadQna = () => {
       showWrite.value = !showWrite.value;
+      showQ.value = !showQ.value;
     };
 
     // 하단 nav바 버튼들
@@ -588,6 +638,12 @@ export default {
       numberOfPages,
       getReviews,
       companyLike,
+      showQ,
+      currnetQnaPage,
+      numberOfQnas,
+      numberofQnaPages,
+      getQnas,
+      qnasLimit,
     };
   },
 };
@@ -617,7 +673,7 @@ export default {
   font-size: 3vh;
   float: left;
   position: absolute;
-  top: 32%;
+  top: 25%;
 }
 .interestPl {
   font-size: 2.5vh;
@@ -625,21 +681,19 @@ export default {
   width: 10vw;
   height: 5vh;
   text-align: center;
-  /* float: left; */
   background: #d2e1f9;
   border: 1px solid #d2e1f9;
   border-radius: 10px;
-  /* font-weight: 600; */
   display: inline;
 }
 .placeDetails {
   font-size: 2.5vh;
   float: left;
   position: absolute;
-  top: 40%;
-  width: calc(fit-content+2%);
+  top: 31%;
+  width: fit-content;
   height: 20vh;
-  padding-top: 1.5%;
+  padding: 2%;
   color: white;
   border-radius: 10px;
   background: linear-gradient(
@@ -681,6 +735,7 @@ export default {
   position: relative;
   margin: auto;
   align-self: left;
+  border-radius: 5%;
 }
 .list {
   float: left;
@@ -688,6 +743,11 @@ export default {
   height: 10vh;
   margin: 1.5%;
   text-align: center;
+  border-radius: 10%;
+  opacity: 0.9;
+}
+.list:hover {
+  opacity: 1;
 }
 .lineIntro {
   text-align: left;
@@ -729,8 +789,8 @@ export default {
   width: 90%;
   height: fit-content;
   padding-top: 2%;
-  /* padding-bottom: 4%; */
   border: 2px solid silver;
+  border-radius: 15px;
   margin: 2%;
   display: flex;
   flex-direction: row;
@@ -742,6 +802,13 @@ export default {
   margin-top: 5%;
   width: 10vw;
   height: 20vh;
+  border-radius: 10px;
+}
+.resType {
+  font-size: 1.2em;
+}
+.resSpace {
+  font-size: 1.2em;
 }
 .resBtn {
   width: 80%;
@@ -749,10 +816,16 @@ export default {
   margin-top: 3%;
   margin-bottom: 3%;
   border-radius: 10px;
+  border: 0.1px solid rgb(4, 20, 97, 1);
   background-color: rgb(4, 20, 97, 1);
   color: white;
   font-size: 1.3rem;
   display: inline;
+}
+.resBtn:hover {
+  background-color: #1e6ff4;
+  border: 0.1px solid #1e6ff4;
+  transition: 0.2s;
 }
 .ul {
   float: right;
@@ -796,6 +869,7 @@ iframe {
   display: flex;
   border-bottom: 1px solid silver;
 }
+
 .profilePic {
   width: 10%;
   height: 10%;
