@@ -15,64 +15,84 @@
         <td class="head">문의 날짜</td>
         <td style="border-top-right-radius: 10px" class="head">답변 유무</td>
       </tr>
-      <table v-for="num in qnas.length" :key="num">
-        <tr>
-          <td>
-            <b>{{ qnas[num - 1].companyName }}</b>
-          </td>
-          <td style="color: rgba(133, 133, 137, 1)">
-            {{ qnas[num - 1].inquiryTime }}
-          </td>
-          <td v-if="!qnas[num - 1].answers"><b>미완료</b></td>
-          <td v-if="qnas[num - 1].answers"><b>완료</b></td>
+      <div style="width: 80%" v-if="qnas.length == 0">
+        <p class="hogaek" @click="toMain">
+          <b style="color: rgb(4, 20, 97, 1)">SPACEZ</b>에 궁금한거 물어보러
+          가기!!! <span class="arrow">&rarr;</span>
+          <span class="arrow2">GoGo!</span>
+        </p>
+        <Nothing what="Q&A가" />
+      </div>
+    </div>
+
+    <table v-for="num in qnas.length < qna ? qnas.length : qna" :key="num">
+      <tr>
+        <td>
+          <b>{{ qnas[num - 1].companyName }}</b>
+        </td>
+        <td style="color: rgba(133, 133, 137, 1)">
+          {{ qnas[num - 1].inquiryTime }}
+        </td>
+        <td v-if="!qnas[num - 1].answers"><b>미완료</b></td>
+        <td v-if="qnas[num - 1].answers"><b>완료</b></td>
+        <button
+          class="btns"
+          v-show="!qnas[num - 1].showMyqna"
+          @click="showContent(qnas[num - 1].inquiryId)"
+        >
+          펼치기
+        </button>
+        <button
+          class="btns"
+          v-show="qnas[num - 1].showMyqna"
+          @click="showContent(qnas[num - 1].inquiryId)"
+        >
+          접기
+        </button>
+      </tr>
+      <tr v-show="qnas[num - 1].showMyqna">
+        <td colspan="3" style="text-align: left">
+          <p>{{ qnas[num - 1].inquiries }}</p>
           <button
-            class="btns"
-            v-show="!qnas[num - 1].showMyqna"
-            @click="showContent(qnas[num - 1].inquiryId)"
+            class="qnaButton"
+            @click="showAnwer(qnas[num - 1].inquiryId)"
+            v-if="qnas[num - 1].answers !== ''"
           >
-            펼치기
-          </button>
-          <button
-            class="btns"
-            v-show="qnas[num - 1].showMyqna"
-            @click="showContent(qnas[num - 1].inquiryId)"
-          >
-            접기
-          </button>
-        </tr>
-        <tr v-show="qnas[num - 1].showMyqna">
-          <td colspan="3" style="text-align: left">
-            <p>{{ qnas[num - 1].inquiries }}</p>
-            <button
-              class="qnaButton"
-              @click="showAnwer(qnas[num - 1].inquiryId)"
-              v-if="qnas[num - 1].answers !== ''"
+            답변보기
+            <span style="color: black" v-show="!qnas[num - 1].showMyAnswer"
+              >&#8744;</span
             >
-              답변보기
-              <span style="color: black" v-show="!qnas[num - 1].showMyAnswer"
-                >&#8744;</span
-              >
-              <span style="color: black" v-show="qnas[num - 1].showMyAnswer">
-                &#8743;</span
-              >
-            </button>
-            <button class="qnaButton" v-if="qnas[num - 1].answers === ''">
-              답변보기
-              <span style="color: black" v-show="!qnas[num - 1].showMyAnswer"
-                >&#8744;</span
-              >
-              <span style="color: black" v-show="qnas[num - 1].showMyAnswer">
-                &#8743;</span
-              >
-            </button>
-            <QnaAnswers
-              v-if="qnas[num - 1] !== null"
-              :qnaAnswer="qnaAnswer"
-              v-show="qnas[num - 1].showMyAnswer"
-            />
-          </td>
-        </tr>
-      </table>
+            <span style="color: black" v-show="qnas[num - 1].showMyAnswer">
+              &#8743;</span
+            >
+          </button>
+          <button class="qnaButton" v-if="qnas[num - 1].answers === ''">
+            답변보기
+            <span style="color: black" v-show="!qnas[num - 1].showMyAnswer"
+              >&#8744;</span
+            >
+            <span style="color: black" v-show="qnas[num - 1].showMyAnswer">
+              &#8743;</span
+            >
+          </button>
+          <QnaAnswers
+            v-if="qnas[num - 1] !== null"
+            :qnaAnswer="qnaAnswer"
+            v-show="qnas[num - 1].showMyAnswer"
+          />
+        </td>
+      </tr>
+    </table>
+    <div>
+      <button
+        class="showMore"
+        :disabled="qnas.length < qna ? true : noMore"
+        @click="showMore"
+        v-if="qnas.length != 0"
+      >
+        더보기
+      </button>
+      <button class="toTop" v-show="qna > 4" @click="toTop">맨위로</button>
     </div>
   </div>
 </template>
@@ -80,14 +100,17 @@
 import { ref } from "vue";
 import axios from "axios";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 import ErrorHandle from "@/components/UI/BaseDialog.vue";
 import QnaAnswers from "@/components/myPage/QnaAnswers.vue";
+import Nothing from "@/components/UI/Nothing.vue";
 
 export default {
   components: {
     QnaAnswers,
     ErrorHandle,
+    Nothing,
   },
   setup() {
     const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
@@ -96,6 +119,9 @@ export default {
     const errorContent = ref(null);
 
     const store = useStore();
+    const router = useRouter();
+    const qna = ref(4);
+    const noMore = ref(false);
 
     let find;
 
@@ -162,6 +188,36 @@ export default {
         }
       }
     };
+
+    //더보기
+    const showMore = () => {
+      qna.value += 4;
+      if (qna.value >= qnas.value.length) {
+        qna.value = qnas.value.length;
+        noMore.value = true;
+        return;
+      }
+    };
+
+    //맨위로
+    const toTop = (e) => {
+      let where = e.path.length - 4;
+      e.path[where].scrollIntoView(true);
+      e.path[where].scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
+      qna.value = 4;
+      noMore.value = false;
+    };
+
+    const toMain = () => {
+      router.push({
+        name: "Main",
+      });
+    };
+
     return {
       qnas,
       showContent,
@@ -171,6 +227,11 @@ export default {
       errorContent,
       errorHome,
       errorRef,
+      qna,
+      noMore,
+      showMore,
+      toTop,
+      toMain,
     };
   },
 };
@@ -234,5 +295,79 @@ td {
   background-color: white;
   border: 1px solid white;
   margin-bottom: 2.5%;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: fit-content;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 0.4em;
+  white-space: nowrap;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+.showMore {
+  text-align: center;
+  background: white;
+  border: 1px solid white;
+}
+.showMore:hover {
+  border-bottom: 1px solid black;
+  transition: 0.1s;
+}
+.toTop {
+  margin-left: 30%;
+  background: white;
+  border: 1px solid white;
+}
+.toTop:hover {
+  border-top: 1px solid black;
+  transition: 0.1s;
+}
+.hogaek {
+  font-family: "Inter";
+  font-style: normal;
+  font-size: 1.2em;
+}
+.hogaek:hover > .arrow {
+  color: red;
+  font-weight: 700;
+}
+.arrow2 {
+  color: white;
+}
+.hogaek:hover > .arrow2 {
+  color: red;
+  font-weight: 700;
 }
 </style>
