@@ -3,23 +3,28 @@
     <span v-if="!showMenuBar" @click="controlMenuBar" style="position:fixed;margin: 0.5em;cursor: pointer;" class="material-symbols-outlined">
       menu
     </span>
-    <div v-else class="wrapper">
-      <div :class="[ link === '/backoffice/managecompany' ? 'menuSelected' : 'menu', ]" @click="moveTo('ManageCompany')" >
-        <div style="text-decoration: none; color: white">장소 정보/수정</div>
+    <div v-else style="width: 100%;height: 100%;display:flex;">
+      <div class="wrapper">
+        <div :class="[ link === '/backoffice/managecompany' ? 'menuSelected' : 'menu', ]" @click="moveTo('ManageCompany')" >
+          <div style="text-decoration: none; color: white">장소 정보/수정</div>
+        </div>
+        <div :class="[ link === '/backoffice/reservationstatus' ? 'menuSelected' : 'menu', ]" @click="moveTo('ReservationStatus')" >
+          <div style="text-decoration: none; color: white">예약 현황</div>
+        </div>
+        <div :class="[link === '/backoffice/manageplace' ? 'menuSelected' : 'menu']" @click="moveTo('ManagePlace')" >
+          <div style="text-decoration: none; color: white">공간 정보/수정</div>
+        </div>
+        <div :class="[link === '/backoffice/qna' ? 'menuSelected' : 'menu']" @click="moveTo('Qna')" >
+          <div style="text-decoration: none; color: white">문의</div>
+        </div>
+        <div :class="[link === '/backoffice/managerchat' ? 'menuSelected' : 'menu']" @click="moveTo('ManagerChat')" >
+          <div style="text-decoration: none; color: white">마스터 문의</div>
+        </div>
       </div>
-      <div :class="[ link === '/backoffice/reservationstatus' ? 'menuSelected' : 'menu', ]" @click="moveTo('ReservationStatus')" >
-        <div style="text-decoration: none; color: white">예약 현황</div>
-      </div>
-      <div :class="[link === '/backoffice/manageplace' ? 'menuSelected' : 'menu']" @click="moveTo('ManagePlace')" >
-        <div style="text-decoration: none; color: white">공간 정보/수정</div>
-      </div>
-      <div :class="[link === '/backoffice/qna' ? 'menuSelected' : 'menu']" @click="moveTo('Qna')" >
-        <div style="text-decoration: none; color: white">문의</div>
-      </div>
-      <div :class="[link === '/backoffice/managerchat' ? 'menuSelected' : 'menu']" @click="moveTo('ManagerChat')" >
-        <div style="text-decoration: none; color: white">마스터 문의</div>
-      </div>
+      <div @click="controlMenuBar" style="position: fixed;left:200px;width: calc(100vw - 200px);height: calc(100vh - 3.75em)" />
     </div>
+    
+    
   </div>
 </template>
 
