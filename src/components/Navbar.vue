@@ -8,6 +8,9 @@
                 <img src="../assets/startLogo.png" @click="closeSearchModal" style="width: 35px;height: 35px;cursor: pointer;" />
             </router-link>
             <input v-if="isLogined && width > 355" id="searchInput" autocomplete="off" @focus="openSearchModal" @keyup.enter="moveToSearch" :value="searchWord" @input="searchModal"/>
+            <div v-if="!isManager && !isMaster && isLogined" style="cursor: pointer;margin: 0 1em;" @click="controlMapModal">
+                map
+            </div>
             <router-link v-if="isMaster" style="cursor: pointer;margin: 0 1em;" :to="{name: 'MasterCompany'}" @click="closeSearchModal">
                 master
             </router-link>
@@ -26,6 +29,8 @@
         </nav>
         <LoginModal v-if="showLoginModal" @close="closeLoginModal" />
         <SearchModal v-if="showSearchModal" @close="closeSearchModal" :result="result" />
+        <MapModal v-if="showMapModal" @close="controlMapModal" />
+        <Toast v-if="showToast" :message="toastMessage" />
     </div>
     
 </template>
@@ -34,18 +39,24 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import LoginModal from '@/components/LoginModal.vue';
 import SearchModal from '@/components/SearchModal.vue';
+import MapModal from '@/components/MapModal.vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import axios from '@/axios';
+import Toast from '@/components/Toast.vue'
+import { useToast } from '@/composables/toast';
 export default {
     components: {
         LoginModal,
         SearchModal,
+        MapModal,
+        Toast,
     },
     setup() {
         const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
         const width = ref(0);
         const showSearchModal = ref(false);
+        const showMapModal = ref(false);
         const showClose = ref(false);
         const searchWord = ref('');
         const router = useRouter();
@@ -55,6 +66,10 @@ export default {
         const isMaster = ref(false);
         const profile_image = store.state.profile;
         const result = ref([]);
+        const {
+            toastMessage, showToast, triggerToast,
+        } = useToast();
+
         width.value = window.innerWidth;
 
         onMounted(() => {
@@ -138,6 +153,13 @@ export default {
             });
         }
 
+        const controlMapModal = () => {
+            if(showMapModal.value === false) {
+                triggerToast('지도를 닫으려면 더블클릭');
+            }
+            showMapModal.value = !showMapModal.value;
+        }
+
         const handleResize = () => {
             width.value = window.innerWidth;
         }
@@ -151,6 +173,7 @@ export default {
             openSearchModal,
             closeSearchModal,
             showClose,
+            showMapModal,
             moveToSearch,
             searchWord,
             isLogined,
@@ -160,6 +183,10 @@ export default {
             searchModal,
             result,
             width,
+            toastMessage,
+            showToast,
+            triggerToast,
+            controlMapModal,
         }
     }
 }

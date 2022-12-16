@@ -144,10 +144,8 @@ export default {
   z-index: 100;
 }
 .modal-dialog {
-  width: 60%;
-  min-width: 600px;
-  height: 90%;
-  min-height: 700px;
+  width: 90%;
+  height: 95%;
   margin: auto;
   background-color: white;
   display: flex;
