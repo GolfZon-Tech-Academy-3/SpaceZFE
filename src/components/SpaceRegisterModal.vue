@@ -340,14 +340,8 @@ export default {
     width: 50%;
     padding: 0.5em;
 }
-.input:focus {
-    outline: none;
-}
 .select {
     padding: 0.5em 0.3em;
-}
-.select:focus {
-    outline: none;
 }
 .check {
     font-size: 0.8em;

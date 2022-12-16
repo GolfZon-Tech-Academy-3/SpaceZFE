@@ -146,6 +146,7 @@ export default {
   color: white;
   padding: 1em;
   border-radius: 1em;
+  cursor: pointer;
 }
 .submit {
   color: grey;

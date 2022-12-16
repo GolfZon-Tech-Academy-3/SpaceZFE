@@ -180,7 +180,6 @@ textarea {
     border-bottom: 1px solid gray;
 }
 .input:focus {
-    outline: none;
     border-bottom: 1px solid black;
 }
 .btn {

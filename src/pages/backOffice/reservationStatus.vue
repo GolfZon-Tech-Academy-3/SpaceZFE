@@ -278,9 +278,6 @@ export default {
   margin-left: 1em;
   margin-right: 1em;
 }
-.date:focus {
-  outline: none;
-}
 .status {
   width: 60vw;
   height: 4em;

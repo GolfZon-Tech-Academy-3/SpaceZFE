@@ -30,11 +30,17 @@ select {
   font-family: 'Noto Sans KR', sans-serif;
   color: #757575;
 }
+select:focus {
+  outline: none;
+}
 textarea {
   font-family: 'Noto Sans KR', sans-serif;
 }
 input {
   font-family: 'Noto Sans KR', sans-serif;
+}
+input:focus {
+  outline: none;
 }
 button {
   font-family: 'Noto Sans KR', sans-serif;

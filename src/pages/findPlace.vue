@@ -408,26 +408,17 @@ export default {
     padding: 0.5em;
     border-radius: 2em;
 }
-#dateSelector:focus {
-    outline: none;
-}
 #timeSelector {
     color:#9E9E9E;
     border: 1px #9E9E9E solid;
     padding: 5% 5%;
     border-radius: 2em;
 }
-#timeSelector:focus {
-    outline: none;
-}
 .search {
     border: 1px #9E9E9E solid;
     padding: 0.6em 1em;
     border-radius: 2em;
     width: 11em;
-}
-.search:focus {
-    outline : none;
 }
 #dateSelector {
     padding: 5px 5px;color:#9E9E9E;

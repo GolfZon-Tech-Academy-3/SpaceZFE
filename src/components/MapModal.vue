@@ -159,7 +159,7 @@ export default {
   height: 100%;
 }
 #loading {
-  display: inline-block;
+  position: fixed;
   width: 50px;
   height: 50px;
   border: 3px solid rgba(255,255,255,.3);
@@ -168,6 +168,8 @@ export default {
   animation: spin 1s ease-in-out infinite;
   -webkit-animation: spin 1s ease-in-out infinite;
   z-index: 1000;
+  top: calc(50% - 25px);
+  left: calc(50% - 25px);
 }
 
 @keyframes spin {

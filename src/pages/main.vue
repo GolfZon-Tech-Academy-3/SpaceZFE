@@ -119,14 +119,12 @@
 
 <script>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import axios from "@/axios";
 export default {
   setup() {
     const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
     const store = useStore();
-    const router = useRouter();
     const hotPlaces = ref([]);
     const newPlaces = ref([]);
     const disabled = ref(false);
@@ -225,6 +223,7 @@ export default {
 }
 .title {
   width: 90%;
+  max-width: 1115.3px;
   height: 2em;
   color: #041461;
   float: left;
@@ -232,7 +231,7 @@ export default {
   font-weight: bold;
   display: flex;
   align-items: center;
-  margin: 0.5em 5%;
+  margin: 0.5em auto;
 }
 .hot {
   margin-left: 1em;

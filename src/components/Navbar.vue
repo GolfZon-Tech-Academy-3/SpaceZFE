@@ -1,7 +1,7 @@
 <template>
     <div>
         <nav class="nav">
-            <router-link v-if="width > 500" class="logo" :to="{name: 'Home'}">
+            <router-link v-if="width > 500" class="logo" :to="isLogined ? {name: 'Main'} : {name: 'Home'}">
                 SPACEZ
             </router-link>
             <router-link v-else :to="{name: 'Home'}" style="margin-left: 3%;">
@@ -137,7 +137,7 @@ export default {
         const logout = () => {
             store.dispatch('initToken');
             isLogined.value = false;
-            window.location.reload();
+            router.push({name: 'Home'});
         }
 
         const moveToSearch = async () => {
@@ -260,9 +260,6 @@ a {
         margin-left: 3%;
         margin-right: 3%;
     }
-}
-#searchInput:focus {
-    outline: none;
 }
 .closeBtn {
     background-color: white;

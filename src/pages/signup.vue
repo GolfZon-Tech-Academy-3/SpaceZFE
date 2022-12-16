@@ -173,7 +173,6 @@ export default {
   padding: 1em;
 }
 .input:focus {
-  outline: none;
   border-bottom: 1px solid black;
 }
 .submit {
