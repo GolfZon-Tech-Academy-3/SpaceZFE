@@ -59,7 +59,9 @@
         <div v-else class="grid">
             <div style="width: 100%;" v-for="place in resultPlace" :key="place.companyId" @scroll="handleScroll">
                 <div style="height: 50%;padding: 1em 1em 0 1em;">
-                    <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)"/>
+                    <router-link :to="{name: 'PlaceDetail', query: {id: place.companyId}}">
+                        <img class="img" :src="place.firstImage" />
+                    </router-link>
                 </div>
                 <div style="height: 10%;padding: 0 2em;margin-top:1em;color:#9E9E9E;white-space: nowrap;">
                     <span>{{place.location}}</span>
@@ -72,9 +74,9 @@
                         favorite
                     </span>
                 </div>
-                <div style="height: 15%; padding: 0 1em;font-size: 2em; cursor:pointer;white-space: nowrap;" @click="moveToPlaceDetail(place.companyId)">
+                <router-link style="height: 15%; padding: 0 1em;font-size: 2em; cursor:pointer;white-space: nowrap;" :to="{name: 'PlaceDetail', query: {id: place.companyId}}">
                     {{place.companyName}}
-                </div>
+                </router-link>
                 <div style="width:80%; height:7%; margin:0 auto;white-space: nowrap;">
                     <span>{{place.lowPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}} 원 </span>
                     <span v-if="(place.reviewSize !== 0)" style="color: #f6ca4e">★</span>
@@ -95,7 +97,6 @@
 
 <script>
 import { ref, computed, onMounted, onUnmounted  } from 'vue';
-import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import axios from '@/axios';
 import SearchMapModal from '@/components/SearchMapModal.vue';
@@ -108,7 +109,6 @@ export default {
     },
     setup() {
         const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
-        const router = useRouter();
         const store = useStore();
         const searchType = computed(() => store.state.searchType);
         const searchDate = computed(() => store.state.searchDate);
@@ -332,15 +332,6 @@ export default {
             }
         }
 
-        const moveToPlaceDetail = (companyId) => {
-            router.push({
-                name: 'PlaceDetail',
-                query:{
-                    id: companyId,
-                }
-            })
-        }
-
         const controlMapModal = () => {
             if(showMapModal.value === false) {
                 triggerToast('지도를 닫으려면 더블클릭');
@@ -370,7 +361,6 @@ export default {
             resetCondition,
             resultPlace,
             addFavorite,
-            moveToPlaceDetail,
             controlMapModal,
             showMapModal,
             scrollEvent,
@@ -455,6 +445,7 @@ export default {
     .grid {
         display: grid;
         width: 100%;
+        max-width: 1200px;
         margin: 2em auto;
         grid-template-columns: 1fr;
         grid-auto-rows: 410px;
@@ -464,6 +455,7 @@ export default {
     .grid {
         display: grid;
         width: 100%;
+        max-width: 1200px;
         margin: 2em auto;
         grid-template-columns: calc(100% / 2) calc(100% / 2);
         grid-auto-rows: 410px;
@@ -473,6 +465,7 @@ export default {
     .grid {
         display: grid;
         width: 100%;
+        max-width: 1200px;
         margin: 2em auto;
         grid-template-columns: calc(100% / 3) calc(100% / 3) calc(100% / 3);
         grid-auto-rows: 410px;
@@ -533,5 +526,8 @@ export default {
 }
 @-webkit-keyframes spin {
   to { -webkit-transform: rotate(360deg); }
+}
+a {
+    color: black;
 }
 </style>

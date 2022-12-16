@@ -3,16 +3,19 @@
     <span v-if="!showMenuBar" @click="controlMenuBar" style="position:fixed;margin: 0.5em;cursor: pointer;" class="material-symbols-outlined">
       menu
     </span>
-    <div v-else class="wrapper">
-      <div :class="[link === '/master/company' ? 'menuSelected' : 'menu']" @click="moveTo('MasterCompany')" >
-        <div style="text-decoration: none; color: white">업체 관리</div>
+    <div v-else style="width: 100%;height: 100%;display:flex;">
+      <div class="wrapper">
+        <div :class="[link === '/master/company' ? 'menuSelected' : 'menu']" @click="moveTo('MasterCompany')" >
+          <div style="text-decoration: none; color: white">업체 관리</div>
+        </div>
+        <div :class="[link === '/master/account' ? 'menuSelected' : 'menu']" @click="moveTo('MasterAccount')" >
+          <div style="text-decoration: none; color: white">계정 관리</div>
+        </div>
+        <div :class="[link === '/master/masterchat' ? 'menuSelected' : 'menu']" @click="moveTo('MasterChat')" >
+          <div style="text-decoration: none; color: white">마스터 문의</div>
+        </div>
       </div>
-      <div :class="[link === '/master/account' ? 'menuSelected' : 'menu']" @click="moveTo('MasterAccount')" >
-        <div style="text-decoration: none; color: white">계정 관리</div>
-      </div>
-      <div :class="[link === '/master/masterchat' ? 'menuSelected' : 'menu']" @click="moveTo('MasterChat')" >
-        <div style="text-decoration: none; color: white">마스터 문의</div>
-      </div>
+      <div @click="controlMenuBar" style="position: fixed;left:200px;width: calc(100vw - 200px);height: calc(100vh - 3.75em)" />
     </div>
   </div>
 </template>
@@ -30,18 +33,6 @@ export default {
       showMenuBar.value = !showMenuBar.value;
       router.push({
         name: link,
-      });
-    };
-
-    const moveToAccount = () => {
-      router.push({
-        name: "MasterAccount",
-      });
-    };
-
-    const masterChat = () => {
-      router.push({
-        name: "MasterChat",
       });
     };
 

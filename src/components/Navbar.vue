@@ -1,24 +1,28 @@
 <template>
     <div>
         <nav class="nav">
-            <div v-if="width > 500" class="logo" @click="moveTo('Home')">
+            <router-link v-if="width > 500" class="logo" :to="{name: 'Home'}">
                 SPACEZ
-            </div>
-            <img v-else style="width: 35px;height: 35px;margin-left: 3%;cursor: pointer;" src="../assets/startLogo.png" @click="moveTo('Home')" />
+            </router-link>
+            <router-link v-else :to="{name: 'Home'}" style="margin-left: 3%;">
+                <img src="../assets/startLogo.png" @click="closeSearchModal" style="width: 35px;height: 35px;cursor: pointer;" />
+            </router-link>
             <input v-if="isLogined && width > 355" id="searchInput" autocomplete="off" @focus="openSearchModal" @keyup.enter="moveToSearch" :value="searchWord" @input="searchModal"/>
-            <div v-if="isMaster" style="cursor: pointer;margin: 0 1em;" @click="moveTo('MasterCompany')">
+            <router-link v-if="isMaster" style="cursor: pointer;margin: 0 1em;" :to="{name: 'MasterCompany'}" @click="closeSearchModal">
                 master
-            </div>
-            <div v-if="isManager" style="cursor: pointer;margin: 0 1em;" @click="moveTo('ManageCompany')">
+            </router-link>
+            <router-link v-if="isManager" style="cursor: pointer;margin: 0 1em;" :to="{name: 'ManageCompany'}" @click="closeSearchModal">
                 manager
-            </div>
+            </router-link>
             <div class="element" style="cursor: pointer;margin: 0 1em;" v-if="!isLogined" @click= "openLoginModal" >
                 login
             </div>
-            <div class="element" style="cursor: pointer;margin: 0 1em;" v-if="isLogined" @click="logout">
+            <router-link class="element" style="cursor: pointer;margin: 0 1em;" v-if="isLogined" :to="{name: 'Home'}" @click="logout">
                 logout
-            </div>
-            <img style="width:1.8em; height:1.8em;border-radius: 50%;margin: 0 1em;cursor: pointer;" v-if="isLogined" :src="profile_image" @click="moveTo('MyPage')"/>
+            </router-link>
+            <router-link v-if="isLogined" :to="{name: 'MyPage'}" style="margin: 0 1em;" @click="closeSearchModal">
+                <img style="width:1.8em; height:1.8em;border-radius: 50%;cursor: pointer;" :src="profile_image"/>
+            </router-link>
         </nav>
         <LoginModal v-if="showLoginModal" @close="closeLoginModal" />
         <SearchModal v-if="showSearchModal" @close="closeSearchModal" :result="result" />
@@ -115,13 +119,10 @@ export default {
             showLoginModal.value = true;
         }
 
-        const logout = async () => {
+        const logout = () => {
             store.dispatch('initToken');
             isLogined.value = false;
-            await router.push({
-                name: 'Home'
-            });
-            window.location.reload(true);
+            window.location.reload();
         }
 
         const moveToSearch = async () => {
@@ -135,13 +136,6 @@ export default {
             router.push({
                 name: 'FindPlace',
             });
-        }
-
-        const moveTo = (page) => {
-            router.push({
-                name: page,
-            })
-            closeSearchModal();
         }
 
         const handleResize = () => {
@@ -165,7 +159,6 @@ export default {
             profile_image,
             searchModal,
             result,
-            moveTo,
             width,
         }
     }
@@ -226,5 +219,8 @@ a {
     border: none;
     font-size: 1.2em;
     cursor: pointer;
+}
+a {
+    color: black;
 }
 </style>

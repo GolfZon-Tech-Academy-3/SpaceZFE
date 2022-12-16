@@ -8,7 +8,9 @@
       <div class="places">
         <div v-for="place in hotPlaces" :key="place.companyId" class="place">
           <div style="width: 80%; height: 70%; margin: 0 auto">
-            <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)" />
+            <router-link :to="{name: 'PlaceDetail', query: {id: place.companyId}}">
+              <img class="img" :src="place.firstImage"/>
+            </router-link>
           </div>
           <div style=" width: 80%; height: 7%; margin: 0 auto; font-size: 100%; color: #9e9e9e;white-space: nowrap;" >
             <span>{{ place.location }}</span>
@@ -22,7 +24,7 @@
             </span>
           </div>
           <div style="width: 80%; height: 10%; margin: 0 auto; font-size: 160%;" >
-            <span style="cursor: pointer;white-space: nowrap;" @click="moveToPlaceDetail(place.companyId)">{{ place.companyName }}</span>
+            <router-link style="cursor: pointer;white-space: nowrap;" :to="{name: 'PlaceDetail', query: {id: place.companyId}}">{{ place.companyName }}</router-link>
           </div>
           <div style="width: 80%; height: 7%; margin: 0 auto;white-space: nowrap;">
             <span>
@@ -41,7 +43,7 @@
 
       <div class="box40">
         <router-link class="hostingGuide" :to="{ name: 'Guide' }">
-          <div style=" color: white; font-size: 1.3em; font-weight: bold; padding-left: 3%; margin-top: 18px; " >
+          <div style=" color: white; font-size: 1.3em; font-weight: bold; padding-left: 3%; margin-top: 18px;" >
             장소 등록, 시작해볼까요?
             <img style="float: right; width: 7%; margin-right: 3%" src="../assets/reg.png" />
           </div>
@@ -52,25 +54,25 @@
       </div>
       <div class="box40">
         <div class="views">
-          <div class="view1" @click="moveToOffice">
+          <router-link class="view1" :to="{name: 'FindPlace'}" @click="moveToOffice">
             <div style=" margin: 5% 5%; font-size: 1.5em; font-weight: bold; color: #041461; " >
               OFFICE
             </div>
-          </div>
-          <div class="view2" @click="moveToMeeting">
-            <div style="margin: 5% 5%; font-size: 1.5em;; font-weight: bold">
+          </router-link>
+          <router-link class="view2" :to="{name: 'FindPlace'}" @click="moveToMeeting">
+            <div style="margin: 5% 5%; font-size: 1.5em;; font-weight: bold;color: black;">
               MEETING ROOM
             </div>
-          </div>
-          <div class="view3" @click="moveToDesk">
+          </router-link>
+          <router-link class="view3" :to="{name: 'FindPlace'}" @click="moveToDesk">
             <div style=" margin: 5% 5%; font-size: 1.5em; font-weight: bold; color: white; " >
               DESK
             </div>
-          </div>
+          </router-link>
         </div>
       </div>
       <div class="box20">
-        <div class="findPlace" @click="moveToAll">전체 보기</div>
+        <router-link class="findPlace" :to="{name: 'FindPlace'}" @click="moveToAll">전체 보기</router-link>
       </div>
 
     <div class="new">
@@ -81,7 +83,9 @@
       <div class="places">
         <div v-for="place in newPlaces" :key="place.companyId" class="place">
           <div style="width: 80%; height: 70%; margin: 0 auto">
-            <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)" />
+            <router-link :to="{name: 'PlaceDetail', query: {id: place.companyId}}">
+              <img class="img" :src="place.firstImage"/>
+            </router-link>
           </div>
           <div style=" width: 80%; height: 7%; margin: 0 auto; font-size: 100%; color: #9e9e9e;white-space: nowrap;" >
             <span>{{ place.location }}</span>
@@ -95,7 +99,7 @@
             </span>
           </div>
           <div style="width: 80%; height: 10%; margin: 0 auto; font-size: 160%" >
-            <span style="cursor: pointer;white-space: nowrap;" @click="moveToPlaceDetail(place.companyId)">{{ place.companyName }}</span>
+            <router-link style="cursor: pointer;white-space: nowrap;" :to="{name: 'PlaceDetail', query: {id: place.companyId}}">{{ place.companyName }}</router-link>
           </div>
           <div style="width: 80%; height: 7%; margin: 0 auto;white-space: nowrap;">
             <span >{{ place.lowPrice .toString() .replace(/\B(?=(\d{3})+(?!\d))/g, ",") }} 원
@@ -147,9 +151,6 @@ export default {
       store.dispatch("updateDate", null);
       store.dispatch("updateTime", null);
       store.dispatch("updateWord", "");
-      router.push({
-        name: "FindPlace",
-      });
     };
 
     const moveToMeeting = () => {
@@ -157,9 +158,6 @@ export default {
       store.dispatch("updateDate", null);
       store.dispatch("updateTime", null);
       store.dispatch("updateWord", "");
-      router.push({
-        name: "FindPlace",
-      });
     };
 
     const moveToDesk = () => {
@@ -167,9 +165,6 @@ export default {
       store.dispatch("updateDate", null);
       store.dispatch("updateTime", null);
       store.dispatch("updateWord", "");
-      router.push({
-        name: "FindPlace",
-      });
     };
 
     const moveToAll = () => {
@@ -177,9 +172,6 @@ export default {
       store.dispatch("updateDate", null);
       store.dispatch("updateTime", null);
       store.dispatch("updateWord", "");
-      router.push({
-        name: "FindPlace",
-      });
     };
 
     const changePage = () => {
@@ -208,15 +200,6 @@ export default {
       }
     }
 
-    const moveToPlaceDetail = async (companyId) => {
-      router.push({
-        name: "PlaceDetail",
-        query: {
-          id: companyId,
-        },
-      });
-    };
-
     return {
       moveToAll,
       hotPlaces,
@@ -224,7 +207,6 @@ export default {
       changePage,
       disabled,
       addFavorite,
-      moveToPlaceDetail,
       moveToOffice,
       moveToMeeting,
       moveToDesk,
@@ -302,6 +284,7 @@ export default {
 }
 .hostingGuide {
   width: 90%;
+  max-width: 900px;
   height: 100px;
   background-color: #041461;
   border-radius: 1em;
@@ -311,6 +294,7 @@ export default {
 }
 .views {
   width: 90%;
+  max-width: 900px;
   height: 100px;
   display: flex;
 }
@@ -411,5 +395,8 @@ export default {
   'wght' 400,
   'GRAD' 0,
   'opsz' 48
+}
+a{
+  color: black;
 }
 </style>
