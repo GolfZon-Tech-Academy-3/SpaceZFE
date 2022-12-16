@@ -106,14 +106,13 @@ export default {
     width: 80%;
     max-height: 75%;
     display:block;
-    overflow: scroll;
-    overflow-x: hidden;
+    overflow-x: auto;
     overflow-y: auto;
     margin: 3em auto;
 }
 .content {
-    width: calc(100% - 200px);
-    height:100vh;
+    width: 100%;
+    height: calc(100vh - 3.75em);
 }
 table {
     width: 100%;
@@ -121,10 +120,12 @@ table {
     overflow: auto;
     font-weight: bold;
     border-collapse: collapse;
+    white-space: nowrap;
 }
 thead {
     height: 5%;
     min-height: 20px;
+    margin: 0.5em;
 }
 th {
     padding: 0.5em 0;

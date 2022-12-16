@@ -1,83 +1,39 @@
 <template>
   <div>
     <div class="popular">
-      <div class="inner">
-        <div class="title">
-          인기장소
-          <span class="hot">HOT</span>
-          <button :disabled="disabled" @click="changePage" class="button">
-            <span class="material-symbols-outlined" style="color: black;">
-              chevron_left
-            </span>
-          </button>
-          <button :disabled="disabled" @click="changePage" class="button">
-            <span class="material-symbols-outlined" style="color: black;">
-              chevron_right
-            </span>
-          </button>
-        </div>
-        <div v-if="page" class="places">
-          <div v-for="place in hotPlaces1" :key="place.companyId" class="place">
-            <div style="width: 80%; height: 70%; margin: 0 auto">
-              <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)" />
-            </div>
-            <div style=" width: 80%; height: 7%; margin: 0 auto; font-size: 100%; color: #9e9e9e;white-space: nowrap;" >
-              <span>{{ place.location }}</span>
-              <span v-for="type in place.types" :key="type">·{{ type }}</span>
-
-              <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;" @click="addFavorite($event, place.companyId)" v-if="place.companyLike">
-                  favorite
-              </span>
-              <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;" @click="addFavorite($event, place.companyId)" v-else>
-                  favorite
-              </span>
-            </div>
-            <div style="width: 80%; height: 16%; margin: 0 auto; font-size: 160%;" >
-              <span style="cursor: pointer;white-space: nowrap;" @click="moveToPlaceDetail(place.companyId)">{{ place.companyName }}</span>
-            </div>
-            <div style="width: 80%; height: 7%; margin: 0 auto;white-space: nowrap;">
-              <span>
-                {{ place.lowPrice .toString() .replace(/\B(?=(\d{3})+(?!\d))/g, ",") }} 원
-              </span>
-              <span v-if="(place.reviewSize !== 0)" style="color: #f6ca4e">★</span>
-              <span v-if="(place.reviewSize !== 0)">{{ place.avgReview }}</span>
-              <span v-else>평가없음</span>
-              <span style="color: #9e9e9e; margin-left: 1em">
-                리뷰 {{ place.reviewSize }}
-              </span>
-            </div>
+      <div class="title">
+        인기장소
+        <span class="hot">HOT</span>
+      </div>
+      <div class="places">
+        <div v-for="place in hotPlaces" :key="place.companyId" class="place">
+          <div style="width: 80%; height: 70%; margin: 0 auto">
+            <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)" />
           </div>
-        </div>
-        <div v-else class="places">
-          <div v-for="place in hotPlaces2" :key="place.companyId" class="place">
-            <div style="width: 80%; height: 70%; margin: 0 auto">
-              <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)" />
-            </div>
-            <div style=" width: 80%; height: 7%; margin: 0 auto; font-size: 100%; color: #9e9e9e;white-space: nowrap;" >
-              <span>{{ place.location }}</span>
-              <span v-for="type in place.types" :key="type">·{{ type }}</span>
+          <div style=" width: 80%; height: 7%; margin: 0 auto; font-size: 100%; color: #9e9e9e;white-space: nowrap;" >
+            <span>{{ place.location }}</span>
+            <span v-for="type in place.types" :key="type">·{{ type }}</span>
 
-              <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;" @click="addFavorite($event, place.companyId)" v-if="place.companyLike">
-                        favorite
-              </span>
-              <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;" @click="addFavorite($event, place.companyId)" v-else>
-                  favorite
-              </span>
-            </div>
-            <div style="width: 80%; height: 16%; margin: 0 auto; font-size: 160%" >
-              <span style="cursor: pointer;white-space: nowrap;" @click="moveToPlaceDetail(place.companyId)">{{ place.companyName }}</span>
-            </div>
-            <div style="width: 80%; height: 7%; margin: 0 auto;white-space: nowrap;">
-              <span>
-                {{ place.lowPrice .toString() .replace(/\B(?=(\d{3})+(?!\d))/g, ",") }} 원
-              </span>
-              <span v-if="(place.reviewSize !== 0)" style="color: #f6ca4e">★</span>
-              <span v-if="(place.reviewSize !== 0)">{{ place.avgReview }}</span>
-              <span v-else>평가없음</span>
-              <span style="color: #9e9e9e; margin-left: 1em">
-                리뷰 {{ place.reviewSize }}
-              </span>
-            </div>
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;" @click="addFavorite($event, place.companyId)" v-if="place.companyLike">
+                favorite
+            </span>
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;" @click="addFavorite($event, place.companyId)" v-else>
+                favorite
+            </span>
+          </div>
+          <div style="width: 80%; height: 10%; margin: 0 auto; font-size: 160%;" >
+            <span style="cursor: pointer;white-space: nowrap;" @click="moveToPlaceDetail(place.companyId)">{{ place.companyName }}</span>
+          </div>
+          <div style="width: 80%; height: 7%; margin: 0 auto;white-space: nowrap;">
+            <span>
+              {{ place.lowPrice .toString() .replace(/\B(?=(\d{3})+(?!\d))/g, ",") }} 원
+            </span>
+            <span v-if="(place.reviewSize !== 0)" style="color: #f6ca4e">★</span>
+            <span v-if="(place.reviewSize !== 0)">{{ place.avgReview }}</span>
+            <span v-else>평가없음</span>
+            <span style="color: #9e9e9e; margin-left: 1em">
+              리뷰 {{ place.reviewSize }}
+            </span>
           </div>
         </div>
       </div>
@@ -85,7 +41,7 @@
 
       <div class="box40">
         <router-link class="hostingGuide" :to="{ name: 'Guide' }">
-          <div style=" color: white; font-size: 2em; font-weight: bold; padding-left: 3%; margin-top: 3.4%; " >
+          <div style=" color: white; font-size: 1.3em; font-weight: bold; padding-left: 3%; margin-top: 18px; " >
             장소 등록, 시작해볼까요?
             <img style="float: right; width: 7%; margin-right: 3%" src="../assets/reg.png" />
           </div>
@@ -118,42 +74,38 @@
       </div>
 
     <div class="new">
-      <div class="inner">
-        <div class="title">
-          새로 등록된 장소
-          <span class="newP">NEW</span>
-        </div>
-        <div class="places">
-          <div v-for="place in newPlaces" :key="place.companyId" class="place">
-            <div style="width: 80%; height: 70%; margin: 0 auto">
-              <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)" />
-            </div>
-            <div style=" width: 80%; height: 7%; margin: 0 auto; font-size: 100%; color: #9e9e9e;white-space: nowrap;" >
-              <span>{{ place.location }}</span>
-              <span v-for="type in place.types" :key="type">·{{ type }}</span>
+      <div class="title">
+        새로 등록된 장소
+        <span class="newP">NEW</span>
+      </div>
+      <div class="places">
+        <div v-for="place in newPlaces" :key="place.companyId" class="place">
+          <div style="width: 80%; height: 70%; margin: 0 auto">
+            <img class="img" :src="place.firstImage" @click="moveToPlaceDetail(place.companyId)" />
+          </div>
+          <div style=" width: 80%; height: 7%; margin: 0 auto; font-size: 100%; color: #9e9e9e;white-space: nowrap;" >
+            <span>{{ place.location }}</span>
+            <span v-for="type in place.types" :key="type">·{{ type }}</span>
 
-              <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;" @click="addFavorite($event, place.companyId)" v-if="place.companyLike">
-                        favorite
-              </span>
-              <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;" @click="addFavorite($event, place.companyId)" v-else>
-                  favorite
-              </span>
-            </div>
-            <div
-              style="width: 80%; height: 16%; margin: 0 auto; font-size: 160%"
-            >
-              <span style="cursor: pointer;white-space: nowrap;" @click="moveToPlaceDetail(place.companyId)">{{ place.companyName }}</span>
-            </div>
-            <div style="width: 80%; height: 7%; margin: 0 auto;white-space: nowrap;">
-              <span >{{ place.lowPrice .toString() .replace(/\B(?=(\d{3})+(?!\d))/g, ",") }} 원
-              </span>
-              <span v-if="(place.reviewSize !== 0)" style="color: #f6ca4e">★</span>
-              <span v-if="(place.reviewSize !== 0)">{{ place.avgReview }}</span>
-              <span v-else>평가없음</span>
-              <span style="color: #9e9e9e; margin-left: 1em">
-                리뷰 {{ place.reviewSize }}
-              </span>
-            </div>
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;" @click="addFavorite($event, place.companyId)" v-if="place.companyLike">
+                      favorite
+            </span>
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;" @click="addFavorite($event, place.companyId)" v-else>
+                favorite
+            </span>
+          </div>
+          <div style="width: 80%; height: 10%; margin: 0 auto; font-size: 160%" >
+            <span style="cursor: pointer;white-space: nowrap;" @click="moveToPlaceDetail(place.companyId)">{{ place.companyName }}</span>
+          </div>
+          <div style="width: 80%; height: 7%; margin: 0 auto;white-space: nowrap;">
+            <span >{{ place.lowPrice .toString() .replace(/\B(?=(\d{3})+(?!\d))/g, ",") }} 원
+            </span>
+            <span v-if="(place.reviewSize !== 0)" style="color: #f6ca4e">★</span>
+            <span v-if="(place.reviewSize !== 0)">{{ place.avgReview }}</span>
+            <span v-else>평가없음</span>
+            <span style="color: #9e9e9e; margin-left: 1em">
+              리뷰 {{ place.reviewSize }}
+            </span>
           </div>
         </div>
       </div>
@@ -171,10 +123,8 @@ export default {
     const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
     const store = useStore();
     const router = useRouter();
-    const hotPlaces1 = ref([]);
-    const hotPlaces2 = ref([]);
+    const hotPlaces = ref([]);
     const newPlaces = ref([]);
-    const page = ref(true);
     const disabled = ref(false);
 
     const main = async () => {
@@ -185,19 +135,7 @@ export default {
           },
         })
         .then((res) => {
-          if (res.data.hotCompany.length > 4) {
-            hotPlaces1.value = res.data.hotCompany.slice(0, 4);
-            hotPlaces2.value = res.data.hotCompany.slice(
-              4,
-              res.data.hotCompany.length
-            );
-          } else {
-            hotPlaces1.value = res.data.hotCompany.slice(
-              0,
-              res.data.hotCompany.length
-            );
-            disabled.value = true;
-          }
+          hotPlaces.value = res.data.hotCompany;
           newPlaces.value = res.data.newCompany;
         });
     };
@@ -281,10 +219,8 @@ export default {
 
     return {
       moveToAll,
-      hotPlaces1,
-      hotPlaces2,
+      hotPlaces,
       newPlaces,
-      page,
       changePage,
       disabled,
       addFavorite,
@@ -303,15 +239,10 @@ export default {
   height: 450px;
   background-color: #f0f3f5;
   display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.inner {
-  width: 1200px;
-  height: 80%;
+  flex-direction: column;
 }
 .title {
-  width: 100%;
+  width: 90%;
   height: 2em;
   color: #041461;
   float: left;
@@ -319,7 +250,7 @@ export default {
   font-weight: bold;
   display: flex;
   align-items: center;
-  margin-bottom: 1em;
+  margin: 0.5em 5%;
 }
 .hot {
   margin-left: 1em;
@@ -335,6 +266,10 @@ export default {
 .places {
   width: 100%;
   height: 80%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  text-align: center;
 }
 .button {
   width: 2em;
@@ -344,9 +279,11 @@ export default {
   background-color: #f0f3f5;
 }
 .place {
-  width: 25%;
+  width: 293.5px;
   height: 100%;
-  float: left;
+  overflow: auto;
+  white-space: nowrap;
+  display: inline-block;
 }
 .box40 {
   width: 100%;
@@ -364,8 +301,8 @@ export default {
   align-items: center;
 }
 .hostingGuide {
-  width: 1000px;
-  height: 140px;
+  width: 90%;
+  height: 100px;
   background-color: #041461;
   border-radius: 1em;
   cursor: pointer;
@@ -373,7 +310,7 @@ export default {
   box-shadow: 0 0 5px 0 gray;
 }
 .views {
-  width: 1000px;
+  width: 90%;
   height: 100px;
   display: flex;
 }
@@ -381,6 +318,7 @@ export default {
   width: 30.3%;
   height: 100%;
   margin: 0% 1.5%;
+  font-size: 80%;
   background-color: grey;
   border-radius: 1em;
   cursor: pointer;
@@ -392,6 +330,7 @@ export default {
   width: 30.3%;
   height: 100%;
   margin: 0% 1.5%;
+  font-size: 80%;
   background-color: grey;
   border-radius: 1em;
   cursor: pointer;
@@ -403,6 +342,7 @@ export default {
   width: 30.3%;
   height: 100%;
   margin: 0% 1.5%;
+  font-size: 80%;
   background-color: grey;
   border-radius: 1em;
   cursor: pointer;
@@ -425,6 +365,7 @@ export default {
   cursor: pointer;
   text-decoration: none;
   box-shadow: 0 0 5px 0 gray;
+  margin-bottom: 3em;
 }
 .findPlace:hover {
   background-color: gray;
@@ -447,10 +388,9 @@ export default {
 .new {
   width: 100%;
   height: 450px;
-  background-color: white;
+  background-color: #f0f3f5;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
 }
 .newP {
   margin-left: 1em;

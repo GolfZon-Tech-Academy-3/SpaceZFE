@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="wrapper">
-            <h1 class="title">시작해보세요 사무 공간 임대</h1>
+            <div class="title">시작해보세요 사무 공간 임대</div>
             <p>1인 데스크부터 20인 대형 사무실까지</p>
             <p>모두를 위한 임대 서비스</p>
             <img class="startLogo" src="../assets/startLogo.png" />
@@ -62,7 +62,9 @@ export default {
     width: 150px;
 }
 .title {
-    margin-top: 5em;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-top: 15%;
 }
 .button {
     border: none;

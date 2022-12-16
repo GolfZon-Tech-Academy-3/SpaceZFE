@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 100%; height: 115vh;">
+    <div style="width: 100%; height: 1000px;">
         <div class="wrapper">
             <h2>업체 등록하기</h2>
             <div class="item">업체 이름</div>
@@ -136,7 +136,7 @@ export default {
 
 <style scoped>
 .wrapper {
-    width: 500px;
+    width: 330px;
     height: 100%;
     margin: 0 auto;
 }
@@ -174,10 +174,10 @@ export default {
     border-bottom: 1px solid black;
 }
 .textarea {
-    width: 485px;
+    width: 320px;
     height: 90px;
     resize: none;
-    padding: 0.5em;
+    padding: 5px;
     border-radius: 1em;
 }
 .submit {

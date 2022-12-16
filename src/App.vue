@@ -9,12 +9,10 @@
 
 <script>
 import Navbar from '@/components/Navbar.vue';
-import Footer from '@/components/Footer.vue'
 
 export default {
   components: {
     Navbar,
-    Footer,
   }
 }
 </script>
@@ -22,7 +20,7 @@ export default {
 <style>
 #app {
   font-family: 'Noto Sans KR', sans-serif;
-  min-width: 1000px;
+  min-width: 335px;
 }
 body {
   margin: 0px;

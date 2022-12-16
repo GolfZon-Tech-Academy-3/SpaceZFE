@@ -1,19 +1,15 @@
 <template>
     <div class="wrapper" @click="closeModal">
         <div class="modal-back" @click.stop>
-            <div class="question">
-                <textarea disabled id="answer" :value="qna.inquiries" maxlength="500" style="width: 96%; height: 88%;padding:2%;resize:none;outline:none;background-color:#F5F7F8;border:none;border-radius: 1em;">
-                </textarea>
-            </div>
-            <div style="width: 90%; height: 10%;margin:1em auto">
+            <textarea disabled id="answer" :value="qna.inquiries" maxlength="500" style="width: 96%; height: 45%;resize:none;outline:none;background-color:#F5F7F8;border:none;padding: 2%;border-radius: 1em;">
+            </textarea>
+            <div style="width: 100%; height: 6%;">
                 <button v-if="qna.isAnswer" class="btn" @click.stop="modifyAnswer(qna.inquiryId)">답변 수정</button>
                 <button v-if="qna.isAnswer" class="btn" @click.stop="deleteAnswer(qna.inquiryId)">답변 삭제</button>
                 <button v-else class="btn" @click.stop="registerAnswer(qna.inquiryId)">답변 등록</button>
             </div>
-            <div class="answer">
-                <textarea id="answer" v-model="qna.answers" maxlength="500" style="width: 96%; height: 88%;padding:2%;resize:none;outline:none;background-color:#F5F7F8;border:none;border-radius: 1em;">
-                </textarea>
-            </div>
+            <textarea placeholder="답변하려면 클릭" id="answer" v-model="qna.answers" maxlength="500" style="width: 96%; height: 45%;resize:none;outline:none;background-color:#F5F7F8;border:none;padding: 2%;border-radius: 1em;">
+            </textarea>
         </div>
     </div>
 </template>
@@ -123,33 +119,22 @@ export default {
 }
 .modal-back {
     width: 70%;
-    min-width: 700px;
+    min-width: 320px;
     height: 60%;
-    min-height: 500px;
+    min-height: 600px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
     font-weight: bold;
+    border-radius: 1em;
 }
 .close {
     border: none;
     background-color: white;
     float: right;
     cursor: pointer;
-}
-.question {
-    width: 97%;
-    height: 35%;
-    margin: 1em auto 2em auto;
-    color: #858589;
-}
-.answer {
-    width: 97%;
-    height: 35%;
-    margin: auto;
-    border-radius: 1em;
 }
 .btn {
     padding: 1% 3%;
