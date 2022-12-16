@@ -223,7 +223,7 @@ a {
     text-decoration: none;
     color: grey;
 }
-@media (min-width: 750px) {
+@media (min-width: 780px) {
     #searchInput {
         position: fixed;
         width: 20%;
@@ -244,7 +244,7 @@ a {
         margin-right: 50%;
     }
 }
-@media (max-width: 750px) {
+@media (max-width: 779px) {
     #searchInput {
         width: 50%;
         font-size: 1em;
