@@ -34,7 +34,7 @@
                         <div style="color: #9E9E9E; font-size: 1em;">시간</div>
                         <select id="timeSelector" @change="changeTime($event)" :value="searchTime">
                             <option value='null' selected>선택안함</option>
-                            <option v-for="val in 23" :key="val">{{val}} 시</option>
+                            <option v-for="val in 24" :key="val - 1">{{val - 1}} 시</option>
                         </select>
                     </span>
                     <span style="display:inline-block;width: 200px; height: 50px;margin-left:0%;">
@@ -151,7 +151,7 @@ export default {
                 document.getElementById('title').style = '';
                 document.getElementById('fake').style = '';
             }
-            if(scrollTop + clientHeight === scrollHeight) {
+            if(scrollTop + clientHeight >= scrollHeight - 20) {
                 if(!stopLoading.value) {
                     loading.value = true;
                     setTimeout(() => {

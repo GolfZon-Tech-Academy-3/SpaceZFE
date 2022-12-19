@@ -16,7 +16,7 @@ import RegisterCompany from "../pages/registerCompany.vue";
 import PlaceDetail from "../pages/placeDetail/_id.vue";
 import Reservation from "../pages/Reservation/_id.vue";
 import MyPage from "../pages/myPage.vue";
-import ManagerChat from "../pages/backOffice/manageChat.vue";
+import ManagerChat from "../pages/backOffice/managerChat.vue";
 import MasterChat from "../pages/master/masterChat.vue";
 
 const beforeMypage = () => (to, from, next) => {
