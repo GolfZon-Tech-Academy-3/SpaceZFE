@@ -187,7 +187,7 @@ export default {
 
 <style>
 #map {
-  width: 30vw;
+  width: 40%;
   height: 60vh;
   /* top: 20px;
   left: 170px; */
@@ -208,5 +208,13 @@ export default {
 }
 .distance {
   font-size: 0.6em;
+}
+@media all and (max-width: 340px) {
+  #map {
+    width: 80%;
+    height: 60vh;
+    /* top: 20px;
+  left: 170px; */
+  }
 }
 </style>

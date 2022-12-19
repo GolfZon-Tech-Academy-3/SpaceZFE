@@ -147,4 +147,15 @@ p {
   width: 4.5vw;
   height: 9vh;
 }
+
+@media all and (max-width: 340px) {
+  textarea {
+    font-size: 1em;
+    width: 60%;
+  }
+  .quesImg {
+    width: 30%;
+    height: 30vh;
+  }
+}
 </style>

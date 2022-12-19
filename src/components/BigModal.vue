@@ -93,4 +93,26 @@ export default {
   margin: 0.2em;
   cursor: pointer;
 }
+@media all and (max-width: 340px) {
+  .modal-title {
+    font-size: 0.7em;
+  }
+  li {
+    font-size: 1em;
+  }
+  .modal-dialog {
+    width: 40%;
+    min-width: 300px;
+    height: 50%;
+    min-height: 100%;
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .close > span {
+    font-size: 0.9em;
+  }
+}
 </style>
