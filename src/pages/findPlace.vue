@@ -57,7 +57,7 @@
             검색결과 없음
         </div>
         <div v-else class="grid">
-            <div style="width: 100%;" v-for="place in resultPlace" :key="place.companyId" @scroll="handleScroll">
+            <div class="place" style="width: 100%;" v-for="place in resultPlace" :key="place.companyId" @scroll="handleScroll">
                 <div style="height: 50%;padding: 1em 1em 0 1em;">
                     <router-link :to="{name: 'PlaceDetail', query: {id: place.companyId}}">
                         <img class="img" :src="place.firstImage" />
@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, onUnmounted  } from 'vue';
+import { ref, computed, onMounted, onUnmounted,onUpdated, watch  } from 'vue';
 import { useStore } from 'vuex';
 import axios from '@/axios';
 import SearchMapModal from '@/components/SearchMapModal.vue';
@@ -127,42 +127,38 @@ export default {
             toastMessage, showToast, triggerToast,
         } = useToast();
 
-        onMounted(() => {
-            setTimeout(() => {
-                document.addEventListener('scroll', scrollEvent);
-            }, 100);
-        })
-
-        onUnmounted(() => {
-            document.removeEventListener('scroll', scrollEvent);
-        })
-
-        const scrollEvent = () => {
-            document.documentElement.scrollTop;
-            let scrollTop = document.querySelector('html').scrollTop;
-            let clientHeight = document.querySelector('html').clientHeight;
-            let scrollHeight = document.querySelector('html').scrollHeight;
-            if(scrollTop > 165) {
-                document.getElementById('fixed').style = 'position: fixed;top: 3.75em;left:0;width: 100%;background-color: white;box-shadow: 0 0 5px 0 gray';
-                document.getElementById('title').style = 'display: none;';
-                document.getElementById('fake').style = 'width: 100%;height: 250px;';
-            } else {
-                document.getElementById('fixed').style = '';
-                document.getElementById('title').style = '';
-                document.getElementById('fake').style = '';
-            }
-            console.log(scrollHeight - 90 - scrollTop - clientHeight);
-            if(scrollTop + clientHeight >= scrollHeight - 90) {
-                if(!stopLoading.value) {
-                    loading.value = true;
-                    setTimeout(() => {
-                        loading.value = false;
+        const ioCallback = (entries, io) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    io.unobserve(entry.target);
+                    if(!stopLoading.value) {
+                        loading.value = true;
                         currentPage.value += 1;
                         search(currentPage.value);
-                    }, 1000);
+                        setTimeout(() => {
+                            loading.value = false;
+                            observeLastItem(io, document.querySelectorAll('.place'));
+                        }, 1000);
+                    }
                 }
+            });
+        };
+
+        const observeLastItem = (io, items) => {
+            const lastItem = items[items.length - 1];
+            io.observe(lastItem);
+        };
+
+        const io = new IntersectionObserver(ioCallback, { threshold: 0.7 });
+
+        watch(resultPlace.value, () => {
+            if(resultPlace.value.length <= 9 && resultPlace.value.length > 0) {
+                setTimeout(() => {
+                    const items = document.querySelectorAll('.place');
+                    observeLastItem(io, items);
+                }, 1000);
             }
-        }
+        })
 
         const search = async (page) => {
             if(searchTime.value != null) { //검색 시간이 존재할때
@@ -364,7 +360,7 @@ export default {
             addFavorite,
             controlMapModal,
             showMapModal,
-            scrollEvent,
+            // scrollEvent,
             toastMessage,
             showToast,
             triggerToast,

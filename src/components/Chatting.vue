@@ -74,6 +74,7 @@
                 'Authorization': store.state.accessToken,
             } 
             ws.send("/pub/chat/message", JSON.stringify({type:'TALK', roomId:roomId.value, sender:sender.value, message:message.value}),header);
+            message.value = '';
         }
         const recvMessage = async (recv) => {
             messages.value.unshift({"type":recv.type,"sender":(recv.type === 'ENTER'?'[알림]':recv.sender),"message":recv.message})
