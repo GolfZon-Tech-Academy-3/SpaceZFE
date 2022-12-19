@@ -140,7 +140,7 @@ export default {
                 router.push({name: 'Home'});
             setTimeout(() => {
                 window.location.reload();
-            }, 500);
+            }, 200);
         }
 
         const moveToSearch = async () => {

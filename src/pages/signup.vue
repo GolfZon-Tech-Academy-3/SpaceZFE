@@ -109,8 +109,9 @@ export default {
     }
 
     const pw_check = (pw) => {
-      var regex=/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-      return (pw != '' && pw != 'undefined' && regex.test(pw));
+      var regex= /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
+      var regex2 = /^(?=.*[a-zA-Z])(?=.*[!@#$^*+=-])(?=.*[0-9]).{8,20}$/
+      return (pw != '' && pw != 'undefined' && (regex.test(pw) || regex2.test(pw)));
     }
 
     const signUp = async () => {
@@ -119,7 +120,7 @@ export default {
       } else if(!certificationOK.value) {
         alert('인증번호 인증을 해주세요');
       } else if(!pw_check(pw.value)) {
-        alert('비밀번호는 최소 8자이며, 최소 하나의 문자와 하나의 숫자로 이루어져야합니다');
+        alert('비밀번호는 최소 8자, 최대 20자이며, 최소 하나의 문자와 하나의 숫자로 이루어져야합니다');
       } else if(pw.value !== pwCheck.value) {
         alert('비밀번호가 일치하지 않습니다');
       } else if(!nicknameOK.value) {
