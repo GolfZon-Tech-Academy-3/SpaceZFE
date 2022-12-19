@@ -154,7 +154,7 @@ export default {
         watch(resultPlace.value, () => {
             if(resultPlace.value.length <= 9 && resultPlace.value.length > 0) {
                 setTimeout(() => {
-                    const items = document.querySelectorAll('.place');modify infinity scroll method to intersectionObserver
+                    const items = document.querySelectorAll('.place');
                     observeLastItem(io, items);
                 }, 1000);
             }
