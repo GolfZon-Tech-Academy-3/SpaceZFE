@@ -151,7 +151,8 @@ export default {
                 document.getElementById('title').style = '';
                 document.getElementById('fake').style = '';
             }
-            if(scrollTop + clientHeight >= scrollHeight - 20) {
+            console.log(scrollHeight - 90 - scrollTop - clientHeight);
+            if(scrollTop + clientHeight >= scrollHeight - 90) {
                 if(!stopLoading.value) {
                     loading.value = true;
                     setTimeout(() => {
