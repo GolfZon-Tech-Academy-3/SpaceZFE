@@ -62,9 +62,9 @@
         <button
           id="next"
           style="cursor: pointer"
-          :disabled="numberOfPages == limit / 5"
           :class="numberOfPages !== limit / 5 ? 'show' : 'nshow'"
           @click="onClick('go')"
+          :disabled="numberOfPages == limit / 5"
         >
           다음
         </button>
