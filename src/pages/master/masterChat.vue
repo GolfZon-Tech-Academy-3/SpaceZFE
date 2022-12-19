@@ -6,7 +6,7 @@
           채팅방
         </div>
         <div style="width: 100%;height: calc(100% - 48px);overflow-x: hidden;overflow-y: auto;">
-          <div class="chat" v-for="chat in chatrooms" :key="chat" @click="enterRoom(chat.roomId)">
+          <div class="chat" v-for="chat in chattings" :key="chat" @click="enterRoom(chat.name, chat.roomId)">
             <div style="width: 100%;height: 50%;">
               {{chat.name}}
               <span style="float: right;font-size: 0.8em;color: gray;">2022-12-22 09:00</span>
@@ -18,18 +18,7 @@
           </div>
         </div>
       </div>
-      <div class="container" id="app" v-cloak>
-      <div class="input-group">
-          <div class="input-group-prepend">
-              <label class="input-group-text">방제목</label>
-          </div>
-          <input type="text" class="form-control" v-model="room_name" v-on:keyup.enter="createRoom">
-          <div class="input-group-append">
-              <button class="btn btn-warning" type="button" @click="createRoom">채팅방 개설</button>
-          </div>
-      </div>
-      </div>
-      <Chatting v-if="showChatting" :sender="sender" :roomId="roomId" />
+      <Chatting v-if="showChatting" :roomInfo="roomInfo" @close="close" />
     </div>
   </template>
   
@@ -37,8 +26,6 @@
   import { ref } from 'vue';
   import axios from '@/axios';
   import { useStore } from 'vuex';
-  import Stomp from 'webstomp-client'
-  import SockJS from 'sockjs-client'
   import MenuBar from "./menuBar.vue";
   import Chatting from "@/components/Chatting.vue";
   
@@ -49,11 +36,9 @@
     },
     setup() {
       const store = useStore();
-      const room_name = ref('');
-      const chatrooms = ref([]);
       const proxy = window.location.hostname === "localhost" ? "" : "/proxy";
-      const sender = ref('');
-      const roomId = ref('');
+      const chattings = ref([]);
+      const roomInfo = ref({});
       const showChatting = ref(false);
   
       const findAllRoom = async () => { 
@@ -63,60 +48,30 @@
                   }
               })
           .then((res) => {
-            chatrooms.value = res.data;
-            console.log(res.data);
+            chattings.value = res.data;
           });
       }
       
       findAllRoom();
-  
-      const createRoom = async () => {
-        if("" === room_name.value) {
-            alert("방 제목을 입력해 주십시요.");
-            return;
-        } else {
-            var params = new URLSearchParams();
-            params.append("name", room_name.value);
-            try {
-              await axios.post(`${proxy}/chat/room`, params, {
-                headers: {
-                  Authorization: store.state.accessToken,
-                }
-              })
-                .then((response) => {
-                        alert(response.data.name+"방 개설에 성공하였습니다.")
-                        room_name.value = '';
-                        findAllRoom();
-                    }
-                )
-            } catch (error) {
-              alert("채팅방 개설에 실패하였습니다."); 
-              console.log(error);
-            }
-        }
-      }
       
-      const enterRoom = (id) => {
-        // var inputSender = prompt('대화명을 입력해 주세요.');
-        // if(inputSender != "") {
-          localStorage.setItem('wschat.sender','Master');
-          localStorage.setItem('wschat.roomId',id);
-          // 차라리 api 요청 보내고 그 roomId 에 해당하는 채팅 내용을 불러오면서 채팅방을 열자.
-          sender.value = 'Master';
-          roomId.value = id;
+      const enterRoom = (name, id) => {
           showChatting.value = true;
-        // }
+          roomInfo.value['sender'] = 'master';
+          roomInfo.value['roomId'] = id;
+          roomInfo.value['roomName'] = name;
       }
   
+      const close = () => {
+        showChatting.value = false;
+      }
+
       return {
-        room_name,
-        chatrooms,
-        findAllRoom,
-        createRoom,
-        enterRoom,
+        chattings,
         showChatting,
-        sender,
-        roomId,
+        roomInfo,
+        findAllRoom,
+        enterRoom,
+        close,
       }
     } 
   };
