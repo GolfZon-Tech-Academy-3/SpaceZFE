@@ -170,10 +170,56 @@
           </div>
         </div>
         <div class="locClicked" v-if="locClicked">
+          <p style="font-size: 1.1em">
+            <b style="color: rgb(4, 20, 97, 1)">장소 소개</b>
+          </p>
           {{ details.info }}
+          <hr />
           <section style="text-align: left">
-            <p class="locClicked"><b style="color: red"></b>장소 위치</p>
-            <KaKaoMap class="map" :options="mapOption" />
+            <p class="locClicked">
+              <b style="color: red">장소 위치</b> 및
+              <b style="color: red">주변</b>검색하기
+            </p>
+            <label for="type">
+              주변시설:
+              <select @click="resetSearch" v-model="arroundType">
+                <!-- <option value="">주변 시설</option> -->
+                <option selected disabled value="">주변 시설</option>
+                <option value="CS2">편의점</option>
+                <option value="SW8">지하철</option>
+                <option value="AD5">숙박시설</option>
+                <option value="FD6">음식점</option>
+                <option value="CE7">까페</option>
+                <option value="PK6">주차장</option>
+              </select>
+            </label>
+            <br />
+            <label for="range">
+              주변 검색 범위:
+              <select class="forms" @click="resetSearch" v-model="arroundRange">
+                <option selected disabled value="">검색 범위</option>
+                <option value="100">100m</option>
+                <option value="200">200m</option>
+                <option value="300">300m</option>
+                <option value="500">500m</option>
+              </select>
+            </label>
+            <button class="researchBtn" @click="around">검색</button>
+            <!-- <button v-show="resetBtn" @click="resetSearch">
+              다시 검색하기
+            </button> -->
+
+            <KaKaoMap
+              class="map"
+              :options="mapOption"
+              :arounds="arrounds"
+              :reset="resetBtn"
+              :level="levels"
+              :aroundType="arroundType"
+              @x="getx"
+              @y="gety"
+              @resBtn="reset"
+            />
           </section>
         </div>
         <div class="rulesClicked" v-if="rulesClicked">
@@ -345,6 +391,7 @@ export default {
       },
       level: 5,
       location: null,
+      img: null,
     });
 
     // let limit = 5;
@@ -361,8 +408,17 @@ export default {
       return Math.ceil(numberOfQnas.value / 5);
     });
 
-    // qna 장소 상세 get하는 함수
+    const arrounds = ref([]);
+    const arroundType = ref("");
+    const arroundRange = ref("");
 
+    const locX = ref("");
+    const locY = ref("");
+    const levels = ref(0);
+    const resetBtn = ref(false);
+    const resetSearchBtn = ref(0);
+
+    // qna 장소 상세 get하는 함수
     const res = async () => {
       loading.value = true;
       try {
@@ -380,6 +436,7 @@ export default {
             resDetails.value = details.value.spaces;
             companyId.value = res.data.companyId;
             mapOption.value.location = details.value.location;
+            mapOption.value.img = details.value.spaceImages[0];
             console.log(details.value);
 
             axios
@@ -408,6 +465,65 @@ export default {
       loading.value = false;
     };
     res();
+
+    //주변정보 검색
+    const around = async () => {
+      try {
+        await axios
+          .get(
+            `https://dapi.kakao.com/v2/local/search/category.json?category_group_code=${arroundType.value}&x=${locX.value}&y=${locY.value}&radius=${arroundRange.value}`,
+            {
+              headers: {
+                Authorization: "KakaoAK 076ace465a5b49eeff44095c98711587",
+              },
+            }
+          )
+          .then((res) => {
+            arrounds.value = res.data.documents;
+            arroundType.value = arroundType.value;
+            levels.value = arroundRange.value;
+            resetBtn.value = !resetBtn.value;
+            if (arrounds.value.length == 0) {
+              alert(
+                "지정하신 범위 내에 검색한 타입의 장소가 없습니다 다시 재설정해서 검색해 주세요"
+              );
+              resetBtn.value = !resetBtn.value;
+              return;
+            }
+          });
+      } catch (error) {
+        if (error.response.status == 400) {
+          alert("검색 범위와 장소 타입을 지정해 주세요!");
+          return;
+        } else if (error.response.status >= 500) {
+          alert("일시적인 서버 오류 입니다 나중에 다시 시도해 주세요");
+          return;
+        } else if (error.response.status == 401) {
+          alert("일시적인 로그인 오류입니다 로그아웃 후 다시 이용해 주세요");
+          return;
+        } else if (error.response.status == 404) {
+          alert("알 수 없는 오류가 발생했습니다 나중에 다시 시도해 주세요");
+          return;
+        }
+      }
+    };
+
+    const reset = (tf) => {
+      resetBtn.value = tf;
+      console.log(tf);
+    };
+
+    const getx = (x) => {
+      locX.value = x;
+    };
+    const gety = (y) => {
+      locY.value = y;
+    };
+
+    const resetSearch = () => {
+      // arrounds.value = "";
+      resetBtn.value = !resetBtn.value;
+    };
 
     //review받아서  pagination하는함수
     const getReviews = async (page = currentPage.value) => {
@@ -644,6 +760,17 @@ export default {
       numberofQnaPages,
       getQnas,
       qnasLimit,
+      arrounds,
+      arroundType,
+      arroundRange,
+      around,
+      getx,
+      gety,
+      levels,
+      reset,
+      resetBtn,
+      resetSearch,
+      resetSearchBtn,
     };
   },
 };
@@ -652,7 +779,7 @@ export default {
 <style scoped>
 .entireForm {
   height: auto;
-  overflow: hidden;
+  /* overflow: hidden; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -890,7 +1017,22 @@ iframe {
   cursor: pointer;
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 48;
 }
-
+.forms {
+  margin-bottom: 2%;
+}
+.researchBtn {
+  margin-left: 2%;
+  width: 4vw;
+  background: rgb(4, 20, 97, 1);
+  border: 1px solid rgb(4, 20, 97, 1);
+  color: white;
+  border-radius: 5px;
+  font-size: 0.7em;
+}
+.researchBtn:hover {
+  border-bottom: 1px solid blue;
+  background: blue;
+}
 @media (max-width: 767px) {
   #app {
     font-family: Inter;

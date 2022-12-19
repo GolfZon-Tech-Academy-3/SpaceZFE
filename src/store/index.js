@@ -14,6 +14,8 @@ export default createStore({
     accessToken: null,
     memberEmail: null,
     memberPw: null,
+    x: null,
+    y: null,
   },
   mutations: {
     SET_MEMBER_ID(state, payload) {
@@ -49,8 +51,20 @@ export default createStore({
     UPDATE_SEARCH_WORD(state, payload) {
       state.searchWord = payload;
     },
+    SET_X(state, payload) {
+      state.x = payload;
+    },
+    SET_Y(state, payload) {
+      state.y = payload;
+    },
   },
   actions: {
+    setLocX({ commit }, x) {
+      commit("SET_X", x);
+    },
+    setLocY({ commit }, y) {
+      commit("SET_Y"), y;
+    },
     setMemberId({ commit }, memberId) {
       commit("SET_MEMBER_ID", memberId);
     },

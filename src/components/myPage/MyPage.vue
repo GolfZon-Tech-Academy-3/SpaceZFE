@@ -419,6 +419,7 @@ export default {
   background-color: #eeeff5;
   border-radius: 15px;
   padding-top: 0.5%;
+  margin-left: 0.5%;
 }
 .btn {
   font-family: "Inter";

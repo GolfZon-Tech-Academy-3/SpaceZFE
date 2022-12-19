@@ -385,6 +385,7 @@ export default {
   background-color: #fafafa;
   border-radius: 30px;
   border: 1px solid #fafafa;
+  padding: 1%;
   margin-left: 0.5%;
   margin-right: 0.5%;
   width: 5%;
@@ -400,10 +401,13 @@ export default {
   float: left;
   width: 60%;
 }
+.table tr {
+  font-weight: 600;
+}
 .table th {
   border-top: 0;
   border-bottom: 1px solid #dee2e6;
-  font-size: 1.2rem;
+  font-size: 1.2em;
 }
 .table td {
   border-color: white;
@@ -415,6 +419,7 @@ export default {
 }
 .milUsage td {
   padding: 2%;
+  font-weight: 600;
 }
 .total {
   float: right;
