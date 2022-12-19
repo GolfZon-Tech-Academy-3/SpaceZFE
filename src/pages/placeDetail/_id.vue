@@ -36,21 +36,23 @@
               <li>{{ details.summary }}</li>
             </ul>
           </div>
-          <img class="big" name="big" :src="currentImg" @click="changePic" />
-          <br />
-          <img
-            class="list"
-            v-for="num in details.spaceImages.length"
-            :key="num.id"
-            :src="details.spaceImages[num - 1]"
-            @click="directChangePic"
-          />
+          <div class="imgLists">
+            <img class="big" name="big" :src="currentImg" @click="changePic" />
+            <br />
+            <img
+              class="list"
+              v-for="num in details.spaceImages.length"
+              :key="num.id"
+              :src="details.spaceImages[num - 1]"
+              @click="directChangePic"
+            />
+          </div>
         </div>
       </div>
     </div>
     <div class="detailNavDiv">
       <nav class="detailNav">
-        <ul class="nav" @click="resClick">
+        <li class="nav" @click="resClick">
           <p class="hover" v-if="!resClicked">장소 예약</p>
           <p
             class="hover"
@@ -59,8 +61,8 @@
           >
             장소 예약
           </p>
-        </ul>
-        <ul class="nav" @click="locClick">
+        </li>
+        <li class="nav" @click="locClick">
           <p class="hover" v-if="!locClicked">장소 소개</p>
           <p
             class="hover"
@@ -69,8 +71,8 @@
           >
             장소 소개
           </p>
-        </ul>
-        <ul class="nav" @click="showrules">
+        </li>
+        <li class="nav" @click="showrules">
           <p class="hover" v-if="!rulesClicked">이용 규칙</p>
           <p
             class="hover"
@@ -79,13 +81,11 @@
           >
             이용 규칙
           </p>
-        </ul>
-        <ul class="nav" @click="showReviews">
+        </li>
+        <li class="nav" @click="showReviews">
           <p class="hover" v-if="!reviewClicked">
             리뷰
-            <a style="opacity: 0.6; margin-left: 10px">{{
-              reviews.totalCount
-            }}</a>
+            <a class="counts">{{ reviews.totalCount }}</a>
           </p>
 
           <p
@@ -94,15 +94,13 @@
             style="color: blue; border-bottom: 1px solid blue"
           >
             리뷰
-            <a style="opacity: 0.6; margin-left: 10px">{{
-              reviews.totalCount
-            }}</a>
+            <a class="counts">{{ reviews.totalCount }}</a>
           </p>
-        </ul>
-        <ul class="nav" @click="showQna">
+        </li>
+        <li class="nav" @click="showQna">
           <p class="hover" v-if="!qnaClicked">
             Q&A
-            <a style="opacity: 0.6; margin-left: 10px">{{ qnas.count }}</a>
+            <a class="counts">{{ qnas.count }}</a>
           </p>
           <p
             class="hover"
@@ -110,9 +108,9 @@
             style="color: blue; border-bottom: 1px solid blue"
           >
             Q&A
-            <a style="opacity: 0.6; margin-left: 10px">{{ qnas.count }}</a>
+            <a class="counts">{{ qnas.count }}</a>
           </p>
-        </ul>
+        </li>
       </nav>
       <div class="navContainer">
         <div class="resClicked" v-show="resClicked">
@@ -127,7 +125,7 @@
               <li style="margin-top: 6%">
                 <b> 가격 </b>
                 <b
-                  style="margin-left: 60%"
+                  class="binlists"
                   v-show="resDetails[num - 1].type == '오피스'"
                 >
                   {{
@@ -137,7 +135,7 @@
                   }}원/일
                 </b>
                 <b
-                  style="margin-left: 60%"
+                  class="binlists"
                   v-show="resDetails[num - 1].type != '오피스'"
                 >
                   {{
@@ -779,14 +777,12 @@ export default {
 <style scoped>
 .entireForm {
   height: auto;
-  /* overflow: hidden; */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 100%;
 }
 .picsAndIntro {
-  width: 100%;
+  width: inherit;
   flex: 1;
   padding: 0%10%0%10%;
   height: 50vh;
@@ -795,31 +791,29 @@ export default {
   float: right;
   width: 20vw;
   height: 20vh;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 .placeLoc {
-  font-size: 3vh;
+  font-size: 1.3em;
   float: left;
-  position: absolute;
-  top: 25%;
+  margin: 2%0%2%0%;
 }
 .interestPl {
-  font-size: 2.5vh;
+  font-size: 1.2em;
   margin-right: 20%;
-  width: 10vw;
-  height: 5vh;
+  width: 50%;
   text-align: center;
   background: #d2e1f9;
   border: 1px solid #d2e1f9;
   border-radius: 10px;
-  display: inline;
 }
 .placeDetails {
   font-size: 2.5vh;
-  float: left;
-  position: absolute;
-  top: 31%;
   width: fit-content;
-  height: 20vh;
+  min-height: 50%;
   padding: 2%;
   color: white;
   border-radius: 10px;
@@ -829,6 +823,9 @@ export default {
       rgba(234, 235, 255, 0) 100%
     ),
     linear-gradient(90deg, #5698b8 0%, #5faba5 100%);
+}
+.imgLists {
+  text-align: left;
 }
 .detailNavDiv {
   height: fit-content;
@@ -853,23 +850,20 @@ export default {
   padding-bottom: 5%;
 }
 .img {
-  width: 70%;
+  /* width: 70%; */
   text-align: left;
 }
 .big {
-  width: 80vh;
+  width: 60%;
   height: 60vh;
-  position: relative;
   margin: auto;
-  align-self: left;
   border-radius: 5%;
 }
 .list {
   float: left;
-  width: 5vw;
+  width: 7%;
   height: 10vh;
-  margin: 1.5%;
-  text-align: center;
+  margin: 1%;
   border-radius: 10%;
   opacity: 0.9;
 }
@@ -1033,20 +1027,310 @@ iframe {
   border-bottom: 1px solid blue;
   background: blue;
 }
-@media (max-width: 767px) {
+.counts {
+  opacity: 0.6;
+  margin-left: 10px;
+}
+.binlists {
+  margin-left: 60%;
+}
+@media all and (max-width: 340px) {
   #app {
     font-family: Inter;
     width: auto;
     height: 100%;
   }
-  body {
-    margin: 0px;
+  .entireForm {
+    height: auto;
+    /* display: block; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
   }
-  .router {
+  .picsAndIntro {
+    padding: 0;
+  }
+  .form {
+    margin-top: 0;
+    width: inherit;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+  .img {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+  .intplace {
+    display: flex;
+    width: 100%;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    height: 20vh;
+    align-items: flex-start;
+    margin-left: 2%;
+    height: 20%;
+  }
+  .placeLoc {
+    flex: auto;
+    height: auto;
+    font-size: 1em;
+    margin: 2%0%2%0%;
+  }
+  .interestPl {
+    font-size: 1.2em;
+    background: #d2e1f9;
+    border: 1px solid #d2e1f9;
+    border-radius: 10px;
+    margin-right: 0;
+    text-align: left;
+    width: auto;
+  }
+  .placeDetails {
+    background: linear-gradient(
+        270deg,
+        rgba(96, 173, 163, 0.42) 0%,
+        rgba(234, 235, 255, 0) 100%
+      ),
+      linear-gradient(90deg, #5698b8 0%, #5faba5 100%);
+    font-size: 3.5vh;
+    color: white;
+    border-radius: 10px;
+  }
+  .detailNavDiv {
     height: 100%;
+    float: left;
+    flex: 1;
   }
-  html {
+  .detailNav {
+    width: 100%;
+    height: inherit;
+    padding: 3%;
+    display: flex;
+  }
+
+  .navContainer {
+    width: 100%;
+    height: fit-content;
+    padding-left: 0;
+    padding-bottom: 5%;
+  }
+  .img {
+    width: 100%;
+    /* text-align: left; */
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+  .big {
+    width: 80vh;
+    height: 60vh;
+    position: relative;
+    /* margin: auto; */
+    align-self: left;
+    border-radius: 5%;
+  }
+  .list {
+    float: left;
     width: 10%;
+    height: 10vh;
+    margin: 1.5%;
+    text-align: center;
+    border-radius: 10%;
+    opacity: 0.9;
+  }
+  .list:hover {
+    opacity: 1;
+  }
+  .imgLists {
+    text-align: left;
+    margin-bottom: 2%;
+  }
+  .lineIntro {
+    text-align: left;
+    font-size: 5vh;
+    margin-bottom: 0;
+  }
+  .shortInto {
+    text-align: left;
+    font-size: 5vh;
+    color: rgb(4, 20, 97, 1);
+    font-weight: 600;
+  }
+  .buttons {
+    width: fit-content;
+    height: fit-content;
+    right: 10%;
+  }
+  .button {
+    width: fit-content;
+    height: fit-content;
+    background-color: white;
+    border: 1px solid white;
+  }
+  .qnaButton {
+    color: #1e6ff4;
+    font-weight: 800;
+    background-color: white;
+    border: 1px solid white;
+    margin-bottom: 2.5%;
+  }
+  .qnaButtonNot {
+    color: orangered;
+    font-weight: 800;
+    background-color: white;
+    border: 1px solid white;
+    margin-bottom: 2.5%;
+  }
+  .lists {
+    width: 90%;
+    height: fit-content;
+    padding-top: 2%;
+    border: 2px solid silver;
+    border-radius: 15px;
+    margin: 2%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+  .binlists {
+    margin-left: 40%;
+  }
+  .resThumb {
+    display: inline;
+    margin-left: 1%;
+    margin-top: 1%;
+    width: 18%;
+    height: 20vh;
+    border-radius: 10px;
+  }
+  .resType {
+    font-size: 1.05em;
+  }
+  .resSpace {
+    font-size: 1.05em;
+  }
+  li > b {
+    font-size: 0.8em;
+  }
+  li {
+    font-size: 0.8em;
+  }
+  .resBtn {
+    width: 80%;
+    margin-left: 8%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+    border-radius: 10px;
+    border: 0.1px solid rgb(4, 20, 97, 1);
+    background-color: rgb(4, 20, 97, 1);
+    color: white;
+    font-size: 1em;
+    display: inline;
+  }
+  .resBtn:hover {
+    background-color: #1e6ff4;
+    border: 0.1px solid #1e6ff4;
+    transition: 0.2s;
+  }
+  .ul {
+    float: right;
+    width: 60%;
+    height: 100%;
+    display: inline;
+    list-style: none;
+  }
+
+  iframe {
+    width: 700px;
+    height: 600px;
+  }
+  .nav {
+    display: contents;
+    font-size: 0.86em;
+    font-weight: 600;
+    justify-content: space-evenly;
+  }
+  .counts {
+    opacity: 0.6;
+    margin-left: 5px;
+  }
+  .hover {
+    margin: 0%2%0%2%;
+  }
+
+  .hover:hover {
+    border-bottom: 1px solid blue;
+    color: blue;
+  }
+  .locClicked {
+    font-size: 1em;
+    padding: 2%;
+  }
+  .rulesClicked {
+    margin-top: 5%;
+    font-size: 1em;
+    padding-left: 3%;
+  }
+  .reviewClicked {
+    padding: 2%;
+  }
+
+  .reviews {
+    width: 90%;
+    margin-top: 5%;
+    font-size: 1em;
+    line-height: 2.5;
+    color: black;
+    display: flex;
+    border-bottom: 1px solid silver;
+  }
+
+  .profilePic {
+    width: 20%;
+    height: 20%;
+    border-radius: 50px;
+  }
+  .qnaClicked {
+    padding: 2%;
+  }
+
+  .qnas {
+    width: 90%;
+    margin-top: 10%;
+    font-size: 1em;
+    line-height: 2.5;
+    color: black;
+    margin-top: 5%;
+    display: flex;
+    width: 80%;
+  }
+  .material-symbols-outlined {
+    color: red;
+    cursor: pointer;
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 48;
+  }
+  .forms {
+    margin-bottom: 2%;
+  }
+  .researchBtn {
+    margin-left: 2%;
+    width: 14%;
+    background: rgb(4, 20, 97, 1);
+    border: 1px solid rgb(4, 20, 97, 1);
+    color: white;
+    border-radius: 5px;
+    font-size: 0.7em;
+  }
+  .researchBtn:hover {
+    border-bottom: 1px solid blue;
+    background: blue;
   }
 }
 </style>
