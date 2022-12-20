@@ -62,26 +62,23 @@ export default {
         .then((res) => {
           sender.value = 'manager';
           roomId.value = res.data[0].roomId;
+          console.log(roomId.value);
         });
     }
     
     findAllRoom();
     
-    const findRoom = async () => {
-        await axios.get(`${proxy}/chat/room/${roomId.value}`,{
-            headers: {
-                Authorization: store.state.accessToken,
-            }
-        })
-        .then((res) => {
-            // talks.value = res.data;
-            console.log(res.data);
-        });
-    }
-
-    setTimeout(() => {
-      findRoom();
-    }, 2000);
+    // const getHistory = async () => {
+    //     await axios.get(`${proxy}/chat/message/${roomId.value}`,{
+    //         headers: {
+    //             Authorization: store.state.accessToken,
+    //         }
+    //     })
+    //     .then((res) => {
+    //         // talks.value = res.data;
+    //         console.log(res.data === '');
+    //     });
+    // }
 
     const sendMessage = async () => {
       if(input.value !== '') {
@@ -152,6 +149,7 @@ export default {
 .submit {
     padding: 0.4em;border: none;box-shadow: 0 0 5px 0 gray;border-radius: 1em;background-color: white;cursor: pointer;
     margin-left: 5px;
+    color:black;
 }
 .submit:hover {
     background-color: black;

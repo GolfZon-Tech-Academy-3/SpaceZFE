@@ -7,14 +7,14 @@
         </div>
         <div style="width: 100%;height: calc(100% - 48px);overflow-x: hidden;overflow-y: auto;">
           <div class="chat" v-for="chat in chattings" :key="chat" @click="enterRoom(chat.name, chat.roomId)">
-            <div style="width: 100%;height: 50%;">
+            <div style="width: 100%;height: 100%;">
               {{chat.name}}
-              <span style="float: right;font-size: 0.8em;color: gray;">2022-12-22 09:00</span>
+              <!-- <span style="float: right;font-size: 0.8em;color: gray;">2022-12-22 09:00</span> -->
             </div>
-            <div style="width: 100%;height: 50%;color: gray;font-size: 0.8em;">
+            <!-- <div style="width: 100%;height: 50%;color: gray;font-size: 0.8em;">
               마지막 채팅 내용
               <span style="float:right;background-color: red;color: white;padding: 0 5.7px;border-radius: 50%;">1</span>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>

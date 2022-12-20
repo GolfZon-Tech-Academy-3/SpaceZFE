@@ -54,19 +54,6 @@
         const close = () => {
             emit('close');
         }
-        
-        const findRoom = async () => {
-            await axios.get(`${proxy}/chat/room/${roomInfo.value.roomId}`,{
-                headers: {
-                    Authorization: store.state.accessToken,
-                }
-            })
-            .then((res) => {
-                console.log(res.data);
-            });
-        }
-
-        findRoom();
     
         const sendMessage = async () => {
             if(input.value !== '') {
@@ -123,7 +110,6 @@
             reconnect,
             input,
             messages,
-            findRoom,
             sendMessage,
             recvMessage,
             connect,
@@ -168,6 +154,7 @@
 .submit {
     padding: 0.4em;border: none;box-shadow: 0 0 5px 0 gray;border-radius: 1em;background-color: white;cursor: pointer;
     margin-left: 5px;
+    color:black;
 }
 .submit:hover {
     background-color: black;
