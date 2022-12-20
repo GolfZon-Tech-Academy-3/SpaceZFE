@@ -1053,13 +1053,14 @@ iframe {
   }
   .form {
     margin-top: 0;
-    width: inherit;
+    width: 100%;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
   }
   .img {
-    width: 100%;
+    width: 96%;
+    padding: 0%2%0%2%;
     text-align: left;
     display: flex;
     flex-direction: column-reverse;
@@ -1121,7 +1122,7 @@ iframe {
     padding-bottom: 5%;
   }
   .img {
-    width: 100%;
+    width: 96%;
     /* text-align: left; */
     display: flex;
     flex-direction: column-reverse;
@@ -1129,12 +1130,13 @@ iframe {
     flex-wrap: nowrap;
   }
   .big {
-    width: 80vh;
+    width: 100%;
     height: 60vh;
     position: relative;
     /* margin: auto; */
     align-self: left;
     border-radius: 5%;
+    transition: 1s;
   }
   .list {
     float: left;
@@ -1151,6 +1153,7 @@ iframe {
   .imgLists {
     text-align: left;
     margin-bottom: 2%;
+    width: 100%;
   }
   .lineIntro {
     text-align: left;

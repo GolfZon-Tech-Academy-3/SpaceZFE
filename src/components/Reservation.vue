@@ -66,6 +66,7 @@
         확인<a style="color: red">(필수)</a>
       </p>
     </div>
+    <h1 class="resInfo" style="color: rgb(4, 20, 97, 1)">예약 정보</h1>
     <div class="right">
       <p style="margin-bottom: 1%">장소이름</p>
       <a style="font-size: 1.5rem">{{ resInfos.spaceName }} </a>
@@ -1795,6 +1796,9 @@ export default {
   padding: 3%;
   margin-top: 5%;
 }
+.resInfo {
+  display: none;
+}
 .inputExpl {
   margin-bottom: 1%;
   margin-top: 3%;
@@ -1803,7 +1807,7 @@ export default {
 }
 .resInput {
   width: 40%;
-  height: 6vh;
+  height: 5vh;
   border-radius: 7px;
   border: 1px solid gray;
   padding-left: 2%;
@@ -1811,14 +1815,14 @@ export default {
 .certiBtn {
   margin-left: 5%;
   opacity: 0.7;
-  height: 6vh;
+  height: 5vh;
   background-color: white;
   border-radius: 7px;
   border: 1px solid gray;
 }
 .insertCerti {
   width: 25%;
-  height: 6vh;
+  height: 5vh;
   border-radius: 7px;
   border: 1px solid gray;
   padding-left: 1%;
@@ -1826,7 +1830,7 @@ export default {
 .certiDone {
   margin-left: 1%;
   opacity: 0.7;
-  height: 6vh;
+  height: 5vh;
   width: 13%;
   background-color: white;
   border-radius: 7px;
@@ -1973,5 +1977,214 @@ export default {
 }
 .resed {
   font-size: 0.9em;
+}
+
+@media all and (max-width: 768px) {
+  .entire {
+    padding: 2%;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+  .left {
+    width: 96%;
+  }
+  .resInfo {
+    display: block;
+  }
+  .right {
+    width: 90%;
+    float: right;
+    background-color: #fafafa;
+    padding: 3%;
+    margin-top: 5%;
+  }
+  .inputExpl {
+    margin-bottom: 1%;
+    margin-top: 3%;
+    font-weight: 600;
+    font-size: 1.3rem;
+  }
+  .resInput {
+    width: 50%;
+    height: 4vh;
+    border-radius: 7px;
+    border: 1px solid gray;
+    padding-left: 2%;
+  }
+  .certiBtn {
+    margin-left: 5%;
+    opacity: 0.7;
+    height: 5vh;
+    background-color: white;
+    border-radius: 7px;
+    border: 1px solid gray;
+  }
+  .insertCerti {
+    width: 25%;
+    height: 5vh;
+    border-radius: 7px;
+    border: 1px solid gray;
+    padding-left: 1%;
+  }
+  .certiDone {
+    margin-left: 1%;
+    opacity: 0.7;
+    height: 5vh;
+    width: 13%;
+    background-color: white;
+    border-radius: 7px;
+    border: 1px solid gray;
+  }
+  .phoneCerti {
+    font-size: 1rem;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    color: #ccb9e9;
+  }
+  .payWay {
+    margin-bottom: 1%;
+    margin-top: 20%;
+    font-weight: 600;
+    font-size: 1.3rem;
+  }
+  .how2pay {
+    width: 45%;
+    height: 5vh;
+    border-radius: 8px;
+    margin-bottom: 5%;
+  }
+  .typePrice {
+    font-weight: 400;
+    text-align: left;
+  }
+  .tdTypePrice {
+    font-size: 1.3rem;
+  }
+  .tdTypeTime {
+    font-size: 1rem;
+  }
+  .typePriceTable {
+    margin-top: 5%;
+    margin-bottom: 5%;
+  }
+  .timeSelect {
+    width: 15%;
+    height: 6vh;
+    border-radius: 7px;
+    margin-bottom: 2.5%;
+    margin-right: 3%;
+    opacity: 0.6;
+    font-size: 1.2rem;
+  }
+  .mileageBtn {
+    height: 1.3rem;
+    font-size: 0.7rem;
+    background-color: white;
+    border: 1px solid gray;
+    opacity: 0.7;
+    border-radius: 10px;
+    margin-right: 2%;
+  }
+  .nOfficePayBtn {
+    width: 40%;
+    height: 10vh;
+    background-color: #041461;
+    color: white;
+    margin: 3%;
+    font-size: 1.3rem;
+  }
+  .officePayBtn {
+    width: 80%;
+
+    height: 10vh;
+    background-color: #041461;
+    color: white;
+    margin: 3%;
+    font-size: 1.3rem;
+  }
+  /* calender */
+  .rap {
+    max-width: 820px;
+    padding: 0 1.4rem;
+    margin-top: 0.3rem;
+    background-color: white;
+  }
+  .dateBtns {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+  .resDate {
+    width: 17%;
+    height: 7vh;
+    color: #4d6aed;
+    font-size: 0.788em;
+    border: 1px solid white;
+    border-radius: 10px;
+  }
+  .resDate:hover {
+    background-color: #1e6ff4;
+    color: white;
+  }
+  .dayShow {
+    color: #4d6aed;
+  }
+  .dateBtn {
+    background-color: inherit;
+    border: 1px solid gray;
+    font-size: 1.2rem;
+    width: fit-content;
+    height: 6vh;
+    border-radius: 7px;
+    text-align: left;
+    /* opacity: 0.6; */
+    padding-bottom: 0.5%;
+    margin-bottom: 1%;
+    margin-right: 2%;
+  }
+  .dateBtn:hover {
+    background-color: #1e6ff4;
+    border: 1px solid #1e6ff4;
+    color: white;
+    transition: 0.1s;
+  }
+  .totalCoast {
+    margin-bottom: 1.5%;
+    font-size: 1.4rem;
+    color: #d14a58;
+    font-weight: bolder;
+  }
+  .goback {
+    background: inherit;
+    border: 1px solid white;
+    color: #1e6ff4;
+  }
+  .goback:hover {
+    background-color: #1e6ff4;
+    border: 1px solid #1e6ff4;
+    color: white;
+    transition: 0.1s;
+  }
+  .showResed {
+    padding: 2%;
+    background: white;
+    float: right;
+
+    /* margin-left: 70%; */
+  }
+  .showResedMent {
+    font-size: 0.8em;
+  }
+  .showResedMent:hover > .arrow {
+    color: red;
+    font-weight: 700;
+  }
+  .resed {
+    font-size: 0.9em;
+  }
 }
 </style>
