@@ -157,7 +157,14 @@
       </p>
       <Nothing what="마일리지가" />
     </div>
-    <div class="total" v-if="mileages.length > 0">
+    <button
+      class="showTotal"
+      v-show="windowSize < 361"
+      @click="showTotalMaileage"
+    >
+      총 마일리지 보기
+    </button>
+    <div class="total" v-show="showTotal" v-if="mileages.length > 0">
       <table class="milUsage">
         <th style="text-align: left">총 마일리지</th>
         <th style="text-align: right">{{ totalMileage }}점</th>
@@ -184,7 +191,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import axios from "axios";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
@@ -205,6 +212,11 @@ export default {
     const usedClick = ref(true);
     const canceledClick = ref(true);
     const refundedClick = ref(true);
+
+    const windowSize = computed(() => {
+      return window.innerWidth;
+    });
+    const showTotal = ref(window.innerWidth > 360 ? true : false);
 
     const totalMileage = ref(0);
     const totalGet = ref(0);
@@ -290,6 +302,11 @@ export default {
       }
     };
 
+    const showTotalMaileage = () => {
+      showTotal.value = !showTotal.value;
+      // console.log(showTotal.value);
+    };
+
     //버튼 바꿔주는 함수들
     const all = () => {
       allClick.value = !allClick.value;
@@ -362,6 +379,9 @@ export default {
       showAll,
       noMore,
       toMain,
+      windowSize,
+      showTotalMaileage,
+      showTotal,
     };
   },
 };
@@ -388,7 +408,7 @@ export default {
   padding: 1%;
   margin-left: 0.5%;
   margin-right: 0.5%;
-  width: 5%;
+  width: 8%;
 }
 .btn:hover {
   background-color: rgb(4, 20, 97, 1);
@@ -458,5 +478,108 @@ table {
 .hogaek:hover > .arrow2 {
   color: red;
   font-weight: 700;
+}
+@media all and (max-width: 768px) {
+  .form {
+    width: 100%;
+    text-align: center;
+    padding: 0%2%2%2%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+  .btn {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    color: #999999;
+    background-color: #fafafa;
+    border-radius: 30px;
+    border: 1px solid #fafafa;
+    padding: 1%;
+    margin-left: 0.5%;
+    margin-right: 0.5%;
+    width: 17%;
+  }
+  .btn:hover {
+    background-color: rgb(4, 20, 97, 1);
+    color: white;
+  }
+  .table {
+    opacity: 0.6;
+    margin-top: 2.5%;
+    /* float: left; */
+    width: 95%;
+  }
+  .table tr {
+    font-weight: 600;
+    font-size: 1em;
+  }
+  .table th {
+    border-top: 0;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 1em;
+  }
+  .table td {
+    border-color: white;
+  }
+  .milUsage th {
+    font-size: 1.2rem;
+    border-bottom: 1px solid #dee2e6;
+    padding: 0.75rem;
+  }
+  .milUsage td {
+    padding: 2%;
+    font-weight: 600;
+  }
+  .total {
+    /* float: right; */
+    /* margin-right: 10%; */
+    margin-top: 0.5%;
+    padding: 2%;
+    background-color: #f6f7f8;
+    border-radius: 15px;
+  }
+  table {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+  }
+  .showTotal {
+    background: white;
+    border: 1px solid white;
+  }
+  .showTotal:hover {
+    font-weight: 800;
+  }
+  .showAll {
+    background: white;
+    border: 1px solid white;
+  }
+  .showAll:hover {
+    border: 1px solid black;
+    border-radius: 10px;
+    transition: 0.1s;
+  }
+  .hogaek {
+    font-family: "Inter";
+    font-style: normal;
+    font-size: 1.2em;
+  }
+  .hogaek:hover > .arrow {
+    color: red;
+    font-weight: 700;
+  }
+  .arrow2 {
+    color: white;
+  }
+  .hogaek:hover > .arrow2 {
+    color: red;
+    font-weight: 700;
+  }
 }
 </style>

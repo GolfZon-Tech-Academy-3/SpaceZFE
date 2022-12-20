@@ -53,11 +53,12 @@
             <td class="imgTd"><img :src="resStatuses[num - 1].imageName" /></td>
             <td class="centerTd">
               <p>
-                <span  class="tooltip" style="font-size: 2rem; margin-right: 3%;" @mouseenter="showPopup" @click="toCompany(resStatuses[num - 1].companyId)">
+                <span  class="tooltip"  @mouseenter="showPopup" @click="toCompany(resStatuses[num - 1].companyId)">
                   <span  class="tooltiptext" v-show="popup">해당 공간으로 이동</span>
-                  {{ resStatuses[num - 1].spaceName }}
+                  <span class="spaceName">{{ resStatuses[num - 1].spaceName }}</span> 
                 </span> 
-                <span style="font-size: 1.3rem; color:#9E9E9E;margin-right: 5%" @mouseenter="showPopup" @click="toCompany(resStatuses[num - 1].companyId)">{{resStatuses[num - 1].type}}</span> 
+                <br v-if="!show"/>
+                <span class="spaceType" style="font-size: 1.3rem; color:#9E9E9E;margin-right: 5%" @mouseenter="showPopup" @click="toCompany(resStatuses[num - 1].companyId)">{{resStatuses[num - 1].type}}</span> 
                 <span
                     v-if="resStatuses[num - 1].payStatus ==='003'"
                     class="payStatusBtn"
@@ -89,10 +90,10 @@
                         v-if="resStatuses[num - 1].status === '004'"
                   >이용 완료</span>
               </p>
-              <p v-if="resStatuses[num - 1].type ==='오피스'">
+              <p class="resDuring" v-if="resStatuses[num - 1].type ==='오피스'">
                 {{ resStatuses[num - 1].startDate.slice(0,10) }} ~ {{ resStatuses[num - 1].endDate.slice(0,10) }}
               </p>
-              <p v-if="resStatuses[num - 1].type !=='오피스'">
+              <p class="resDuring" v-if="resStatuses[num - 1].type !=='오피스'">
                 {{ resStatuses[num - 1].startDate }} ~ {{ resStatuses[num - 1].endDate }}
               </p>
               <p>
@@ -109,10 +110,10 @@
             </td>
             <td class='btnTd'>
                 <div style="border-left: 1px solid #dee2e6; padding-left: 10%;">
-                    <p style="font-size:1.3rem">{{resStatuses[num - 1].companyIdId}}</p>
-                    <p style="margin-left: 3%; font-size:0.7rem;color:#838383">{{resStatuses[num - 1].location}}</p>
-                    <p style="margin-left: 3%; font-size:1rem;color:#838383">{{resStatuses[num - 1].details}}</p>
-                    <p><button class="cancelBtn" @click="cancelRes(resStatuses[num - 1])">예약 취소하기</button></p>
+                    <p class="moblieNshow" style="font-size:1.3rem">{{resStatuses[num - 1].companyIdId}}</p>
+                    <p class="moblieNshow" style="margin-left: 3%; font-size:0.7rem;color:#838383">{{resStatuses[num - 1].location}}</p>
+                    <p class="moblieNshow" style="margin-left: 3%; font-size:1rem;color:#838383">{{resStatuses[num - 1].details}}</p>
+                    <p><button class="cancelBtn" @click="cancelRes(resStatuses[num - 1])">예약 취소<span v-if="show">하기</span></button></p>
                 </div>
             </td>
           </tr>
@@ -128,11 +129,12 @@
             <td class="imgTd"><img :src="resDone[num-1].imageName" /></td>
             <td class="centerTd">
               <p>
-                <span  class="tooltip" style="font-size: 2rem; margin-right: 3%;" @mouseenter="showPopup" @click="toCompany(resDone[num - 1].companyId)">
+                <span  class="tooltip" @mouseenter="showPopup" @click="toCompany(resDone[num - 1].companyId)">
                   <span  class="tooltiptext" v-show="popup">해당 공간으로 이동</span>
-                  {{ resDone[num - 1].spaceName }}
+                  <span class="spaceName">{{ resDone[num - 1].spaceName }}</span>
                 </span> 
-                <span style="font-size: 1.3rem; color:#9E9E9E;margin-right: 5%;" >{{resDone[num - 1].type}}</span> 
+                 <br v-if="!show"/>
+                <span class="spaceType" style="font-size: 1.3rem; color:#9E9E9E;margin-right: 5%;" >{{resDone[num - 1].type}}</span> 
                 <span
                     class="payStatusBtn"
                     style="background-color: white;
@@ -170,9 +172,9 @@
             </td>
             <td class='btnTd'>
                 <div style="border-left: 1px solid #dee2e6; padding-left: 10%;">
-                    <p style="font-size:1.3rem">{{resDone[num - 1].companyId}}</p>
-                    <p style="margin-left: 3%; font-size:0.7rem;color:#838383">{{resDone[num-1].location}}</p>
-                    <p style="margin-left: 3%; font-size:1rem;color:#838383">{{resDone[num-1].details}}</p>
+                    <p class="moblieNshow" style="font-size:1.3rem">{{resDone[num - 1].companyId}}</p>
+                    <p class="moblieNshow" style="margin-left: 3%; font-size:0.7rem;color:#838383">{{resDone[num-1].location}}</p>
+                    <p class="moblieNshow" style="margin-left: 3%; font-size:1rem;color:#838383">{{resDone[num-1].details}}</p>
                       <p v-show="resDone[num - 1].status !== '002' && resDone[num - 1].status !== '003'">
                         <button v-show="!resDone[num - 1].review" 
                         :id="resDone[num - 1].reviewed"  
@@ -268,6 +270,8 @@ setup() {
     const noMoreResStatus = ref(false)
 
     let find
+
+    const show = ref(window.innerWidth > 360 ? true : false)
 
     //예약 현황 띄우는 함수
     const getResStatuses = async ()=>{
@@ -513,7 +517,8 @@ setup() {
       resStatuseses,
       noMoreResStatus,
       showResStatuses,
-      toTop
+      toTop,
+      show
       };
   },
 };
@@ -716,5 +721,225 @@ img{
 .hogaek:hover > .arrow2 {
   color: red;
   font-weight: 700;
+}
+.spaceName{
+  font-size: 1.4em;
+}
+.spaceType{
+      font-size: 1.3rem;
+    color: rgb(158, 158, 158);
+    margin-right: 5%;
+    margin-left: 2%;
+}
+@media all and (max-width: 768px) {
+.form {
+  width: 92%;
+  /* float: right; */
+  text-align: center;
+  padding: 2%4%04%;
+}
+.outer {
+  background-color: #e7eaee;
+  border-radius: 10px;
+  padding: 3%0.3% 0% 0.3%;
+  font-size: 1.1rem;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 800;
+}
+.inner {
+  background-color: white;
+  border-radius: 10px;
+  text-align: center;
+  padding: 3%;
+}
+.res {
+  width: 100%;
+}
+.res1 {
+    width: 10%;
+}
+.resBtn {
+ color: silver;
+    margin-right: 5%;
+    font-weight: 800;
+    font-size: 1em;
+}
+.resBtn:hover {
+  color: #7276c5;
+}
+.resConduct {
+  /* margin-left: 5%; */
+  font-weight: 800;
+  font-size: 1em;
+}
+.spaceType{
+      font-size: 0.98em;
+    color: rgb(158, 158, 158);
+    margin-right: 0;
+}
+.resDuring{
+  font-size: 0.1em;
+}
+table{
+    margin: auto;
+    width: 100%;
+}
+td{
+    padding-top: 1.5%;
+    padding-bottom: 1.5%;
+   border-bottom: 1px solid #dee2e6;
+}
+img{
+    border-radius: 10px;
+    width: 80%;
+    height: 10vh;
+}
+.centerTd{
+    text-align: left;
+       width: 67%;
+}
+.centerTd p{
+    margin-bottom: 1%;
+    margin-top:1%
+}
+.imgTd{
+    width: 20%;
+}
+
+.btnTd{
+    text-align: left;
+    width: 20%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    
+}
+.btnTd p{
+    margin-bottom: 1%;
+}
+.payStatusBtn{
+    border-radius: 10px;
+    padding: 1%;
+    font-size: 0.1em;
+    font-weight: 300;
+}
+.info{
+    color: #9E9E9E;
+    font-size:0.8em
+}
+.moblieNshow{
+  display: none;
+}
+.cancelBtn{
+   margin-top: 8%;
+    width: 124%;
+    height: 10%;
+    background-color: white;
+    border-radius: 10px;
+}
+.cancelBtn:hover{
+  border: 1px solid gray;
+  color: gray;
+  transition:  0.2s;
+}
+.nShowReviewlBtn{
+       margin-top: 8%;
+    width: 124%;
+    height: 10%;
+    background-color: #9E9E9E;
+    border: 1px solid #9E9E9E;
+    color:white;
+    border-radius: 10px;
+}
+.showReviewlBtn{
+      margin-top: 8%;
+    width: 124%;
+    height: 10%;
+   border: 1px solid #9E9E9E;
+  background-color: #9E9E9E;
+   color:white;
+    border-radius: 10px;
+}
+.nShowReviewlBtn:hover{
+  border: 1px solid #e1dfdf;
+  /* background-color: #e1dfdf; */
+  transition:  0.2s;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px  black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: fit-content;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px ;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 0.4em;
+  white-space:nowrap;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+.reviewsho{
+ transition: 0.5s;
+}
+.showMore{
+  background: white;
+  border: 1px solid white;
+}
+.showMore:hover{
+  border-bottom: 1px solid black;
+  transition: 0.1s;
+}
+.toTop{
+  background: white;
+  border: 1px solid white;
+  float: right;
+}
+.toTop:hover{
+  border-top: 1px solid black;
+  transition: 0.1s;
+}
+.hogaek {
+  font-family: "Inter";
+  font-style: normal;
+  font-size: 0.9em;
+}
+.hogaek:hover > .arrow {
+  color: red;
+  font-weight: 700;
+}
+.arrow2 {
+  color: white;
+}
+.hogaek:hover > .arrow2 {
+  color: red;
+  font-weight: 700;
+}  
 }
 </style>

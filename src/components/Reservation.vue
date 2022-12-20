@@ -2071,7 +2071,7 @@ export default {
     margin-bottom: 5%;
   }
   .timeSelect {
-    width: 15%;
+    width: 30%;
     height: 6vh;
     border-radius: 7px;
     margin-bottom: 2.5%;
@@ -2089,7 +2089,7 @@ export default {
     margin-right: 2%;
   }
   .nOfficePayBtn {
-    width: 40%;
+    width: 44%;
     height: 10vh;
     background-color: #041461;
     color: white;
@@ -2097,8 +2097,7 @@ export default {
     font-size: 1.3rem;
   }
   .officePayBtn {
-    width: 80%;
-
+    width: 94%;
     height: 10vh;
     background-color: #041461;
     color: white;

@@ -69,4 +69,10 @@ p {
   width: 100%;
   height: 100%;
 }
+@media all and (max-width: 768px) {
+  p {
+    opacity: 0.6;
+    font-size: 0.8em;
+  }
+}
 </style>

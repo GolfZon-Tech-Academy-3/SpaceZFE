@@ -1122,7 +1122,7 @@ iframe {
     padding-bottom: 5%;
   }
   .img {
-    width: 96%;
+    width: 94%;
     /* text-align: left; */
     display: flex;
     flex-direction: column-reverse;
@@ -1140,7 +1140,7 @@ iframe {
   }
   .list {
     float: left;
-    width: 10%;
+    width: 12%;
     height: 10vh;
     margin: 1.5%;
     text-align: center;
@@ -1209,8 +1209,8 @@ iframe {
     display: inline;
     margin-left: 1%;
     margin-top: 1%;
-    width: 18%;
-    height: 20vh;
+    width: 24%;
+    height: 19vh;
     border-radius: 10px;
   }
   .resType {
@@ -1234,7 +1234,7 @@ iframe {
     border: 0.1px solid rgb(4, 20, 97, 1);
     background-color: rgb(4, 20, 97, 1);
     color: white;
-    font-size: 1em;
+    font-size: 1.2em;
     display: inline;
   }
   .resBtn:hover {
