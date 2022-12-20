@@ -93,7 +93,7 @@ export default {
   margin: 0.2em;
   cursor: pointer;
 }
-@media all and (max-width: 340px) {
+@media all and (max-width: 768px) {
   .modal-title {
     font-size: 0.7em;
   }

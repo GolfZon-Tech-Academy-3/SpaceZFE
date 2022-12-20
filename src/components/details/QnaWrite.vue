@@ -148,7 +148,7 @@ p {
   height: 9vh;
 }
 
-@media all and (max-width: 340px) {
+@media all and (max-width: 768px) {
   textarea {
     font-size: 1em;
     width: 60%;

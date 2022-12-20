@@ -209,7 +209,7 @@ export default {
 .distance {
   font-size: 0.6em;
 }
-@media all and (max-width: 340px) {
+@media all and (max-width: 768px) {
   #map {
     width: 80%;
     height: 60vh;

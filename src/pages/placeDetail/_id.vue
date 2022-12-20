@@ -1034,7 +1034,7 @@ iframe {
 .binlists {
   margin-left: 60%;
 }
-@media all and (max-width: 340px) {
+@media all and (max-width: 768px) {
   #app {
     font-family: Inter;
     width: auto;
