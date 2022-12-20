@@ -151,6 +151,28 @@ export default {
 
         const io = new IntersectionObserver(ioCallback, { threshold: 0.7 });
 
+        onMounted(() => {
+            setTimeout(() => {
+                document.addEventListener('scroll', scrollEvent);
+            }, 100);
+        })
+        onUnmounted(() => {
+            document.removeEventListener('scroll', scrollEvent);
+        })
+        const scrollEvent = () => {
+            document.documentElement.scrollTop;
+            let scrollTop = document.querySelector('html').scrollTop;
+            if(scrollTop > 165) {
+                document.getElementById('fixed').style = 'position: fixed;top: 3.75em;left:0;width: 100%;background-color: white;box-shadow: 0 0 5px 0 gray';
+                document.getElementById('title').style = 'display: none;';
+                document.getElementById('fake').style = 'width: 100%;height: 250px;';
+            } else {
+                document.getElementById('fixed').style = '';
+                document.getElementById('title').style = '';
+                document.getElementById('fake').style = '';
+            }
+        }
+
         watch(resultPlace.value, () => {
             if(resultPlace.value.length <= 9 && resultPlace.value.length > 0) {
                 setTimeout(() => {
