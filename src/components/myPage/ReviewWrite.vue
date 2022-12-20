@@ -239,4 +239,43 @@ export default {
 .inner {
   margin-bottom: 0;
 }
+@media all and (max-width: 768px) {
+  .modal-dialog {
+    margin-top: 10%;
+  }
+  .modal-wrapper {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-content {
+    text-align: center;
+    border-radius: 15px;
+    margin: 1%10%1%10%;
+  }
+  .btn {
+    height: 10%;
+    width: 400%;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  #text {
+    height: 25%;
+    width: 180%;
+    font-size: 1.5rem;
+    border-radius: 15px;
+  }
+  .modal-body {
+    width: 100%;
+  }
+  .inner {
+    margin-bottom: 0;
+  }
+}
 </style>

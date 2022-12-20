@@ -27,14 +27,14 @@
 
     <table v-for="num in qnas.length < qna ? qnas.length : qna" :key="num">
       <tr>
-        <td>
-          <b>{{ qnas[num - 1].companyName }}</b>
+        <td class="placeNTd">
+          <b class="placeName">{{ qnas[num - 1].companyName }}</b>
         </td>
-        <td style="color: rgba(133, 133, 137, 1)">
+        <td class="day" style="color: rgba(133, 133, 137, 1)">
           {{ qnas[num - 1].inquiryTime }}
         </td>
-        <td v-if="!qnas[num - 1].answers"><b>미완료</b></td>
-        <td v-if="qnas[num - 1].answers"><b>완료</b></td>
+        <td class="done" v-if="!qnas[num - 1].answers"><b>미완료</b></td>
+        <td class="done" v-if="qnas[num - 1].answers"><b>완료</b></td>
         <button
           class="btns"
           v-show="!qnas[num - 1].showMyqna"
@@ -52,11 +52,11 @@
       </tr>
       <tr v-show="qnas[num - 1].showMyqna">
         <td colspan="3" style="text-align: left">
-          <p>{{ qnas[num - 1].inquiries }}</p>
+          <p class="question">{{ qnas[num - 1].inquiries }}</p>
           <button
             class="qnaButton"
             @click="showAnwer(qnas[num - 1].inquiryId)"
-            v-if="qnas[num - 1].answers !== ''"
+            v-if="qnas[num - 1].answers != null"
           >
             답변보기
             <span style="color: black" v-show="!qnas[num - 1].showMyAnswer"
@@ -66,14 +66,8 @@
               &#8743;</span
             >
           </button>
-          <button class="qnaButton" v-if="qnas[num - 1].answers === ''">
-            답변보기
-            <span style="color: black" v-show="!qnas[num - 1].showMyAnswer"
-              >&#8744;</span
-            >
-            <span style="color: black" v-show="qnas[num - 1].showMyAnswer">
-              &#8743;</span
-            >
+          <button class="qnaButtonNOt" v-if="qnas[num - 1].answers == null">
+            답변 미등록
           </button>
           <QnaAnswers
             v-if="qnas[num - 1] !== null"
@@ -296,6 +290,13 @@ td {
   border: 1px solid white;
   margin-bottom: 2.5%;
 }
+.qnaButtonNOt {
+  color: orangered;
+  font-weight: 800;
+  background-color: white;
+  border: 1px solid white;
+  margin-bottom: 2.5%;
+}
 .tooltip {
   position: relative;
   display: inline-block;
@@ -369,5 +370,157 @@ td {
 .hogaek:hover > .arrow2 {
   color: red;
   font-weight: 700;
+}
+@media all and (max-width: 768px) {
+  .qnaHeader {
+    font-family: "Italiana";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 2.5rem;
+    text-align: center;
+    width: fit-content;
+    margin: 0;
+  }
+  .form {
+    width: 100%;
+    text-align: center;
+    padding-top: 0%;
+    /* padding: 2%0%0%4%; */
+  }
+  .frame {
+    margin: auto;
+    padding-top: 2%;
+  }
+  .nav {
+    margin-left: 15%;
+    width: 100%;
+  }
+
+  table {
+    width: 90%;
+  }
+  td {
+    height: 7vh;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 1.2rem;
+    width: 17vw;
+    padding: 1.5%;
+  }
+  .head {
+    background: #d0d2e9;
+    border-bottom: 3px solid black;
+    font-weight: 600;
+    font-size: 0.8em;
+    height: 4vh;
+    width: 22vw;
+  }
+  .placeName {
+    font-size: 0.6em;
+  }
+  .placeNTd {
+    width: 25%;
+  }
+  .day {
+    font-size: 0.8em;
+    width: 25%;
+  }
+  .done {
+    width: 23%;
+  }
+  .btns {
+    /* float: left; */
+    margin-top: 3%;
+    width: 75%;
+    margin-left: 5%;
+    margin-top: 20%;
+    font-size: 0.8em;
+    border-radius: 15px;
+    /* background-color: white; */
+    border: 1px solid white;
+  }
+  .qnaButton {
+    color: #1e6ff4;
+    font-weight: 800;
+    background-color: white;
+    border: 1px solid white;
+    margin-bottom: 2.5%;
+  }
+  .tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px black;
+  }
+
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: fit-content;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.4em;
+    white-space: nowrap;
+  }
+
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+  .showMore {
+    text-align: center;
+    background: white;
+    border: 1px solid white;
+  }
+  .showMore:hover {
+    border-bottom: 1px solid black;
+    transition: 0.1s;
+  }
+  .toTop {
+    margin-left: 30%;
+    background: white;
+    border: 1px solid white;
+  }
+  .toTop:hover {
+    border-top: 1px solid black;
+    transition: 0.1s;
+  }
+  .hogaek {
+    font-family: "Inter";
+    font-style: normal;
+    font-size: 1.2em;
+  }
+  .hogaek:hover > .arrow {
+    color: red;
+    font-weight: 700;
+  }
+  .arrow2 {
+    color: white;
+  }
+  .hogaek:hover > .arrow2 {
+    color: red;
+    font-weight: 700;
+  }
+  .question {
+    font-size: 0.8em;
+  }
 }
 </style>

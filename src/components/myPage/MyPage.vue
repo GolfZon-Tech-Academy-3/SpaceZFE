@@ -8,7 +8,7 @@
     <p>{{ errorContent }}</p>
   </ErrorHandle>
   <Spinner v-if="loading" />
-  <div style="height: auto; overflow: hidden; display: flex; min-height: 400px">
+  <div class="totalDiv">
     <div class="sideBar">
       <p>
         <button class="btn" @click="myShow" v-show="!my">
@@ -98,15 +98,11 @@
 
         <table style="width: 100%">
           <tr style="width: 100%; padding-top: 3%">
-            <td style="text-align: left; color: #9e9e9e; margin-right: 65vw">
-              이메일
-            </td>
+            <td class="marginTd">이메일</td>
             <td style="text-align: right">{{ useEmail }}</td>
           </tr>
           <tr style="width: 100%; padding-top: 3%">
-            <td style="text-align: left; color: #9e9e9e; margin-right: 65vw">
-              닉네임
-            </td>
+            <td class="marginTd">닉네임</td>
             <td v-show="editProf" style="text-align: right">{{ userNick }}</td>
             <td v-show="!editProf" style="text-align: right">
               <input
@@ -412,6 +408,12 @@ export default {
 </script>
 
 <style scoped>
+.totalDiv {
+  height: auto;
+  overflow: hidden;
+  display: flex;
+  min-height: 400px;
+}
 .sideBar {
   width: 15%;
   height: 75vh;
@@ -476,6 +478,11 @@ td {
   font-size: 1.2rem;
   padding-top: 4%;
 }
+.marginTd {
+  text-align: left;
+  color: #9e9e9e;
+  margin-right: 65vw;
+}
 .profile {
   min-width: 9vw;
   min-height: 19vh;
@@ -530,5 +537,140 @@ td {
   background-color: white;
   opacity: 0.6;
   padding: 1% 0% 1% 0%;
+}
+
+@media all and (max-width: 768px) {
+  .totalDiv {
+    height: auto;
+    overflow: hidden;
+    display: flex;
+    min-height: 400px;
+    flex-direction: column;
+  }
+  .sideBar {
+    width: 100%;
+    height: 10%;
+    /* float: left; */
+    background-color: #eeeff5;
+    border-radius: 15px;
+    padding-top: 0.5%;
+    margin-left: 0.5%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+  .btn {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 800;
+    font-size: 1em;
+    /* text-align: left; */
+    /* width: 25%; */
+    color: #7276c5;
+    border-radius: 15px;
+    border: 1px solid #eeeff5;
+    height: 8vh;
+    margin-bottom: 1%;
+    text-align: center;
+  }
+  .btn:hover {
+    background: rgba(114, 118, 197, 0.24);
+    border-radius: 15px;
+  }
+  .sideImg {
+    display: none;
+  }
+  p {
+    margin: 0;
+  }
+  .form {
+    width: 100%;
+    text-align: center;
+    padding-top: 4%;
+    padding-bottom: 5%;
+  }
+  .otherForm {
+    width: 100%;
+    float: right;
+    text-align: center;
+    overflow: hidden;
+    height: auto;
+    padding-bottom: 5%;
+  }
+  .board {
+    margin: auto;
+    width: 70%;
+    border: 1px solid gray;
+    border-radius: 15px;
+    padding: 2%4%2%4%;
+  }
+  td {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1em;
+    padding-top: 4%;
+  }
+  .marginTd {
+    text-align: left;
+    color: #9e9e9e;
+    margin-right: 30%;
+    width: 21%;
+  }
+  .profile {
+    min-width: 10%;
+    min-height: 20%;
+    max-width: 35%;
+    max-height: 35%;
+    border-radius: 90%;
+  }
+  .profEdit {
+    margin-top: 10%;
+    width: 60%;
+    height: 6vh;
+    font-family: "Inter";
+    font-weight: 700;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    border: 1px solid white;
+    color: #adadad;
+  }
+  .editCancle {
+    background: white;
+    border: 1px solid white;
+    color: red;
+  }
+  .profEdit:hover {
+    color: black;
+  }
+  #file {
+    display: none;
+  }
+  .uploadBtn {
+    width: 31%;
+    border: 1px solid gray;
+    border-radius: 15px;
+    padding: 2%;
+  }
+  .nickInput {
+    width: 30%;
+    height: 5vh;
+    margin-right: 2%;
+    border-radius: 10px;
+    border: 1px solid gray;
+    opacity: 0.6;
+    padding-left: 3%;
+  }
+  .nickBtn {
+    width: 40%;
+    /* height: 4.5vh; */
+    font-size: 1em;
+    color: gray;
+    border-radius: 10px;
+    border: 1px solid gray;
+    background-color: white;
+    opacity: 0.6;
+    padding: 1% 0% 1% 0%;
+  }
 }
 </style>
