@@ -159,7 +159,7 @@
     </div>
     <button
       class="showTotal"
-      v-show="windowSize < 361"
+      v-show="windowSize < 769"
       @click="showTotalMaileage"
     >
       총 마일리지 보기
@@ -216,7 +216,7 @@ export default {
     const windowSize = computed(() => {
       return window.innerWidth;
     });
-    const showTotal = ref(window.innerWidth > 360 ? true : false);
+    const showTotal = ref(window.innerWidth > 768 ? true : false);
 
     const totalMileage = ref(0);
     const totalGet = ref(0);

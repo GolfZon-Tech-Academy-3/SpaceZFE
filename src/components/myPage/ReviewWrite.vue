@@ -256,7 +256,7 @@ export default {
   .modal-content {
     text-align: center;
     border-radius: 15px;
-    margin: 1%10%1%10%;
+    margin: 0%10%1%16%;
   }
   .btn {
     height: 10%;

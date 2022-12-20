@@ -104,7 +104,6 @@ export default {
     width: 40%;
     min-width: 300px;
     height: 50%;
-    min-height: 100%;
     display: flex;
     position: absolute;
     top: 50%;

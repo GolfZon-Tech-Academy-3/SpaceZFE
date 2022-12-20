@@ -57,8 +57,8 @@
                   <span  class="tooltiptext" v-show="popup">해당 공간으로 이동</span>
                   <span class="spaceName">{{ resStatuses[num - 1].spaceName }}</span> 
                 </span> 
-                <br v-if="!show"/>
                 <span class="spaceType" style="font-size: 1.3rem; color:#9E9E9E;margin-right: 5%" @mouseenter="showPopup" @click="toCompany(resStatuses[num - 1].companyId)">{{resStatuses[num - 1].type}}</span> 
+                <br v-if="!show"/>
                 <span
                     v-if="resStatuses[num - 1].payStatus ==='003'"
                     class="payStatusBtn"
@@ -155,7 +155,7 @@
                         border: 1px solid red;"
                   >예약 취소</span>
               </p>
-              <p>
+              <p class="resDuring">
                 {{ resDone[num - 1].startDate.slice(0,10) }} ~ {{ resDone[num - 1].endDate.slice(0,10) }}
               </p>
               <p>
@@ -271,7 +271,7 @@ setup() {
 
     let find
 
-    const show = ref(window.innerWidth > 360 ? true : false)
+    const show = ref(window.innerWidth > 768 ? true : false)
 
     //예약 현황 띄우는 함수
     const getResStatuses = async ()=>{
@@ -779,7 +779,7 @@ img{
     margin-right: 0;
 }
 .resDuring{
-  font-size: 0.1em;
+  font-size: 0.6em;
 }
 table{
     margin: auto;
@@ -820,7 +820,7 @@ img{
 .payStatusBtn{
     border-radius: 10px;
     padding: 1%;
-    font-size: 0.1em;
+    font-size: 0.7em;
     font-weight: 300;
 }
 .info{

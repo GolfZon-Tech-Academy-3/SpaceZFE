@@ -430,7 +430,7 @@ td {
   .btns {
     /* float: left; */
     margin-top: 3%;
-    width: 75%;
+    width: 65%;
     margin-left: 5%;
     margin-top: 20%;
     font-size: 0.8em;
