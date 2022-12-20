@@ -116,7 +116,7 @@ export default {
 li {
   font-size: 1.2rem;
 }
-@media all and (max-width: 340px) {
+@media all and (max-width: 768px) {
   .modal-title {
     font-size: 1em;
   }
