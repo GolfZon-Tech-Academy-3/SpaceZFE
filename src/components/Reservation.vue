@@ -1986,7 +1986,7 @@ export default {
 }
 .showResed {
   padding: 2%;
-  background: white;
+  /* background: white; */
   float: right;
 
   /* margin-left: 70%; */
@@ -2140,9 +2140,7 @@ export default {
     flex-direction: row;
     flex-wrap: nowrap;
   }
-  .showResed {
-    display: grid;
-  }
+
   .resDate {
     width: 17%;
     height: 7vh;
@@ -2196,8 +2194,9 @@ export default {
   }
   .showResed {
     padding: 2%;
-    background: white;
-    float: right;
+    display: grid;
+    /* background: white; */
+    /* float: right; */
 
     /* margin-left: 70%; */
   }
