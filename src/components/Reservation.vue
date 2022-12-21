@@ -105,10 +105,10 @@
         @mouseover="showResedTimes"
         @mouseleave="showResedTimes"
       >
-        선택한 날짜({{ startDay }})의 예약 시간 보기
+        {{ startDay }}의 예약 시간 확인
         <span class="arrow">&rarr;</span>
       </a>
-      <a v-show="showResed">
+      <a class="showResed" v-show="showResed">
         <span
           class="resed"
           v-for="num in restTimes.filter(Boolean).length"
@@ -317,8 +317,6 @@ import { useStore } from "vuex";
 
 import ErrorHandle from "@/components/UI/BaseDialog.vue";
 import Spinner from "@/components/UI/Spinner.vue";
-
-import _ from "lodash";
 
 export default {
   components: {
@@ -561,6 +559,7 @@ export default {
         console.log(x, buttons.value);
       }
       console.log(showingStartDates.value);
+      console.log(showingEndingDates.value);
     };
 
     //마일리지 계산기
@@ -682,10 +681,22 @@ export default {
       if (!phoneNum.value) {
         correctNum.value = true;
       }
-      const res = await axios.get(
-        `${proxy}/reservation/phoneCheck?phone=${phoneNum.value}`
-      );
-      certiNum.value = res.data;
+      try {
+        await axios
+          .get(`${proxy}/reservation/phoneCheck?phone=${phoneNum.value}`, {
+            headers: {
+              Authorization: store.state.accessToken,
+            },
+          })
+          .then((res) => {
+            if (res.status < 300 && res.status >= 200) {
+              alert("인증번호 발송");
+            }
+            certiNum.value = res.data;
+          });
+      } catch (error) {
+        alert("오류발생 나중에 다시 시도해 주세요");
+      }
     };
 
     //휴대폰 인증확인
@@ -718,7 +729,7 @@ export default {
         alert("결제 관련 동의에 전부 체크해 주세요");
       }
       // else if (resMessage.value != "인증성공") {
-      //   alert("휴대폰 인증이 유료인 관계로 제한");
+      //   alert("휴대폰 인증을 해주세요");
       // }
       else if (pay.value === "SPACEZ 페이") {
         var clientKey = "test_ck_MGjLJoQ1aVZ5Rq9xWBd3w6KYe2RN";
@@ -883,7 +894,7 @@ export default {
         alert("결제 관련 동의에 전부 체크해 주세요");
       }
       // else if (resMessage.value != "인증성공") {
-      //   alert("휴대폰 인증이 유료인 관계로 제한");
+      //   alert("휴대폰 인증을 해주세요");
       // }
       else if (pay.value === "SPACEZ 페이") {
         var clientKey = "test_ck_MGjLJoQ1aVZ5Rq9xWBd3w6KYe2RN";
@@ -1438,8 +1449,8 @@ export default {
 
     //예약 종료시간 리뉴얼
     const getEndDates = (selectDay) => {
-      console.log(selectDay);
-      console.log(endDates.value);
+      // console.log(selectDay.slice(8, 10));
+      // console.log(endDates.value);
       showingDeskEnd.value = !showingDeskEnd.value;
 
       let day = parseInt(selectDay.slice(8, 10));
@@ -1454,6 +1465,7 @@ export default {
       }
       //배열에 예약일(오늘) 이전 날짜들 삭제
       dates = dates.slice(day);
+      // console.log(dates);
       //만약 말일을 선택하면 배열이 0이 되니까 월 변경
       if (dates.length < 1) {
         resMonth++;
@@ -1486,6 +1498,13 @@ export default {
           if (resMonth < 10) {
             resMonth = "0" + resMonth;
           }
+        } else if (dates[i] === 1 && dates[0] === 1) {
+          resMonth = 1;
+          resYear++;
+          //10월 이전들은 보기 안좋으니까 0추가
+          if (resMonth < 10) {
+            resMonth = "0" + resMonth;
+          }
         }
         //일도 10일 이전은 0추가
         if (dates[i] > 0 && dates[i] < 10) {
@@ -1497,17 +1516,15 @@ export default {
         }
         endDates.value.push(`${resYear}-${resMonth}-${dates[i]}`);
       }
-      reserved = resInfos.value.reservedTime;
-      // console.log(reserved);
 
       for (let i = 0; i < reserved.length; i++) {
         let found = endDates.value.find((e) => e == reserved[i]);
-        // console.log(found);
         for (let j = 0; j < endDates.value.length; j++) {
           if (endDates.value[j] == found) endDates.value[j] = "<예약>";
         }
       }
 
+      console.log(endDates.value);
       const week = ["일", "월", "화", "수", "목", "금", "토"];
       for (let i = 0; i < endDates.value.length; i++) {
         if (endDates.value[i] != "<예약>") {
@@ -1542,7 +1559,7 @@ export default {
         alert("결제 관련 동의에 전부 체크해 주세요");
       }
       // else if (resMessage.value != "인증성공") {
-      //   alert("휴대폰 인증이 유료인 관계로 제한");
+      //   alert("휴대폰 인증을 해주세요");
       // }
       else if (pay.value === "SPACEZ 페이") {
         var clientKey = "test_ck_MGjLJoQ1aVZ5Rq9xWBd3w6KYe2RN";
@@ -1819,6 +1836,12 @@ export default {
   background-color: white;
   border-radius: 7px;
   border: 1px solid gray;
+}
+.certiBtn:hover {
+  opacity: 1;
+  background: gray;
+  color: white;
+  transition: 0.1s;
 }
 .insertCerti {
   width: 25%;
@@ -2116,6 +2139,9 @@ export default {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+  }
+  .showResed {
+    display: grid;
   }
   .resDate {
     width: 17%;
