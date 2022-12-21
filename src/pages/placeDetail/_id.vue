@@ -565,8 +565,8 @@ export default {
       } else if (e != "go" && e != "back") {
         // qnasLimit.value = e * qnasLimit.value;
         qnasLimit.value = e * 5;
-        x = e * 5;
-        currnetQnaPage.value = qnas.value.list.slice(x - 5, e * 5);
+        x = e * 5 - 5;
+        currnetQnaPage.value = qnas.value.list.slice(x, e * 5);
         console.log(qnasLimit.value, x);
       }
       console.log(e);
