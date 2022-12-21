@@ -548,16 +548,20 @@ export default {
     getReviews();
 
     //qna pagination
+    let x = 0;
     const getQnas = (e) => {
-      let x = 0;
       if (e == "go") {
         qnasLimit.value += 5;
         x += 5;
         currnetQnaPage.value = qnas.value.list.slice(x, qnasLimit.value);
+        console.log(currnetQnaPage.value);
+        console.log(x, qnasLimit.value);
       } else if (e == "back") {
         qnasLimit.value -= 5;
         x -= 5;
         currnetQnaPage.value = qnas.value.list.slice(x, qnasLimit.value);
+        console.log(currnetQnaPage.value);
+        console.log(x, qnasLimit.value);
       } else if (e != "go" && e != "back") {
         // qnasLimit.value = e * qnasLimit.value;
         qnasLimit.value = e * 5;
