@@ -7,7 +7,7 @@
             <div id="content" style="width: 100%;height: calc(100% - 48px);overflow-x: hidden;overflow-y: auto;position: relative;">
                 <div v-for="talk in talks" :key="talk" style="width: calc(100% - 1em);height: auto;text-align: left;padding: 0.5em;position: relative;">
                     <div :style="[talk.sender === 'master' ? 'text-align:right;' : '']" v-if="talk.sender !== '[알림]'">{{ talk.sender }}</div>
-                    <span v-if="talk.sender !== '[알림]'" :style="[talk.sender === 'master' ? 'float :left;' : 'float:right;']">{{ talk.createdAt }}</span>
+                    <span v-if="talk.sender !== '[알림]'" :style="[talk.sender === 'master' ? 'float :left;font-size: 0.8em;color: gray;' : 'float:right;font-size: 0.8em;color: gray;']">{{ talk.createdAt }}</span>
                     <div :class="[talk.sender === '[알림]' ? 'alert' : (talk.sender === 'master' ? 'send' : 'receive')]">
                         {{talk.message}}
                     </div>
