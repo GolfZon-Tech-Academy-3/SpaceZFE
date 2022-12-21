@@ -161,7 +161,7 @@ export default {
             .put(
               `${proxy}/review/update`,
               {
-                reviewId: edit.value.id,
+                reviewId: edit.value.id.reviewId,
                 content: revContent.value,
                 rating: score.value - 1,
               },
@@ -256,7 +256,7 @@ export default {
   .modal-content {
     text-align: center;
     border-radius: 15px;
-    margin: 0%10%1%16%;
+    margin: 0%10%1%25%;
   }
   .btn {
     height: 10%;
@@ -267,7 +267,7 @@ export default {
   }
   #text {
     height: 25%;
-    width: 180%;
+    width: 160%;
     font-size: 1.5rem;
     border-radius: 15px;
   }
