@@ -155,7 +155,7 @@ p {
   }
   .quesImg {
     width: 30%;
-    height: 30vh;
+    height: 18vh;
   }
 }
 </style>
