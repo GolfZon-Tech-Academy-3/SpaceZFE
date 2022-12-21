@@ -27,6 +27,7 @@ export default {
       emit('close');
     }
 
+    //맵 초기화
     const initMap = () => {
         let container = document.getElementById("kakaoMap");
         let options = {
@@ -43,6 +44,7 @@ export default {
         overlay.value = new kakao.maps.CustomOverlay();
     }
 
+    //장소들로 위치 좌표 찍기
     const searchSubmit = () => {
       for(var i = 0; i < places.value.length; i++) {
             let companyName = places.value[i].companyName;

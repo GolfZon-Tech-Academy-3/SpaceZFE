@@ -139,6 +139,7 @@ export default {
             }
         })
 
+        //조건
         watch(startTime, () => {
             console.log(startTime.value);
             if(endDisabled.value) {
@@ -157,6 +158,7 @@ export default {
             }
         })
 
+        //조건
         watch(endTime, () => {
             let checkStart = '';
             let checkEnd = '';
@@ -170,6 +172,7 @@ export default {
             }
         })
 
+        //조건
         watch(startCleanTime, () => {
             console.log(startCleanTime.value);
             if(endCleanDisabled.value) {
@@ -188,6 +191,7 @@ export default {
             }
         })
 
+        //조건
         watch(endCleanTime, () => {
             let checkStart = '';
             let checkEnd = '';
@@ -205,6 +209,7 @@ export default {
             emit('close');
         }
 
+        //이미지 업로드
         const addImage = (event) => {
             if(imgs.value.length === 5) {
                 alert('이미 5개의 이미지가 업로드 되었습니다');
@@ -214,6 +219,7 @@ export default {
             }
         }
 
+        //공간 등록
         const registerSpace = async () => {
             if(spaceName.value.length < 3) {
                 alert('공간 이름을 두 자 이상 입력하세요');

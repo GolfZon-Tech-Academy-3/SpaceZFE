@@ -53,6 +53,7 @@ export default {
       emit("close");
     };
 
+    //이메일 형식 확인
     const email_check = (email) => {
       var regex =
         /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
@@ -69,6 +70,7 @@ export default {
       }
     };
 
+    //로그인
     const login = async () => {
       if (!email_check(email.value)) {
         alert("올바른 이메일 형식이 아닙니다");

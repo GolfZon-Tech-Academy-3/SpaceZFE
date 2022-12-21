@@ -32,6 +32,7 @@ export default {
     const link = window.location.pathname;
     const showMenuBar = ref(false);
 
+    //페이지 이동하기
     const moveTo = (link) => {
       showMenuBar.value = !showMenuBar.value;
       router.push({
@@ -39,6 +40,7 @@ export default {
       });
     };
 
+    //메뉴바 열고 닫기
     const controlMenuBar = () => {
       showMenuBar.value = !showMenuBar.value;
     }

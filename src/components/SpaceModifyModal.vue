@@ -164,6 +164,7 @@ export default {
             }
         })
 
+        //조건
         watch(startTime, () => {
             let checkStart = '';
             let checkEnd = '';
@@ -177,6 +178,7 @@ export default {
             }
         })
 
+        //조건
         watch(endTime, () => {
             let checkStart = '';
             let checkEnd = '';
@@ -190,6 +192,7 @@ export default {
             }
         })
 
+        //조건
         watch(startCleanTime, () => {
             let checkStart = '';
             let checkEnd = '';
@@ -203,6 +206,7 @@ export default {
             }
         })
 
+        //조건
         watch(endCleanTime, () => {
             let checkStart = '';
             let checkEnd = '';
@@ -220,6 +224,7 @@ export default {
             emit('close');
         }
 
+        //공간 정보 수정
         const modifySpace = async () => {
             console.log(officePrice.value);
             if(spaceName.value.length < 3) {

@@ -55,6 +55,7 @@ export default {
     setup() {
         const proxy = window.location.hostname === 'localhost' ? '' : '/proxy';
         const width = ref(0);
+        const showLoginModal = ref(false);
         const showSearchModal = ref(false);
         const showMapModal = ref(false);
         const showClose = ref(false);
@@ -92,6 +93,7 @@ export default {
             isLogined.value = true;
         }
         
+        //네비게이션 바 검색
         const searchModal = async (event) => {
             searchWord.value = event.target.value;
             await axios.post(`${proxy}/company/total?page=1`,
@@ -110,11 +112,13 @@ export default {
                         })
         }
 
+        //검색 모달 열기
         const openSearchModal = () => {
             showSearchModal.value = true;
             showClose.value = true;
         }
 
+        //검색 모달 닫기
         const closeSearchModal = () => {
             showSearchModal.value = false;
             showClose.value = false;
@@ -122,18 +126,19 @@ export default {
             input.value = '';
         }
 
+        //로그인 모달 닫기
         const closeLoginModal = () => {
             showLoginModal.value = false;
         }
 
-        const showLoginModal = ref(false);
-
+        //로그인 모달 열기
         const openLoginModal = async () => {
             showSearchModal.value = false;
             showClose.value = false;
             showLoginModal.value = true;
         }
 
+        //로그아웃
         const logout = () => {
             store.dispatch('initToken');
             isLogined.value = false;
@@ -143,6 +148,7 @@ export default {
             }, 200);
         }
 
+        //검색 페이지 이동
         const moveToSearch = async () => {
             showSearchModal.value = false;
             showClose.value = false;
@@ -156,6 +162,7 @@ export default {
             });
         }
 
+        //지도 열고 닫기
         const controlMapModal = () => {
             if(showMapModal.value === false) {
                 triggerToast('지도를 닫으려면 더블클릭');
@@ -163,6 +170,7 @@ export default {
             showMapModal.value = !showMapModal.value;
         }
 
+        //반응형을 위한 resize 함수
         const handleResize = () => {
             width.value = window.innerWidth;
         }

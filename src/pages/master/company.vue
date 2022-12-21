@@ -82,6 +82,7 @@ export default {
             toastMessage, showToast, triggerToast,
         } = useToast();
 
+        //장소 정보 얻기
         const getCompanys = async (type) => {
             await axios.get(`${proxy}/company/manager/list`, {
                 headers: {
@@ -120,26 +121,31 @@ export default {
 
         getCompanys(selected.value);
 
+        //모든 상태 검색
         const selectAll = () => {
             selected.value = 'all';
             getCompanys('all');
         }
 
+        //대기 중인 상태 검색
         const selectWait = () => {
             selected.value = 'wait';
             getCompanys('wait');
         }
 
+        //완료 상태 검색
         const selectCompleted = () => {
             selected.value = 'completed';
             getCompanys('completed');
         }
 
+        //거절 상태 검색
         const selectDeclined = () => {
             selected.value = 'declined';
             getCompanys('declined');
         }
 
+        //매니저로 승인하기
         const approve = async (id) => {
             if(confirm('매니저로 승인하시겠습니까?')) {
                 try {
@@ -157,6 +163,7 @@ export default {
             }
         }
 
+        //매니저 승인 거절
         const decline = async (id) => {
             if(confirm('매니저 승인을 거절하시겠습니까?')) {
                 try {

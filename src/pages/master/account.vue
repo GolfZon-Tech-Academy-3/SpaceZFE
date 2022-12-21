@@ -70,6 +70,7 @@ export default {
         const masters = ref([]);
         const candidates = ref([]);
 
+        //마스터 계정 얻기
         const getMasters = async () => {
             await axios.get(`${proxy}/master/list`, {
                 headers: {
@@ -82,6 +83,7 @@ export default {
 
         getMasters();
 
+        //멤버 회원 마스터 회원으로 승급
         const approve = async (id) => {
             if(confirm('멤버 회원을 마스터 회원으로 변경하시겠습니까?')) {
                 try {
@@ -99,6 +101,7 @@ export default {
             }
         }
 
+        //마스터 회원 멤버 회원으로 강등
         const disapprove = async (id) => {
             if(confirm('마스터 회원을 멤버 회원으로 변경하시겠습니까?')) {
                 try {
@@ -115,6 +118,7 @@ export default {
             }
         }
 
+        //멤버 검색하기
         const changeKeyword = async (e) => {
             await axios.get(`${proxy}/master/member/list?searchWord=${e.target.value}`, {
                 headers: {

@@ -55,6 +55,7 @@
             emit('close');
         }
     
+        //메시지 전송
         const sendMessage = async () => {
             if(input.value !== '') {
                 let header = {
@@ -67,6 +68,8 @@
                 }, 300);
             }
         }
+
+        //메시지 수신
         const recvMessage = async (recv) => {
             talks.value.push({"type":recv.type,"sender":(recv.type === 'ENTER'?'[알림]':recv.sender),"message":recv.message})
             setTimeout(() => {
@@ -74,7 +77,7 @@
             }, 300);
         }
         
-        
+        //채팅 연결
         const connect = async () => {
             let header = {
                 'Authorization': store.state.accessToken,

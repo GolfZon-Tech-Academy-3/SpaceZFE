@@ -41,6 +41,7 @@
       const roomInfo = ref({});
       const showChatting = ref(false);
   
+      //채팅방 정보 얻기
       const findAllRoom = async () => { 
         await axios.get(`${proxy}/chat/rooms`, {
                   headers: {
@@ -54,6 +55,7 @@
       
       findAllRoom();
       
+      //채팅방 참가
       const enterRoom = (name, id) => {
           showChatting.value = true;
           roomInfo.value['sender'] = 'master';
@@ -61,6 +63,7 @@
           roomInfo.value['roomName'] = name;
       }
   
+      //닫기
       const close = () => {
         showChatting.value = false;
       }

@@ -46,6 +46,7 @@ export default {
         const qnas = ref([]);
         const qna = ref({});
 
+        //QNA 들 얻기
         const getQnas = async () => {
             const companyId = store.state.companyId;
             await axios.get(`${proxy}/back-office/inquiry/total/${companyId}`, {
@@ -65,11 +66,13 @@ export default {
 
         getQnas();
 
+        //QNA 창 열기
         const openQnaModal = (index) => {
             showQnaModal.value = true;
             qna.value = qnas.value[index];
         }
 
+        //QNA 창 닫기
         const closeQnaModal = () => {
             showQnaModal.value = false;
         }

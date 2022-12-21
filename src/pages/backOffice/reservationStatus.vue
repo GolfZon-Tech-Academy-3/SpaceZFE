@@ -87,6 +87,8 @@ export default {
     const startDate = ref("");
     const endDate = ref("");
     const money = ref("");
+
+    //오늘 예약 수 얻기
     const getTodayResv = async () => {
       await axios
         .get(
@@ -101,6 +103,8 @@ export default {
           todayResv.value = res.data;
         });
     };
+
+    //오늘 예약 취소 수 얻기
     const getTodayCancel = async () => {
       await axios
         .get(`${proxy}/back-office/cancel/count/${store.state.companyId}`, {
@@ -116,6 +120,7 @@ export default {
     getTodayResv();
     getTodayCancel();
 
+    //예약 정보 얻기
     const getResvs = async () => {
       await axios
         .get(
@@ -134,6 +139,7 @@ export default {
 
     getResvs();
 
+    //예약 취소하기
     const cancelResv = async (type, id) => {
       if (type === "오피스") {
         if (confirm("예약을 취소하시겠습니까?")) {
@@ -162,6 +168,7 @@ export default {
       }
     };
 
+    //이용 완료 처리하기
     const completeResv = async (id) => {
       if (confirm("이용 완료 처리하시겠습니까?")) {
         await axios
@@ -176,6 +183,7 @@ export default {
       }
     };
 
+    //기간별 금액 조회
     const searchWithDateCondition = async () => {
       if (startDate.value > endDate.value) {
         alert("시작 날짜가 마지막 날짜보다 늦습니다");

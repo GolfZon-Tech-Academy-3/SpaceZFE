@@ -41,6 +41,7 @@ export default {
         const rule = ref('');
         const router = useRouter();
 
+        //주소 검색
         const searchAddress = () => {
             new daum.Postcode({
                 oncomplete: function(data) {
@@ -64,10 +65,12 @@ export default {
             }).open();
         }
 
+        //이미지 변경
         const changeImage = (event) => {
             file = event.target.files[0];
         }
 
+        //제출
         const submit = async () => {
             if(store.state.authority == null) {
                 alert('로그인을 먼저 진행해주세요');

@@ -129,6 +129,7 @@ export default {
     const newPlaces = ref([]);
     const disabled = ref(false);
 
+    //신규장소, 인기장소 얻기
     const main = async () => {
       await axios
         .get(`${proxy}/company/main`, {
@@ -144,6 +145,7 @@ export default {
 
     main();
 
+    //오피스 검색
     const moveToOffice = () => {
       store.dispatch("updateType", "office");
       store.dispatch("updateDate", null);
@@ -151,6 +153,7 @@ export default {
       store.dispatch("updateWord", "");
     };
 
+    //회의실 검색
     const moveToMeeting = () => {
       store.dispatch("updateType", "meeting-room");
       store.dispatch("updateDate", null);
@@ -158,6 +161,7 @@ export default {
       store.dispatch("updateWord", "");
     };
 
+    //데스크 검색
     const moveToDesk = () => {
       store.dispatch("updateType", "desk");
       store.dispatch("updateDate", null);
@@ -165,6 +169,7 @@ export default {
       store.dispatch("updateWord", "");
     };
 
+    //전체 검색
     const moveToAll = () => {
       store.dispatch("updateType", "total");
       store.dispatch("updateDate", null);
@@ -172,10 +177,7 @@ export default {
       store.dispatch("updateWord", "");
     };
 
-    const changePage = () => {
-      page.value = !page.value;
-    };
-
+    //좋아하는 장소 등록
     const addFavorite = async (e, companyId) => {
       console.log(store.state.accessToken);
       try {

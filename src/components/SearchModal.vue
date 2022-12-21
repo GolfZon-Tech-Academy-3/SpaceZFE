@@ -28,6 +28,7 @@ export default {
             emit('close');
         }
 
+        //클릭 시 장소 상세로 이동
         const moveToPlaceDetail = (companyId) => {
             router.push({
                 name: 'PlaceDetail',

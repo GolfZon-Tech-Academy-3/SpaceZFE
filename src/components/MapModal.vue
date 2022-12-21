@@ -28,6 +28,7 @@ export default {
       emit('close');
     }
 
+    //맵 초기화
     const initMap = () => {
         let container = document.getElementById("kakaoMap");
         let options = {
@@ -44,12 +45,14 @@ export default {
         overlay.value = new kakao.maps.CustomOverlay();
     }
 
+    //현재 위치 얻기
     const getPos = () => {
       return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
       });
     };
 
+    //현 위치 위도 경도 얻기
     const getCoordinate = async () => {
       loading.value = true;
       if (navigator.geolocation) {
@@ -61,6 +64,7 @@ export default {
       }
     };
 
+    //공간 리스트로 위치 좌표 찍기
     const searchSubmit = async () => {
       await axios.get(`${proxy}/company/space/list`, {
         headers: {

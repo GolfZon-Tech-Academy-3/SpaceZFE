@@ -61,6 +61,7 @@ export default {
         const placeIntro = ref('');
         const rule = ref('');
 
+        //내 장소 정보 얻기
         const getInfo = async () => {
             await axios.get(`${proxy}/company/information/${store.state.companyId}`, {
                 headers: {
@@ -79,10 +80,12 @@ export default {
 
         getInfo();
 
+        //수정 여부 확인
         const controlEdit = () => {
             isEditing.value = !isEditing.value;
         }
 
+        //주소 검색하기
         const searchAddress = () => {
             new daum.Postcode({
                 oncomplete: function(data) {
@@ -106,6 +109,7 @@ export default {
             }).open();
         }
 
+        //수정하기
         const submit = async () => {
             if(confirm('수정하시겠습니까?')) {
                 if(placeName.value.length < 2) {

@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { ref, watch, getCurrentInstance } from 'vue';
+import { getCurrentInstance } from 'vue';
 import axios from '@/axios';
 import { useStore } from 'vuex';
 export default {
@@ -34,6 +34,7 @@ export default {
             emit('close');
         }
         
+        //답변 삭제
         const deleteAnswer = async (inquiryId) => {
             if(confirm("답변을 삭제하시겠습니까?")) {
                 try {
@@ -50,6 +51,7 @@ export default {
             }
         }
 
+        //답변 수정
         const modifyAnswer = async (inquiryId) => {
             if(confirm("답변을 수정하시겠습니까?")) {
                 var answer = document.getElementById('answer');
@@ -73,6 +75,7 @@ export default {
             }
         }
 
+        //답변 등록
         const registerAnswer = async (inquiryId) => {
             if(confirm("답변을 등록하시겠습니까?")) {
                 var answer = document.getElementById('answer');

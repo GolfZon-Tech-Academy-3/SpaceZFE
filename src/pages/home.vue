@@ -30,6 +30,8 @@ export default {
         const store = useStore();
         const showLoginModal = ref(false);
         const router = useRouter();
+
+        //시작하기
         const start = () => {
             if (store.state.authority != null) {
                 router.push({
@@ -40,6 +42,7 @@ export default {
             }
         }
 
+        //로그인 창 닫기
         const closeModal = () => {
             showLoginModal.value = false;
         }

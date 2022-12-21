@@ -53,6 +53,7 @@ export default {
     var ws = Stomp.over(sock);
     var reconnect = 0;
 
+    //방 정보 얻기
     const findAllRoom = async () => {
       await axios.get(`${proxy}/chat/rooms`, {
                 headers: {
@@ -67,19 +68,8 @@ export default {
     }
     
     findAllRoom();
-    
-    // const getHistory = async () => {
-    //     await axios.get(`${proxy}/chat/message/${roomId.value}`,{
-    //         headers: {
-    //             Authorization: store.state.accessToken,
-    //         }
-    //     })
-    //     .then((res) => {
-    //         // talks.value = res.data;
-    //         console.log(res.data === '');
-    //     });
-    // }
 
+    //메시지 전송
     const sendMessage = async () => {
       if(input.value !== '') {
           let header = {
@@ -93,6 +83,7 @@ export default {
       }
     }
 
+    //메시지 수신
     const recvMessage = async (recv) => {
         talks.value.push({"type":recv.type,"sender":(recv.type === 'ENTER'?'[알림]':recv.sender),"message":recv.message})
         setTimeout(() => {
@@ -100,7 +91,7 @@ export default {
         }, 300);
     }
     
-    
+    //연결
     const connect = async () => {
         let header = {
             'Authorization': store.state.accessToken,
@@ -127,6 +118,7 @@ export default {
         });
     }
 
+    //연결
     connect();
 
     return {

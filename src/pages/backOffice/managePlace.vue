@@ -29,7 +29,7 @@
         </div>
 
         <SpaceRegisterModal v-if="showRegisterSpace" @close="closeRegister" />
-        <SpaceModifyModal v-if="showModifySpace" @close="closeModifier" :space="space" />
+        <SpaceModifyModal v-if="showModifySpace" @close="closeModify" :space="space" />
     </div>
 </template>
 
@@ -54,6 +54,7 @@ export default {
         const spaces = ref([]);
         var space = ref({});
 
+        //공간 정보 얻기
         const getSpaces = async () => {
             const companyId = store.state.companyId;
             await axios.get(`${proxy}/space/list/${companyId}`, {
@@ -70,18 +71,22 @@ export default {
 
         getSpaces();
 
+        //등록 창 열기
         const openRegister = () => {
             showRegisterSpace.value = true;
         }
 
+        //등록 창 닫기
         const closeRegister = () => {
             showRegisterSpace.value = false;
         }
 
-        const closeModifier = () => {
+        //수정 창 닫기
+        const closeModify = () => {
             showModifySpace.value = false;
         }
 
+        //수정 창 열기
         const openModify = (info) => {
             showModifySpace.value = true;
             space.value = info;
@@ -93,7 +98,7 @@ export default {
             openRegister,
             openModify,
             closeRegister,
-            closeModifier,
+            closeModify,
             spaces,
             space,
         }

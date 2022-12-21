@@ -56,11 +56,13 @@ export default {
     const nickname = ref('');
     const nicknameOK = ref(false);
 
+    //이메일 형식 확인
     const email_check = (email) => {
       var regex=/([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
       return (email != '' && email != 'undefined' && regex.test(email));
     }
 
+    //인증번호 보내기
     const sendCertification = async () => {
       if(!email_check(email.value)) {
         alert('올바른 이메일 형식이 아닙니다');
@@ -82,6 +84,7 @@ export default {
       }
     }
 
+    //인증번호 확인
     const checkCertificationNum = () => {
       if(localStorage.getItem('certificationNum') === certificationNum.value) {
         alert('인증되었습니다');
@@ -90,6 +93,7 @@ export default {
       }
     }
     
+    //닉네임 중복 체크
     const checkNickName = async () => {
       if(nickname.value.length < 2) {
         alert('닉네임은 두 글자 이상 입력해야합니다');
@@ -108,12 +112,14 @@ export default {
       }
     }
 
+    //비밀번호 체크 
     const pw_check = (pw) => {
       var regex= /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
       var regex2 = /^(?=.*[a-zA-Z])(?=.*[!@#$^*+=-])(?=.*[0-9]).{8,20}$/
       return (pw != '' && pw != 'undefined' && (regex.test(pw) || regex2.test(pw)));
     }
 
+    //회원가입
     const signUp = async () => {
       if(!emailOK.value) {
         alert('인증되지 않은 이메일입니다');

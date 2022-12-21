@@ -127,6 +127,7 @@ export default {
             toastMessage, showToast, triggerToast,
         } = useToast();
 
+        //Intersection Observer 를 활용하여 무한 스크롤
         const ioCallback = (entries, io) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
@@ -151,14 +152,18 @@ export default {
 
         const io = new IntersectionObserver(ioCallback, { threshold: 0.7 });
 
+        //스크롤 이벤트 등록
         onMounted(() => {
             setTimeout(() => {
                 document.addEventListener('scroll', scrollEvent);
             }, 100);
         })
+        //스크롤 이벤트 삭제
         onUnmounted(() => {
             document.removeEventListener('scroll', scrollEvent);
         })
+
+        //검색 조건 fix 하기
         const scrollEvent = () => {
             document.documentElement.scrollTop;
             let scrollTop = document.querySelector('html').scrollTop;
@@ -173,6 +178,7 @@ export default {
             }
         }
 
+        //무한 스크롤을 위한 item 세팅
         watch(resultPlace.value, () => {
             if(resultPlace.value.length <= 9 && resultPlace.value.length > 0) {
                 setTimeout(() => {
@@ -182,6 +188,7 @@ export default {
             }
         })
 
+        //검색하기
         const search = async (page) => {
             if(searchTime.value != null) { //검색 시간이 존재할때
                 if(searchTime.value.length === 3) {
@@ -259,6 +266,7 @@ export default {
 
         search(1);
 
+        //검색 날짜 변경
         const changeDate = (event) => {
             if(event.target.value === '') {
                 store.dispatch('updateDate', null);
@@ -267,6 +275,7 @@ export default {
             }
         }
         
+        //검색 시간 변경
         const changeTime = (event) => {
             if(event.target.value == 'null') {
                 store.dispatch('updateTime', null);
@@ -275,6 +284,7 @@ export default {
             }
         }
 
+        //검색어 변경
         const changeWord = (event) => {
             store.dispatch('updateWord', event.target.value);
         }
@@ -294,30 +304,35 @@ export default {
             return date.getFullYear() + '-' + month + '-' + day;
         }
 
+        //검색 타입 전체로 변경
         const selectAll = () => {
             store.dispatch('updateType', 'total');
             currentPage.value = 1;
             window.location.reload();
         }
 
+        //검색 타입 오피스만
         const selectOffice = () => {
             store.dispatch('updateType', 'office');
             currentPage.value = 1;
             window.location.reload();
         }
 
+        //검색 타입 데스크만
         const selectDesk = () => {
             store.dispatch('updateType', 'desk');
             currentPage.value = 1;
             window.location.reload();
         }
 
+        //검색 타입 회의실만
         const selectMeeting = () => {
             store.dispatch('updateType', 'meeting-room');
             currentPage.value = 1;
             window.location.reload();
         }
 
+        //조건 검색
         const searchWithCondition = () => {
             if(searchDate.value == null && searchTime.value != null) {
                 alert('날짜와 시간을 모두 선택해주세요');
@@ -327,12 +342,14 @@ export default {
             window.location.reload();
         }
 
+        //컨디션 초기화
         const resetCondition = () => {
             store.dispatch('updateDate', null);
             store.dispatch('updateTime', null);
             store.dispatch('updateWord', '');
         }
 
+        //좋아하는 장소로 등록
         const addFavorite = async (e, companyId) => {
             try {
                 await axios.get(`${proxy}/company/like/${companyId}`, {
@@ -351,6 +368,7 @@ export default {
             }
         }
 
+        //지도 창 열고 닫기
         const controlMapModal = () => {
             if(showMapModal.value === false) {
                 triggerToast('지도를 닫으려면 더블클릭');

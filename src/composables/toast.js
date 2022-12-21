@@ -3,6 +3,8 @@ export const useToast = () => {
     const toastMessage = ref('');
     const showToast = ref(false); 
     const timeout = ref(null);
+
+    //토스트 실행
     const triggerToast = (message) => {
           toastMessage.value = message;
           showToast.value = true;
@@ -13,6 +15,7 @@ export const useToast = () => {
         }
 
     onUnmounted(() => {
+        //타임 아웃 삭제
         clearTimeout(timeout.value);
     })
     return {
