@@ -113,7 +113,11 @@
         </li>
       </nav>
       <div class="navContainer">
-        <div class="resClicked" v-show="resClicked">
+        <div
+          class="resClicked"
+          v-if="resDetails.length > 0"
+          v-show="resClicked"
+        >
           <div class="lists" v-for="num in resDetails.length" :key="num">
             <img class="resThumb" :src="resDetails[num - 1].spaceImage" />
             {{ resDetails[num - 1].spaceImages }}
@@ -167,6 +171,10 @@
             </ul>
           </div>
         </div>
+        <Nothing
+          v-if="resDetails.length <= 0 && resClicked"
+          what="사무 공간이"
+        />
         <div class="locClicked" v-if="locClicked">
           <p style="font-size: 1.1em">
             <b style="color: rgb(4, 20, 97, 1)">장소 소개</b>
