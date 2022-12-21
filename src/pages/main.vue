@@ -204,7 +204,6 @@ export default {
       moveToAll,
       hotPlaces,
       newPlaces,
-      changePage,
       disabled,
       addFavorite,
       moveToOffice,
