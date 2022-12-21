@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper" @click="closeModal">
         <div class="modal-back" @click.stop>
-            <textarea disabled id="answer" :value="qna.inquiries" maxlength="500" style="width: 96%; height: 45%;resize:none;outline:none;background-color:#F5F7F8;border:none;padding: 2%;border-radius: 1em;">
+            <textarea disabled :value="qna.inquiries" maxlength="500" style="width: 96%; height: 45%;resize:none;outline:none;background-color:#F5F7F8;border:none;padding: 2%;border-radius: 1em;">
             </textarea>
             <div style="width: 100%; height: 6%;">
                 <button v-if="qna.isAnswer" class="btn" @click.stop="modifyAnswer(qna.inquiryId)">답변 수정</button>
