@@ -65,6 +65,7 @@
         <input type="checkbox" v-model="d" @click="selectD" />만 14세 이상
         확인<a style="color: red">(필수)</a>
       </p>
+      <div class="g-recaptcha" data-sitekey="6Lfd32MjAAAAAJ3iKd4ogmYR-Dw_JE6wYjzo4Bzr"></div>
     </div>
     <h1 class="resInfo" style="color: rgb(4, 20, 97, 1)">예약 정보</h1>
     <div class="right">
@@ -412,6 +413,7 @@ export default {
 
     const date = new Date();
     let now = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+
 
     //예약할 장소의 정보 불러오기
     const getResInfos = async () => {
