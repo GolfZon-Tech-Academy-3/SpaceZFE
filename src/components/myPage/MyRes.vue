@@ -46,7 +46,7 @@
         <b style="color: rgb(4, 20, 97, 1)">SPACEZ</b>로 공간 예약하러 가기 !!! <span class="arrow">&rarr;</span>
         <span class="arrow2">GoGo!</span>
       </p>
-          <Nothing what="예약현황이"/>
+          <Nothing what="예약 현황이"/>
         </div>
         <table>
           <tr v-for="num in resStatuses.length < resStatuseses? resStatuses.length : resStatuseses" :key="num">
@@ -119,9 +119,14 @@
           </tr>
         </table>
         <button v-if="resStatuses.length>0" class="showMore" :disabled="resStatuses.length < resStatuseses ? true : noMoreResStatus" @click="showResStatuses">더보기</button>
+        <button class="toTop" v-show="resStatuseses > 4" @click="toTop">맨위로</button>
       </div>
       <div v-show="!resRecord" class="inner">
         <div v-if="resDone.length ==0">
+          <p class="hogaek" @click="toMain">
+        <b style="color: rgb(4, 20, 97, 1)">SPACEZ</b>로 공간 예약하러 가기 !!! <span class="arrow">&rarr;</span>
+        <span class="arrow2">GoGo!</span>
+      </p>
           <Nothing what="예약 이력이"/>
         </div>
         <table v-for="num in (resDone.length < resDones ? resDone.length : resDones)" :key="num">
@@ -482,6 +487,7 @@ setup() {
       resDones.value = 4
       resStatuseses.value = 4
       noMore.value = false
+      noMoreResStatus.value = false 
     };
     
     return {

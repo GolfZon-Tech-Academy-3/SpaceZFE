@@ -153,6 +153,9 @@ export default {
       if (revContent.value === "") {
         alert("리뷰를 수정하고 수정버튼을 눌러주세요!");
         revContent.value = "";
+      } else if (revContent.value.length < 5) {
+        alert("리뷰는 최소 5자 이상 써주세요!");
+        revContent.value = "";
       } else if (score.value == 0) {
         alert("평점은 최소 1점이상 매겨주세요");
       } else {
