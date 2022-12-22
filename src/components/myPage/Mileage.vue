@@ -90,7 +90,7 @@
           @click="showAll"
           :disabled="mileages.length < totalMileages ? true : noMore"
         >
-          전체 보기
+          더 보기
         </button>
       </table>
       <table class="table" v-show="!earnedClick">

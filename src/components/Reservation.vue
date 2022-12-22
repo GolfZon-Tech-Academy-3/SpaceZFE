@@ -729,11 +729,9 @@ export default {
         alert("결제 수단을 선택해주세요");
       } else if (!a.value || !b.value || !c.value || !d.value) {
         alert("결제 관련 동의에 전부 체크해 주세요");
-      }
-      // else if (resMessage.value != "인증성공") {
-      //   alert("휴대폰 인증을 해주세요");
-      // }
-      else if (pay.value === "SPACEZ 페이") {
+      } else if (resMessage.value != "인증성공") {
+        alert("휴대폰 인증을 해주세요");
+      } else if (pay.value === "SPACEZ 페이") {
         var clientKey = "test_ck_MGjLJoQ1aVZ5Rq9xWBd3w6KYe2RN";
         var customerKey = store.state.memberId; //memberId
         // BrandPay 객체 초기화
@@ -894,11 +892,9 @@ export default {
         alert("결제 수단을 선택해주세요");
       } else if (!a.value || !b.value || !c.value || !d.value) {
         alert("결제 관련 동의에 전부 체크해 주세요");
-      }
-      // else if (resMessage.value != "인증성공") {
-      //   alert("휴대폰 인증을 해주세요");
-      // }
-      else if (pay.value === "SPACEZ 페이") {
+      } else if (resMessage.value != "인증성공") {
+        alert("휴대폰 인증을 해주세요");
+      } else if (pay.value === "SPACEZ 페이") {
         var clientKey = "test_ck_MGjLJoQ1aVZ5Rq9xWBd3w6KYe2RN";
         var customerKey = store.state.memberId; //memberId
         // BrandPay 객체 초기화
@@ -1026,7 +1022,9 @@ export default {
                   error.response.status < 500 &&
                   error.response.status >= 400
                 ) {
-                  alert("입력을 다시 확인해주세요.");
+                  alert(
+                    "입력을 다시 확인해주시거나 재 로그인 후 시도해 주세요."
+                  );
                   router.go();
                   console.log(error);
                 } else if (error.response.status >= 500) {
@@ -1559,11 +1557,9 @@ export default {
         alert("결제 수단을 선택해주세요");
       } else if (!a.value || !b.value || !c.value || !d.value) {
         alert("결제 관련 동의에 전부 체크해 주세요");
-      }
-      // else if (resMessage.value != "인증성공") {
-      //   alert("휴대폰 인증을 해주세요");
-      // }
-      else if (pay.value === "SPACEZ 페이") {
+      } else if (resMessage.value != "인증성공") {
+        alert("휴대폰 인증을 해주세요");
+      } else if (pay.value === "SPACEZ 페이") {
         var clientKey = "test_ck_MGjLJoQ1aVZ5Rq9xWBd3w6KYe2RN";
         var customerKey = store.state.memberId; //memberId
         // BrandPay 객체 초기화
